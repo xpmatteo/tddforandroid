@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LightsOutAndroid</string>
+    <string name="application_title">Lights Out!</string>
+    <string name="title_activity_main">Lights Out!</string>
+
+</resources>

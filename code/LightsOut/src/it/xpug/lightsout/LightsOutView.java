@@ -6,10 +6,4 @@ public interface LightsOutView {
 
 	void turnButtonOff(int buttonId);
 
-	int createButton();
-
-	int createButtonRightOf(int buttonId);
-
-	int createButtonBelow(int buttonId);
-
 }

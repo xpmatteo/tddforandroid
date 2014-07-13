@@ -2,7 +2,6 @@ package it.xpug.lightsout;
 
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -15,35 +14,24 @@ public class LightsOutGameTest {
 
 	
 	@Test
-	public void setup1x1Game() {
+	public void setupGame() {
 		context.checking(new Expectations() {{
-			oneOf(view).createButton();
-			will(returnValue(100));
-			
-			oneOf(view).turnButtonOn(100);
+			oneOf(view).turnButtonOn(0);
 		}});
 		
-		game.onGameStart(1);
+		game.onGameStart();
 	}
-
-	@Test@Ignore
-	public void setup2x2Game() {
+	
+	@Test
+	public void onClick() throws Exception {
 		context.checking(new Expectations() {{
-			oneOf(view).createButton();
-			will(returnValue(1));
-			oneOf(view).createButtonRightOf(1);
-			will(returnValue(2));
-			oneOf(view).createButtonBelow(1);
-			will(returnValue(3));
-			oneOf(view).createButtonRightOf(3);
-			will(returnValue(4));
-			
-			oneOf(view).turnButtonOn(1);
-			oneOf(view).turnButtonOn(2);
-			oneOf(view).turnButtonOn(3);
-			oneOf(view).turnButtonOn(4);
+			exactly(2).of(view).turnButtonOn(0);
+			oneOf(view).turnButtonOff(0);
 		}});
-		game.onGameStart(2);
+		
+		game.onClick();		
+		game.onClick();		
+		game.onClick();		
 	}
 
 }

@@ -9,9 +9,8 @@ public class LightsOutGame {
 		this.view = view;
 	}
 
-	public void onGameStart(int size) {
-		int buttonID = view.createButton();
-		view.turnButtonOn(buttonID);
+	public void onGameStart() {
+		view.turnButtonOn(0);
 		buttonIsOn = true;
 	}
 

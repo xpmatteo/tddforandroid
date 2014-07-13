@@ -13,11 +13,11 @@ public class LightsOutTest extends ActivityInstrumentationTestCase2<MainActivity
 
 	@UiThreadTest
 	public void testToggleButtonScenario() throws Exception {
-		theButtonIsOff();
-		whenIPressTheButton();
 		theButtonIsOn();
 		whenIPressTheButton();
 		theButtonIsOff();
+		whenIPressTheButton();
+		theButtonIsOn();
 	}
 
 	private void theButtonIsOn() {

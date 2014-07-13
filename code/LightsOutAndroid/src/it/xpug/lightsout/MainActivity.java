@@ -1,5 +1,8 @@
 package it.xpug.lightsout;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,12 +22,13 @@ public class MainActivity extends Activity implements LightsOutView {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);		
 		
-		final LightsOutGame game = new LightsOutGame(this);
+		List<Boolean> status = Arrays.asList(true);
+		final LightsOutController game = new LightsOutController(status, this);
 		game.onGameStart();
 		getButton().setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				game.onClick();
+				game.onClick(v.getId());
 			}
 		});
 	}

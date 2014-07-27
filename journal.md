@@ -28,3 +28,28 @@ What I learned
  - The GridView works well for structuring the buttons. It needs a ListAdapter that creates the items for the elements in the grid.  This is a "model" for the grid.  It probably deserves the status of "view" for the purposes of the controller.
 
  - It's easy to get confused about which project contains what.  It's best to have a very clear naming convention.
+
+
+2014-07-21 Spike: tempconv
+
+Riesco ad avere la spike funzionante in 23 minuti.
+
+La cosa curiosa e' che il cambio di orientamento del display NON distrugge lo stato dell'applicazione.  Vai a capire.
+
+
+
+2014-07-24 TDD Compound Interest
+
+3 pomodori.  Perso parecchio tempo in problemucci.
+
+Non si capisce bene il valore aggiunto del test, dato che non ci sono molte variazioni da provare in questa applicazione.
+
+Che cosa ho imparato?
+
+ - variazioni:
+  - tipi di calcolo: l'app percentage ... fornisce un certo numero di diversi calcolatori
+ - mi serve un puzzle dove e' il controller a creare la gui ad ogni stadio
+
+
+
+

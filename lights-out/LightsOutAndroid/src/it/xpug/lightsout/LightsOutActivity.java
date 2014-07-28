@@ -94,6 +94,7 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 
 	@Override
 	public void showVictory() {
-		Toast.makeText(this, R.string.you_have_won, Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(this, R.string.you_have_won, Toast.LENGTH_LONG);
+		toast.show();
 	}
 }

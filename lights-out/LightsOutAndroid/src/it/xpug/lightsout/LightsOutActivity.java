@@ -14,6 +14,7 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 
 	private static final ColorDrawable COLOR_OFF = new ColorDrawable(Color.DKGRAY);
 	private static final ColorDrawable COLOR_ON = new ColorDrawable(Color.YELLOW);
+	private static final String KEY = "status";
 	private LightsOutApplication application;
 
 	@Override
@@ -24,6 +25,9 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 		grid.setAdapter(new LightsOutAdapter(this));
 		
 		application = new LightsOutApplication(new LightsOutModel(5), this);
+		
+		restoreStatus(savedInstanceState);
+		
 		grid.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -37,6 +41,7 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putString(KEY, application.saveStatus());
 		System.out.println("===== ON SAVE INSTANCE STATE");
 	}
 	
@@ -80,7 +85,10 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 			return new TextView(context) {{
 				setId(position);
 				setHeight(90);
-				setBackground(COLOR_ON);
+				if (application.isOnAt(position))
+					setBackground(COLOR_ON);
+				else
+					setBackground(COLOR_OFF);
 			}};
 		}
 	}
@@ -89,5 +97,10 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 	public void showVictory() {
 		Toast toast = Toast.makeText(this, R.string.you_have_won, Toast.LENGTH_LONG);
 		toast.show();
+	}
+
+	private void restoreStatus(Bundle savedInstanceState) {
+		if (null != savedInstanceState && savedInstanceState.containsKey(KEY))
+			application.restoreStatus(savedInstanceState.getString(KEY));
 	}
 }

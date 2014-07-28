@@ -6,8 +6,6 @@ import org.jmock.*;
 import org.jmock.integration.junit4.*;
 import org.junit.*;
 
-import com.apple.eawt.*;
-
 public class LightsOutApplicationTest {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	LightsOutView view = context.mock(LightsOutView.class);

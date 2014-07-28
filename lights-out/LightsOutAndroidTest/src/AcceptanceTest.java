@@ -3,6 +3,7 @@ import static java.util.Arrays.*;
 import java.util.*;
 
 import it.xpug.lightsout.*;
+import android.content.pm.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.test.*;
@@ -12,15 +13,12 @@ import android.widget.*;
 
 public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutActivity> {
 
-	private LightsOutActivity activity;
-
 	public AcceptanceTest() {
 		super(LightsOutActivity.class);
 	}
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		this.activity = getActivity();
 	}
 	
 	public void testAtStartAllLightsAreOn() throws Exception {
@@ -48,15 +46,25 @@ public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutAc
 		onlyTheseLightsAreOff(1, 2, 5, 8, 11, 12);
 	}
 	
-	@UiThreadTest
-	public void testRestoreStateAfterConfigChange() throws Exception {
-		givenIClickedOnButton(6);
+	public void testRestoreStateAfterConfigChange() throws Throwable {
+		runTestOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				givenIClickedOnButton(6);
+			}
+		});
+		
 		whenIChangeFromPortraitToLandscape();
-		onlyTheseLightsAreOff(1, 5, 6, 7, 11);		
+		onlyTheseLightsAreOff1(1, 5, 6, 7, 11);
 	}
-
+	
 	private void whenIChangeFromPortraitToLandscape() {
-		fail("not implemented");
+		final LightsOutActivity oldActivity = getActivity();
+		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		getActivity().finish();
+	    setActivity(null);
+		getInstrumentation().waitForIdleSync();
+		assertNotSame(oldActivity, getActivity());
 	}
 
 	private void givenIClickedOnButton(int position) {
@@ -74,6 +82,19 @@ public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutAc
 				assertTrue("should be off at " + i, isLightOffAt(i));
 			else
 				assertTrue("should be on at " + i, isLightOnAt(i));
+		}
+	}
+	
+	private void onlyTheseLightsAreOff1(final Integer ... positionsOff) {
+		try {
+			runTestOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					onlyTheseLightsAreOff(positionsOff);
+				}
+			});
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -96,7 +117,7 @@ public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutAc
 	}
 
 	private GridView grid() {
-		return (GridView) activity.findViewById(R.id.grid);
+		return (GridView) getActivity().findViewById(R.id.grid);
 	}
 	
 	private boolean isLightOffAt(int position) {

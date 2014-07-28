@@ -30,6 +30,21 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 				application.onClickOn(position);
 			}
 		});
+		
+		System.out.println("===== ON CREATE");
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		System.out.println("===== ON DESTROY");
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		System.out.println("===== ON SAVE INSTANCE STATE");
+		//throw new RuntimeException("I did it on purpose");
 	}
 	
 	@Override

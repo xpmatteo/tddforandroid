@@ -41,8 +41,8 @@ public class LightsOutApplication {
 			view.setLightOffAt(position);
 	}
 
-	public boolean positionIsOn(int position) {
-		return true;
+	public boolean isOnAt(int position) {
+		return model.isOnAt(position);
 	}
 
 }

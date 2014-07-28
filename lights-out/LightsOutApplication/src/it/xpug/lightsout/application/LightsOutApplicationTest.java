@@ -6,7 +6,9 @@ import org.jmock.*;
 import org.jmock.integration.junit4.*;
 import org.junit.*;
 
-public class LightsOutControllerTest {
+import com.apple.eawt.*;
+
+public class LightsOutApplicationTest {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	LightsOutView view = context.mock(LightsOutView.class);
 	LightsOutModel model = new LightsOutModel(3);
@@ -23,7 +25,20 @@ public class LightsOutControllerTest {
 		assertIsOn(6);
 		assertIsOn(7);
 		assertIsOn(8);
-		assertIsOn(9);
+	}
+
+	@Test
+	public void notAlwaysOn() {
+		model.setStatus("...OOO...");
+		assertIsOff(0);
+		assertIsOff(1);
+		assertIsOff(2);
+		assertIsOn(3);
+		assertIsOn(4);
+		assertIsOn(5);
+		assertIsOff(6);
+		assertIsOff(7);
+		assertIsOff(8);
 	}
 	
 	/*
@@ -124,7 +139,12 @@ public class LightsOutControllerTest {
 
 	private void assertIsOn(int position) {
 		String message = String.format("position %s expected to be on", position);
-		assertTrue(message, app.positionIsOn(position));
+		assertTrue(message, app.isOnAt(position));
+	}
+
+	private void assertIsOff(int position) {
+		String message = String.format("position %s expected to be off", position);
+		assertFalse(message, app.isOnAt(position));
 	}
 
 }

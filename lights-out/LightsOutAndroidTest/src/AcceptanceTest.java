@@ -47,13 +47,7 @@ public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutAc
 	}
 	
 	public void testRestoreStateAfterConfigChange() throws Throwable {
-		runTestOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				givenIClickedOnButton(6);
-			}
-		});
-		
+		givenIClickedOnButton(6);		
 		whenIChangeFromPortraitToLandscape();
 		onlyTheseLightsAreOff1(1, 5, 6, 7, 11);
 	}
@@ -67,8 +61,18 @@ public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutAc
 		assertNotSame(oldActivity, getActivity());
 	}
 
-	private void givenIClickedOnButton(int position) {
-		whenIClickOnButton(position);
+	private void givenIClickedOnButton(final int position) {
+		getActivity();
+		try {
+			runTestOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					whenIClickOnButton(position);
+				}
+			});
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void whenIClickOnButton(int position) {

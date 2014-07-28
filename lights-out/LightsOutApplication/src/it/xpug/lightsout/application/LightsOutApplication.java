@@ -45,4 +45,12 @@ public class LightsOutApplication {
 		return model.isOnAt(position);
 	}
 
+	public void restoreStatus(String status) {
+		model.setStatus(status);
+	}
+
+	public String saveStatus() {
+		return model.toString();
+	}
+
 }

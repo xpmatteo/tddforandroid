@@ -124,7 +124,6 @@ public class LightsOutApplicationTest {
 		app.onClickOn(0);
 		app.onClickOn(1);
 	}
-	
 
 	@Test
 	public void showCongratsOnVictory() throws Exception {
@@ -137,6 +136,12 @@ public class LightsOutApplicationTest {
 		assertTrue("all off", model.isAllOff());
 	}
 
+	@Test
+	public void saveAndRestoreState() throws Exception {
+		app.restoreStatus("OOO...OOO");
+		assertEquals("OOO...OOO", app.saveStatus());
+	}
+	
 	private void assertIsOn(int position) {
 		String message = String.format("position %s expected to be on", position);
 		assertTrue(message, app.isOnAt(position));

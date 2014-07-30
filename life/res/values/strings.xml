@@ -3,6 +3,8 @@
 
     <string name="app_name">Game Of Life</string>
     <string name="title_activity_life">Game of Life</string>
-    <string name="hello_world">Hello world!</string>
-
+    <string name="randomize">Randomize</string>
+    <string name="stop">Stop</string>
+    <string name="restart">Restart</string>
+    
 </resources>

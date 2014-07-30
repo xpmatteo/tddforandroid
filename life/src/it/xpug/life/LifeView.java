@@ -5,6 +5,7 @@ import android.annotation.*;
 import android.content.*;
 import android.graphics.*;
 import android.os.*;
+import android.util.*;
 import android.view.*;
 import com.thoughtworks.game_of_life.core.*;
 
@@ -17,6 +18,8 @@ public class LifeView extends View {
 	private RefreshHandler handler = new RefreshHandler();
 	private int width;
 	private int height;
+	
+	private Boolean stopped = false;
 
 	@SuppressLint("HandlerLeak")
 	class RefreshHandler extends Handler {
@@ -26,20 +29,27 @@ public class LifeView extends View {
 			invalidate();
 		}
 		
-        public void sleep(long delayMillis) {
+        public void redrawMeLater(long delayMillis) {
         	removeMessages(0);
             sendMessageDelayed(obtainMessage(0), delayMillis);
         }
 	}
 
-	public LifeView(Context context, World world) {
-		super(context);
-		this.world = world;
+	public LifeView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+	
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int makeMeSquare = Math.min(widthMeasureSpec, heightMeasureSpec);
+		setMeasuredDimension(makeMeSquare, makeMeSquare);
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		
+		if (null == world) return;
 		
 		width = canvas.getWidth();
 		height = world.getHeight();
@@ -61,7 +71,21 @@ public class LifeView extends View {
 			}
 		}
 		
-		handler.sleep(100);
+		if (!stopped)
+			handler.redrawMeLater(100);
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
+	public void stop() {
+		stopped = true;
+	}
+
+	public void restart() {
+		stopped = false;
+		handler.redrawMeLater(0);
 	}
 
 }

@@ -1,9 +1,8 @@
 package com.thoughtworks.game_of_life.core;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.thoughtworks.game_of_life.core.Location.allWorldLocations;
+import static com.thoughtworks.game_of_life.core.Location.*;
 
 public class World {
 
@@ -17,6 +16,18 @@ public class World {
 		cells = initCells();
     }
 
+    public void randomize() {
+    	Random random = new Random();
+    	
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (random.nextFloat() > .7) {
+			        setLiving(at(x,y));
+				}
+			}
+		}
+    }
+    
     public void advance() {
         Map<Location, Cell> newCells = initCells();
 

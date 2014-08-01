@@ -8,4 +8,6 @@ public interface LightsOutView {
 
 	void showVictory();
 
+	void updateScore(int newScore);
+
 }

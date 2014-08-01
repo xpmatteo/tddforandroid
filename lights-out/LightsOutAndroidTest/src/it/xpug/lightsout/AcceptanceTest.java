@@ -47,13 +47,25 @@ public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutAc
 		onlyTheseLightsAreOff(1, 2, 5, 8, 11, 12);
 	}
 	
-	
 	public void xxx_testRestoreStateAfterConfigChange() throws Throwable {
 		givenIClickedOnButton(6);		
 		whenIChangeFromPortraitToLandscape();
 		onlyTheseLightsAreOff1(1, 5, 6, 7, 11);
 	}
 	
+	@UiThreadTest
+	public void testKeepScore() {
+		theScoreIs(0);
+		whenIClickOnButton(0);
+		 andIClickOnButton(1);
+		theScoreIs(2);
+	}
+	
+	private void theScoreIs(int expectedScore) {
+		TextView scoreView = (TextView) getActivity().findViewById(R.id.score);
+		assertEquals("Score: " + expectedScore, scoreView.getText());
+	}
+
 	private void whenIChangeFromPortraitToLandscape() {
 		final LightsOutActivity oldActivity = getActivity();
 		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -79,6 +91,10 @@ public class AcceptanceTest extends ActivityInstrumentationTestCase2<LightsOutAc
 
 	private void whenIClickOnButton(int position) {
 		grid().performItemClick(grid(), position, position);
+	}
+
+	private void andIClickOnButton(int position) {
+		whenIClickOnButton(position);
 	}
 
 	private void onlyTheseLightsAreOff(Integer ... positionsOff) {

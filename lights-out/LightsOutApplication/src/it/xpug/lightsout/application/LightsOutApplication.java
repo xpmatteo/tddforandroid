@@ -5,6 +5,7 @@ public class LightsOutApplication {
 
 	private LightsOutView view;
 	private LightsOutModel model;
+	private int score = 0;
 
 	public LightsOutApplication(LightsOutModel model, LightsOutView view) {
 		this.model = model;
@@ -15,6 +16,8 @@ public class LightsOutApplication {
 		toggleCross(position);
 		if (won())
 			view.showVictory();
+		score++;
+		view.updateScore(score);
 	}
 
 	private void toggleCross(int position) {
@@ -51,6 +54,10 @@ public class LightsOutApplication {
 
 	public String saveStatus() {
 		return model.toString();
+	}
+
+	public int score() {
+		return score;
 	}
 
 }

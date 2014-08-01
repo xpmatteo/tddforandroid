@@ -21,23 +21,16 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lights_out);
-		GridView grid = (GridView) findViewById(R.id.grid);
-		grid.setAdapter(new LightsOutAdapter(this));
 		
-		application = new LightsOutApplication(new LightsOutModel(5), this);
-		
+		application = new LightsOutApplication(new LightsOutModel(5), this);		
 		restoreStatus(savedInstanceState);
 		
-		grid.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				application.onClickOn(position);
-			}
-		});
+		prepareGrid();
+		updateScore(application.score());
 		
 		System.out.println("===== ON CREATE");
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -57,14 +50,19 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 		cell.setBackground(COLOR_OFF);
 	}
 
+	@Override
+	public void updateScore(int newScore) {
+		TextView scoreView = (TextView) findViewById(R.id.score);
+		scoreView.setText("Score: " + newScore);
+	}
+
+	@Override
+	public void showVictory() {
+		Toast toast = Toast.makeText(this, R.string.you_have_won, Toast.LENGTH_LONG);
+		toast.show();
+	}
+
 	class LightsOutAdapter extends BaseAdapter {
-
-		private Context context;
-		
-		public LightsOutAdapter(Context context) {
-			this.context = context;
-		}
-
 		@Override
 		public int getCount() {
 			return 25;
@@ -82,7 +80,7 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			return new TextView(context) {{
+			return new TextView(LightsOutActivity.this) {{
 				setId(position);
 				setHeight(90);
 				if (application.isOnAt(position))
@@ -93,14 +91,19 @@ public class LightsOutActivity extends Activity implements LightsOutView {
 		}
 	}
 
-	@Override
-	public void showVictory() {
-		Toast toast = Toast.makeText(this, R.string.you_have_won, Toast.LENGTH_LONG);
-		toast.show();
-	}
-
 	private void restoreStatus(Bundle savedInstanceState) {
 		if (null != savedInstanceState && savedInstanceState.containsKey(KEY))
 			application.restoreStatus(savedInstanceState.getString(KEY));
+	}
+
+	private void prepareGrid() {
+		GridView grid = (GridView) findViewById(R.id.grid);
+		grid.setAdapter(new LightsOutAdapter());
+		grid.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				application.onClickOn(position);
+			}
+		});
 	}
 }

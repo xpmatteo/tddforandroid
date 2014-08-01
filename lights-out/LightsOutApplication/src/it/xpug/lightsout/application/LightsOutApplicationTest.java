@@ -2,12 +2,15 @@ package it.xpug.lightsout.application;
 
 import static org.junit.Assert.*;
 
+import java.util.*;
+
 import org.jmock.*;
 import org.jmock.integration.junit4.*;
 import org.junit.*;
 
 public class LightsOutApplicationTest {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
+	
 	LightsOutView view = context.mock(LightsOutView.class);
 	LightsOutModel model = new LightsOutModel(3);
 	LightsOutApplication app = new LightsOutApplication(model, view); 
@@ -52,6 +55,7 @@ public class LightsOutApplicationTest {
 			oneOf(view).setLightOffAt(4);
 			oneOf(view).setLightOffAt(5);
 			oneOf(view).setLightOffAt(7);
+			ignoringScore();
 		}});
 		app.onClickOn(4);
 	}
@@ -68,6 +72,7 @@ public class LightsOutApplicationTest {
 			oneOf(view).setLightOffAt(3);
 			oneOf(view).setLightOffAt(4);
 			oneOf(view).setLightOffAt(6);
+			ignoringScore();
 		}});
 		app.onClickOn(3);
 	}
@@ -83,6 +88,7 @@ public class LightsOutApplicationTest {
 			oneOf(view).setLightOffAt(0);
 			oneOf(view).setLightOffAt(1);
 			oneOf(view).setLightOffAt(3);
+			ignoringScore();
 		}});
 		app.onClickOn(0);
 	}
@@ -98,6 +104,7 @@ public class LightsOutApplicationTest {
 			oneOf(view).setLightOffAt(5);
 			oneOf(view).setLightOffAt(7);
 			oneOf(view).setLightOffAt(8);
+			ignoringScore();
 		}});
 		app.onClickOn(8);
 	}
@@ -118,6 +125,7 @@ public class LightsOutApplicationTest {
 			oneOf(view).setLightOnAt(1);
 			oneOf(view).setLightOffAt(2);
 			oneOf(view).setLightOffAt(4);
+			ignoringScore();
 		}});
 		app.onClickOn(0);
 		app.onClickOn(1);
@@ -127,11 +135,24 @@ public class LightsOutApplicationTest {
 	public void showCongratsOnVictory() throws Exception {
 		model.setStatus("OO.O.....");
 		context.checking(new Expectations() {{
-			allowing(view).setLightOffAt(with(any(Integer.class)));
 			oneOf(view).showVictory();
+			ignoringScore();
+			ignoringLights();
 		}});
 		app.onClickOn(0);
 		assertTrue("all off", model.isAllOff());
+	}
+	
+	@Test
+	public void updatesScoreOnClick() throws Exception {
+		context.checking(new Expectations() {{
+			oneOf(view).updateScore(1);
+			oneOf(view).updateScore(2);
+			ignoringLights();
+		}});		
+		app.onClickOn(anyPosition());
+		app.onClickOn(anyPosition());
+		assertEquals(2, app.score());
 	}
 
 	@Test
@@ -140,6 +161,10 @@ public class LightsOutApplicationTest {
 		assertEquals("OOO...OOO", app.saveStatus());
 	}
 	
+	private int anyPosition() {
+		return new Random().nextInt(model.side()*model.side());
+	}
+
 	private void assertIsOn(int position) {
 		String message = String.format("position %s expected to be on", position);
 		assertTrue(message, app.isOnAt(position));
@@ -150,4 +175,16 @@ public class LightsOutApplicationTest {
 		assertFalse(message, app.isOnAt(position));
 	}
 
+	private void ignoringScore() {
+		context.checking(new Expectations() {{
+			allowing(view).updateScore(with(any(Integer.class)));
+		}});
+	}
+
+	private void ignoringLights() {
+		context.checking(new Expectations() {{
+			allowing(view).setLightOffAt(with(any(Integer.class)));
+			allowing(view).setLightOnAt(with(any(Integer.class)));
+		}});
+	}
 }

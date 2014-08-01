@@ -39,6 +39,10 @@ public class LifeView extends View {
 		super(context, attrs);
 	}
 	
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		int makeMeSquare = Math.min(widthMeasureSpec, heightMeasureSpec);
@@ -72,13 +76,9 @@ public class LifeView extends View {
 		}
 		
 		if (!stopped)
-			handler.redrawMeLater(100);
+			handler.redrawMeLater(200);
 	}
 
-	public void setWorld(World world) {
-		this.world = world;
-	}
-	
 	public void stop() {
 		stopped = true;
 	}

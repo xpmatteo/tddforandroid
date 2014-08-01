@@ -9,13 +9,17 @@
     <GridView
         android:id="@+id/grid"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:numColumns="5"
+        android:layout_height="wrap_content"
         android:horizontalSpacing="5dp"
-        android:verticalSpacing="5dp"
-       >
-        
+        android:numColumns="5"
+        android:verticalSpacing="5dp" >
     </GridView>
-    
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge" />
     
 </LinearLayout>

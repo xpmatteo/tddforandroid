@@ -50,6 +50,9 @@ Che cosa ho imparato?
   - tipi di calcolo: l'app percentage ... fornisce un certo numero di diversi calcolatori
  - mi serve un puzzle dove e' il controller a creare la gui ad ogni stadio
 
+2014-08-01
+
+Added score to Lights Out
 
 
 

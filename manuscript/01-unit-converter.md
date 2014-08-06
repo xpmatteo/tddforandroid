@@ -13,22 +13,22 @@ Yes, I know this feature is already implemented by Google on all phones. I use t
 The feature we want to implement is "convert a number from one unit to another".  To clarify what we want to do to ourselves and our customer, it's a good idea to write down a few examples (a.k.a. scenarios) of how the feature will work.
 
 {icon=fa-cube}
-G> ## Example: inches to cm <br/>
+G> ## Example: inches to cm {linebreak]
 G>
-G> Given the user selected "in" to "cm" <br/>
-G> When the user types 2 <br/>
-G> Then the result is "2.00 in = 5.08 cm" <br/>
+G> Given the user selected "in" to "cm" {linebreak]
+G> When the user types 2 {linebreak]
+G> Then the result is "2.00 in = 5.08 cm" {linebreak]
 
-G> ## Example: Fahrenheit to Celsius <br/>
+G> ## Example: Fahrenheit to Celsius {linebreak]
 G>
-G> Given the user selected "F" to "C" <br/>
-G> When the user types 50 <br/>
-G> Then the result is "50.00 F = 10.00 C" <br/>
+G> Given the user selected "F" to "C" {linebreak]
+G> When the user types 50 {linebreak]
+G> Then the result is "50.00 F = 10.00 C" {linebreak]
 
-G> ## Example: unsupported units <br/>
+G> ## Example: unsupported units {linebreak]
 G>
-G> Given the user selected "ABC" to "XYZ" <br/>
-G> Then the result is "I don't know how to convert this" <br/>
+G> Given the user selected "ABC" to "XYZ" {linebreak]
+G> Then the result is "I don't know how to convert this" {linebreak]
 
 Note that by writing down the examples we clarified what exactly the customer expects to see: how numbers are formatted, what the result message should look like.
 
@@ -48,9 +48,9 @@ Our spike implements the "inches to cm" and the "unsupported units" scenario.  I
 {width=60%}
 ![How the unit conversion spike looks like](images/spike-units-screenshot.png)
 
-{lang="java"}
 <<[The activity for the unit conversion spike](../UnitConversionSpike/app/src/main/java/name/vaccari/matteo/unitconversionspike/MyActivity.java)
 
+{lang="xml"}
 <<[The layout for the unit conversion spike](../UnitConversionSpike/app/src/main/res/layout/activity_my.xml)
 
 What I learned:
@@ -184,9 +184,11 @@ We also observe that Android Studio colors the tests differently, to tell us tha
 
 ![Now the ATs produce failures as expected](images/unitdoctor-at-failing-for-the-right-reason.png)
 
-T> Always check the error message, to make sure that the tests are failing for the right reason.
+T> Tip: Always check the error message, to make sure that the tests are failing for the right reason.
 
 Q> What is the difference between a *failure* and an *error*?  A "failure" is when your tests fails because of a broken assertion.  An "error" is when the test fails because of an exception.  In general, we want our test to produce failures, not errors, because errors mean that our software is doing something  unexpected.
 
 
+## Shift to TDD
 
+Now that we have some failing acceptance tests, we leave them be.  We now shift to a faster gear by starting to write some *unit* tests.  

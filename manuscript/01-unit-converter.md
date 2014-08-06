@@ -193,3 +193,16 @@ Q> What is the difference between a *failure* and an *error*?  A "failure" is wh
 Now that we have some failing acceptance tests, we leave them be.  We now shift to a faster gear by starting to write some *unit* tests.
 
 In order to do this we will start by assuming that we have a kernel of the application that does not need to use Android at all.  For this reason we open a new module inside the project.  (If I were using Eclipse, I would start a new project.)
+
+
+Test list:
+
+ * Convert input number to double
+ * Format output message
+ * Convert in to cm
+ * Convert cm to in
+ * Convert F to C
+ * Convert C to F
+
+ * Convert cm to feet and inches
+

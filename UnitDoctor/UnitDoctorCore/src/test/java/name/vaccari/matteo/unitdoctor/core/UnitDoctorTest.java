@@ -31,4 +31,26 @@ public class UnitDoctorTest {
 
         unitDoctor.onChange();
     }
+
+    @Test
+    public void convertsFahrenheitToCelsius() throws Exception {
+        final UnitDoctorView view = context.mock(UnitDoctorView.class);
+
+        UnitDoctor unitDoctor = new UnitDoctor(view);
+
+        context.checking(new Expectations() {{
+            allowing(view).getFromUnit();
+            will(returnValue("F"));
+
+            allowing(view).getToUnit();
+            will(returnValue("C"));
+
+            allowing(view).getInputNumber();
+            will(returnValue(32.0));
+
+            oneOf(view).showConversion(0.0);
+        }});
+
+        unitDoctor.onChange();
+    }
 }

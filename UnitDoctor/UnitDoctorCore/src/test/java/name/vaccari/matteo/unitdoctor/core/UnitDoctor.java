@@ -8,8 +8,13 @@ public class UnitDoctor {
     }
 
     public void onChange() {
+        String fromUnit = view.getFromUnit();
+        String toUnit = view.getToUnit();
         double inputNumber = view.getInputNumber();
-
-        view.showConversion(inputNumber * 2.54);
+        if (fromUnit.equals("in") && toUnit.equals("cm")) {
+            view.showConversion(inputNumber * 2.54);
+        } else {
+            view.showConversion((inputNumber - 32.0) * 5.0/9.0);
+        }
     }
 }

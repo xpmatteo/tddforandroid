@@ -120,7 +120,7 @@ private void whenTheUserEnters(String inputNumber) {
 }
 
 private void thenTheResultIs(String expectedResult) {
-  assertEquals(expectedResult, getField(R.id.result));
+  assertEquals(expectedResult, getField(R.id.result).getText());
 }
 
 private TextView getField(int id) {
@@ -167,7 +167,11 @@ But are they failing for the expected reason?
     at name.vaccari.matteo.unitdoctor.UnitConversionAcceptanceTest.testInchesToCentimeters(UnitConversionAcceptanceTest.java:13)
     ...
 
-The error message is "Only the original thread that created a view hierarchy can touch its views."  So it fails because we can only touch an element of the UI, such as when we call `setText()` on the text fields, using the main thread of the application.  We have two choice: either annotating the test method with `@UiThreadTest` or wrap calls to `setText()` appropriately.  Since we try to keep the tests as uncluttered as possible, I prefer to do the latter, so we change the helper methods this way:
+The error message is "Only the original thread that created a view hierarchy can touch its views."  So it fails because we can only touch an element of the UI, such as when we call `setText()` on the text fields, using the main thread of the application.  The easiest way to solve the problem, for now, is to annotate the tests with `@UiThreadTest`.  We do so, and now we check that the error message is what we expect:
+
+    junit.framework.AssertionFailedError: expected:<50.00 F = 10.00 C> but was:<Result goes here>
+
+T> Always check the error message, to make sure that the tests are failing for the right reason.
 
 
 

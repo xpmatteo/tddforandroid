@@ -16,12 +16,14 @@ public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCas
         thenTheResultIs("2 in = 5.08 cm");
     }
 
+    @UiThreadTest
     public void testFahrenheitToCelsius() throws Exception {
         givenTheUserSelectedConversion("F", "C");
         whenTheUserEnters("50");
         thenTheResultIs("50.00 F = 10.00 C");
     }
 
+    @UiThreadTest
     public void testUnknownUnits() throws Exception {
         givenTheUserSelectedConversion("ABC", "XYZ");
         thenTheResultIs("I don't know how to convert this");
@@ -37,7 +39,7 @@ public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCas
     }
 
     private void thenTheResultIs(String expectedResult) {
-        assertEquals(expectedResult, getField(R.id.result));
+        assertEquals(expectedResult, getField(R.id.result).getText());
     }
 
     private TextView getField(int id) {

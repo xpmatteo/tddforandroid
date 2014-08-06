@@ -1,7 +1,5 @@
 package name.vaccari.matteo.unitdoctor.core;
 
-import oracle.jrockit.jfr.StringConstantPool;
-
 public interface UnitDoctorView {
     String getFromUnit();
 

@@ -194,6 +194,7 @@ Now that we have some failing acceptance tests, we leave them be.  We now shift 
 
 In order to do this we will start by assuming that we have a kernel of the application that does not need to use Android at all.  For this reason we open a new module inside the project.  (If I were using Eclipse, I would start a new project.)
 
+T> Tip: keep android-free code in a separate module or project.  Keep android-dependent code in a module that depends on the android-free module.
 
 Test list:
 
@@ -205,4 +206,6 @@ Test list:
  * Convert C to F
 
  * Convert cm to feet and inches
+
+We will use a technique called *presenter-first*.
 

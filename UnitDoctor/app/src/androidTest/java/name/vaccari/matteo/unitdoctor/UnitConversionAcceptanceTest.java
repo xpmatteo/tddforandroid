@@ -1,6 +1,6 @@
 package name.vaccari.matteo.unitdoctor;
 
-import android.test.ActivityInstrumentationTestCase2;
+import android.test.*;
 import android.widget.TextView;
 
 public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -9,6 +9,7 @@ public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCas
         super(MainActivity.class);
     }
 
+    @UiThreadTest
     public void testInchesToCentimeters() throws Exception {
         givenTheUserSelectedConversion("in", "cm");
         whenTheUserEnters("2");

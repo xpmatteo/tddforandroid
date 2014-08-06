@@ -12,19 +12,22 @@ Yes, I know this feature is already implemented by Google on all phones. I use t
 
 The feature we want to implement is "convert a number from one unit to another".  To clarify what we want to do to ourselves and our customer, it's a good idea to write down a few examples (a.k.a. scenarios) of how the feature will work.
 
-Example: inches to cm
-Given the user selected "in" to "cm"
-When the user types 2
-Then the result is "5.08"
+{icon=fa-cube}
+G> ## Example: inches to cm
+G> Given the user selected "in" to "cm"
+G> When the user types 2
+G> Then the result is "2.00 in = 5.08 cm"
 
-Example: Fahrenheit to Celsius
-Given the user selected "F" to "C"
-When the user types 32
-Then the result is "0.00"
+G> ## Example: Fahrenheit to Celsius
+G> Given the user selected "F" to "C"
+G> When the user types 50
+G> Then the result is "50.00 F = 10.00 C"
 
-Example: unsupported units
-Given the user selected "ABC" to "XYZ"
-Then the result is "I don't know how to convert this"
+G> ## Example: unsupported units
+G> Given the user selected "ABC" to "XYZ"
+G> Then the result is "I don't know how to convert this"
+
+Note that by writing down the examples we clarified what exactly the customer expects to see: how numbers are formatted, what the result message should look like.
 
 See further: BDD
 
@@ -74,6 +77,7 @@ We create a new project (remember, we don't want to "evolve" the spike!).  I use
 
 Android Studio set up a source folder named `src/androidTest`.  I create a new Java class there.
 
+{linenos=on}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 package name.vaccari.matteo.unitdoctor;
 
@@ -144,5 +148,26 @@ public void testUnknownUnits() throws Exception {
 ~~~~~~~~~~~~~~~~
 
 
-#### Step 4: implement just enough view so that it compiles
+#### Step 4: implement just enough layout so that we can see the test fail
+
+We turn to editing the layout file so that we can fix all the IDs.  This time I make a small effort at creating a tidy UI.
+
+![The Android Studio preview of the UI](images/unitdoctor-layout-first-version.png)
+
+Now we can run the tests and see them all fail
+
+![The first run of the ATs fail as expected](images/unitdoctor-at-failing.png)
+
+But are they failing for the expected reason?
+
+    android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
+    at android.view.ViewRootImpl.checkThread(ViewRootImpl.java:4607)
+    ...
+    at name.vaccari.matteo.unitdoctor.UnitConversionAcceptanceTest.givenTheUserSelectedConversion(UnitConversionAcceptanceTest.java:30)
+    at name.vaccari.matteo.unitdoctor.UnitConversionAcceptanceTest.testInchesToCentimeters(UnitConversionAcceptanceTest.java:13)
+    ...
+
+The error message is "Only the original thread that created a view hierarchy can touch its views."  So it fails because we can only touch an element of the UI, such as when we call `setText()` on the text fields, using the main thread of the application.  We have two choice: either annotating the test method with `@UiThreadTest` or wrap calls to `setText()` appropriately.  Since we try to keep the tests as uncluttered as possible, I prefer to do the latter, so we change the helper methods this way:
+
+
 

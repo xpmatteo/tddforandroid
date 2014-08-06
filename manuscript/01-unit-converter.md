@@ -12,17 +12,19 @@ Yes, I know this feature is already implemented by Google on all phones. I use t
 
 The feature we want to implement is "convert a number from one unit to another".  To clarify what we want to do to ourselves and our customer, it's a good idea to write down a few examples (a.k.a. scenarios) of how the feature will work.
 
-{icon=fa-cube}
+{icon="fa-cube"}
 G> Example: inches to cm \\
 G> Given the user selected "in" to "cm" \\
 G> When the user types 2 \\
 G> Then the result is "2.00 in = 5.08 cm"
 
+{icon="fa-cube"}
 G> Example: Fahrenheit to Celsius \\
 G> Given the user selected "F" to "C" \\
 G> When the user types 50 \\
 G> Then the result is "50.00 F = 10.00 C"
 
+{icon="fa-cube"}
 G> Example: unsupported units \\
 G> Given the user selected "ABC" to "XYZ" \\
 G> Then the result is "I don't know how to convert this"
@@ -189,3 +191,5 @@ Q> What is the difference between a *failure* and an *error*?  A "failure" is wh
 ## Shift to TDD
 
 Now that we have some failing acceptance tests, we leave them be.  We now shift to a faster gear by starting to write some *unit* tests.
+
+In order to do this we will start by assuming that we have a kernel of the application that does not need to use Android at all.  For this reason we open a new module inside the project.  (If I were using Eclipse, I would start a new project.)

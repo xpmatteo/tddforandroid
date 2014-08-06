@@ -13,22 +13,19 @@ Yes, I know this feature is already implemented by Google on all phones. I use t
 The feature we want to implement is "convert a number from one unit to another".  To clarify what we want to do to ourselves and our customer, it's a good idea to write down a few examples (a.k.a. scenarios) of how the feature will work.
 
 {icon=fa-cube}
-G> ## Example: inches to cm {linebreak]
-G>
-G> Given the user selected "in" to "cm" {linebreak]
-G> When the user types 2 {linebreak]
-G> Then the result is "2.00 in = 5.08 cm" {linebreak]
+G> Example: inches to cm \\
+G> Given the user selected "in" to "cm" \\
+G> When the user types 2 \\
+G> Then the result is "2.00 in = 5.08 cm"
 
-G> ## Example: Fahrenheit to Celsius {linebreak]
-G>
-G> Given the user selected "F" to "C" {linebreak]
-G> When the user types 50 {linebreak]
-G> Then the result is "50.00 F = 10.00 C" {linebreak]
+G> Example: Fahrenheit to Celsius \\
+G> Given the user selected "F" to "C" \\
+G> When the user types 50 \\
+G> Then the result is "50.00 F = 10.00 C"
 
-G> ## Example: unsupported units {linebreak]
-G>
-G> Given the user selected "ABC" to "XYZ" {linebreak]
-G> Then the result is "I don't know how to convert this" {linebreak]
+G> Example: unsupported units \\
+G> Given the user selected "ABC" to "XYZ" \\
+G> Then the result is "I don't know how to convert this"
 
 Note that by writing down the examples we clarified what exactly the customer expects to see: how numbers are formatted, what the result message should look like.
 
@@ -191,4 +188,4 @@ Q> What is the difference between a *failure* and an *error*?  A "failure" is wh
 
 ## Shift to TDD
 
-Now that we have some failing acceptance tests, we leave them be.  We now shift to a faster gear by starting to write some *unit* tests.  
+Now that we have some failing acceptance tests, we leave them be.  We now shift to a faster gear by starting to write some *unit* tests.

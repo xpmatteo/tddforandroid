@@ -13,19 +13,22 @@ Yes, I know this feature is already implemented by Google on all phones. I use t
 The feature we want to implement is "convert a number from one unit to another".  To clarify what we want to do to ourselves and our customer, it's a good idea to write down a few examples (a.k.a. scenarios) of how the feature will work.
 
 {icon=fa-cube}
-G> ## Example: inches to cm
-G> Given the user selected "in" to "cm"
-G> When the user types 2
-G> Then the result is "2.00 in = 5.08 cm"
+G> ## Example: inches to cm <br/>
+G>
+G> Given the user selected "in" to "cm" <br/>
+G> When the user types 2 <br/>
+G> Then the result is "2.00 in = 5.08 cm" <br/>
 
-G> ## Example: Fahrenheit to Celsius
-G> Given the user selected "F" to "C"
-G> When the user types 50
-G> Then the result is "50.00 F = 10.00 C"
+G> ## Example: Fahrenheit to Celsius <br/>
+G>
+G> Given the user selected "F" to "C" <br/>
+G> When the user types 50 <br/>
+G> Then the result is "50.00 F = 10.00 C" <br/>
 
-G> ## Example: unsupported units
-G> Given the user selected "ABC" to "XYZ"
-G> Then the result is "I don't know how to convert this"
+G> ## Example: unsupported units <br/>
+G>
+G> Given the user selected "ABC" to "XYZ" <br/>
+G> Then the result is "I don't know how to convert this" <br/>
 
 Note that by writing down the examples we clarified what exactly the customer expects to see: how numbers are formatted, what the result message should look like.
 
@@ -45,6 +48,7 @@ Our spike implements the "inches to cm" and the "unsupported units" scenario.  I
 {width=60%}
 ![How the unit conversion spike looks like](images/spike-units-screenshot.png)
 
+{lang="java"}
 <<[The activity for the unit conversion spike](../UnitConversionSpike/app/src/main/java/name/vaccari/matteo/unitconversionspike/MyActivity.java)
 
 <<[The layout for the unit conversion spike](../UnitConversionSpike/app/src/main/res/layout/activity_my.xml)
@@ -83,7 +87,8 @@ package name.vaccari.matteo.unitdoctor;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class UnitConversionAcceptanceTest
+    extends ActivityInstrumentationTestCase2<MainActivity> {
 
   public UnitConversionAcceptanceTest() {
     super(MainActivity.class);
@@ -156,11 +161,13 @@ We turn to editing the layout file so that we can fix all the IDs.  This time I 
 
 Now we can run the tests and see them all fail
 
-![The first run of the ATs fail as expected](images/unitdoctor-at-failing.png)
+![The first run of the ATs unexpectedly produces errors, not failures](images/unitdoctor-at-failing.png)
 
 But are they failing for the expected reason?
 
-    android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
+{lang="text"}
+    android.view.ViewRootImpl$CalledFromWrongThreadException:
+    Only the original thread that created a view hierarchy can touch its views.
     at android.view.ViewRootImpl.checkThread(ViewRootImpl.java:4607)
     ...
     at name.vaccari.matteo.unitdoctor.UnitConversionAcceptanceTest.givenTheUserSelectedConversion(UnitConversionAcceptanceTest.java:30)
@@ -169,9 +176,17 @@ But are they failing for the expected reason?
 
 The error message is "Only the original thread that created a view hierarchy can touch its views."  So it fails because we can only touch an element of the UI, such as when we call `setText()` on the text fields, using the main thread of the application.  The easiest way to solve the problem, for now, is to annotate the tests with `@UiThreadTest`.  We do so, and now we check that the error message is what we expect:
 
-    junit.framework.AssertionFailedError: expected:<50.00 F = 10.00 C> but was:<Result goes here>
+{lang="text"}
+    junit.framework.AssertionFailedError:
+    expected:<50.00 F = 10.00 C> but was:<Result goes here>
+
+We also observe that Android Studio colors the tests differently, to tell us that the tests produce failures, not errors.
+
+![Now the ATs produce failures as expected](images/unitdoctor-at-failing-for-the-right-reason.png)
 
 T> Always check the error message, to make sure that the tests are failing for the right reason.
+
+Q> What is the difference between a *failure* and an *error*?  A "failure" is when your tests fails because of a broken assertion.  An "error" is when the test fails because of an exception.  In general, we want our test to produce failures, not errors, because errors mean that our software is doing something  unexpected.
 
 
 

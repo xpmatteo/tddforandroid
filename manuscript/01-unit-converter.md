@@ -46,4 +46,11 @@ Our spike implements the "inches to cm" and the "unsupported units" scenario.  I
 
 <<[The layout for the unit conversion spike](../UnitConversionSpike/app/src/main/res/layout/activity_my.xml)
 
+What I learned:
 
+ * How to change the result at every keypress
+ * How to use a `RelativeLayout`
+
+## Continue with an end-to-end acceptance test
+
+The first step after the optional spike is to write an end-to-end acceptance test

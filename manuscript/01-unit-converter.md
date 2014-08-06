@@ -51,6 +51,98 @@ What I learned:
  * How to change the result at every keypress
  * How to use a `RelativeLayout`
 
+
 ## Continue with an end-to-end acceptance test
 
-The first step after the optional spike is to write an end-to-end acceptance test
+The first step after the optional spike is to write an end-to-end acceptance test.  The rules for an acceptance tests are
+
+ 1. Business talk: write at the same level of abstraction as the examples that were discussed with the customer.
+ 2. Ignore them: when the ATs pass, then the feature is complete.  Therefore it will take some time before all the ATs pass.  We will ignore all the non-passing ATs until they pass.  (Ignore means that we comment them out, or we use some other trick to temporarily remove them from the build.)
+ 3. Pass once, pass forever.  When an AT passes, it means that some bit of functionality is present in the system.  From this moment onward, the AT must stay green forever.  The AT now works as a non-regression test.
+
+### Workflow
+
+#### Step 0: new project
+
+We create a new project (remember, we don't want to "evolve" the spike!).  I use Android Studio and I let it set up the new project with its wizard.  I invent a fancy name and I call it "Unit Doctor".
+
+{width=60%}
+![The new project wizard](images/unitdoctor-project-setup-wizard.png)
+
+
+#### Step 1: write the test *as it should read*
+
+Android Studio set up a source folder named `src/androidTest`.  I create a new Java class there.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+package name.vaccari.matteo.unitdoctor;
+
+import android.test.ActivityInstrumentationTestCase2;
+
+public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCase2<MainActivity> {
+
+  public UnitConversionAcceptanceTest() {
+    super(MainActivity.class);
+  }
+
+  public void testInchesToCentimeters() throws Exception {
+    givenTheUserSelectedConversion("in", "cm");
+    whenTheUserEnters("2");
+    thenTheResultIs("2.00 in = 5.08 cm");
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The test is written in the same language as the original example, by imagining that we have implemented the three methods at lines 13-15.
+
+#### Step 2: implement the helper methods
+
+We assume at first that the UI is similar to what we developed in the spike.  So our first implementation of the testing language is quite simple.
+
+~~~~~~~~~~~~~~~
+public void testInchesToCentimeters() throws Exception {
+  givenTheUserSelectedConversion("in", "cm");
+  whenTheUserEnters("2");
+  thenTheResultIs("2.00 in = 5.08 cm");
+}
+
+private void givenTheUserSelectedConversion(String fromUnit, String toUnit) {
+  getField(R.id.fromUnit).setText(fromUnit);
+  getField(R.id.toUnit).setText(toUnit);
+}
+
+private void whenTheUserEnters(String inputNumber) {
+  getField(R.id.inputNumber).setText(inputNumber);
+}
+
+private void thenTheResultIs(String expectedResult) {
+  assertEquals(expectedResult, getField(R.id.result));
+}
+
+private TextView getField(int id) {
+  return (TextView) getActivity().findViewById(id);
+}
+~~~~~~~~~~~~~~~
+
+The test does not compile yet, because the identifiers like `R.id.fromUnit` etc. are not yet defined.
+
+#### Step 3: implement other scenarios
+
+We implement a few other significant scenarios.  This way we check that the testing language that we are developing is expressive enough.
+
+~~~~~~~~~~~~~~~~
+public void testFahrenheitToCelsius() throws Exception {
+    givenTheUserSelectedConversion("F", "C");
+    whenTheUserEnters("50");
+    thenTheResultIs("50.00 F = 10.00 C");
+}
+
+public void testUnknownUnits() throws Exception {
+    givenTheUserSelectedConversion("ABC", "XYZ");
+    thenTheResultIs("I don't know how to convert this");
+}
+~~~~~~~~~~~~~~~~
+
+
+#### Step 4: implement just enough view so that it compiles
+

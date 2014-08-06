@@ -8,6 +8,8 @@ public class UnitDoctor {
     }
 
     public void onChange() {
-        view.showConversion(25.4);
+        double inputNumber = view.getInputNumber();
+
+        view.showConversion(inputNumber * 2.54);
     }
 }

@@ -68,3 +68,15 @@ Next steps
  - reboot the exercise
 
 
+2014-08-12
+
+ Riprendo l'esercizio UnitDoctor
+
+ Dopo avere un failing end2end test, creo il modulo UnitDoctorCore
+
+ Sviluppo l'oggetto UnitDoctor in stile presenter-first alla JBrains
+
+ Poi devo sviluppare la view... e si torna al modulo app
+
+
+

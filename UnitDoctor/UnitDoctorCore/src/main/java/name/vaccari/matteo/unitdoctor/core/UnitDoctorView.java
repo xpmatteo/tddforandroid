@@ -1,11 +1,10 @@
 package name.vaccari.matteo.unitdoctor.core;
 
 public interface UnitDoctorView {
-    String getFromUnit();
+    double inputNumber();
+    String fromUnit();
+    String toUnit();
 
-    String getToUnit();
-
-    double getInputNumber();
-
-    void showConversion(double result);
+    void showResult(double result);
+    void showConversionNotSupported();
 }

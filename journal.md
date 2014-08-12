@@ -85,6 +85,8 @@ Che cosa ho imparato:
 
   - Usare la MainActivity come "main" funziona benissimo
 
+  - genymotion alternativa come emulatore piu' veloce
+
 Che cosa manca da fare:
 
   - salvare lo stato dell'applicazione quando viene fermata, recuperarlo nella onCreate

@@ -12,26 +12,21 @@ Yes, I know this feature is already implemented by Google on all phones. I use t
 
 The feature we want to implement is "convert a number from one unit to another".  To clarify what we want to do to ourselves and our customer, it's a good idea to write down a few examples (a.k.a. scenarios) of how the feature will work.
 
-{icon="fa-cube"}
-G> Example: inches to cm \\
-G> Given the user selected "in" to "cm" \\
-G> When the user types 2 \\
-G> Then the result is "2.00 in = 5.08 cm"
+> **Example: inches to cm** \\
+> Given the user selected "in" to "cm" \\
+> When the user types 2 \\
+> Then the result is "2.00 in = 5.08 cm"
 
-{icon="fa-cube"}
-G> Example: Fahrenheit to Celsius \\
-G> Given the user selected "F" to "C" \\
-G> When the user types 50 \\
-G> Then the result is "50.00 F = 10.00 C"
+> **Example: Fahrenheit to Celsius** \\
+> Given the user selected "F" to "C" \\
+> When the user types 50 \\
+> Then the result is "50.00 F = 10.00 C"
 
-{icon="fa-cube"}
-G> Example: unsupported units \\
-G> Given the user selected "ABC" to "XYZ" \\
-G> Then the result is "I don't know how to convert this"
+> **Example: unsupported units** \\
+> Given the user selected "ABC" to "XYZ" \\
+> Then the result is "I don't know how to convert this"
 
 Note that by writing down the examples we clarified what exactly the customer expects to see: how numbers are formatted, what the result message should look like.
-
-See further: BDD
 
 
 ## Start with a spike

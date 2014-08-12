@@ -214,14 +214,14 @@ We will use a technique called *presenter-first*.
 
 Q> Wouldn't it be better to use Mockito instead of JMock?  \\
 Q> Well, I find that Mockito is easier to learn, but I prefer JMock.  There is more than one reason. The most compelling is that it lets me write tests that are more expressive.  With Mockito you must say, for instance:
-Q>~~~~~~~~~~~~
-Q>  when(model.getNumber()).thenReturn(42);
 Q>
-Q>  presenter.render();
+Q>        when(model.getNumber()).thenReturn(42);
 Q>
-Q>  verify(view).showNumber(42);
-Q>~~~~~~~~~~~~
-Q> With JMock it becomes
+Q>        presenter.render();
+Q>
+Q>        verify(view).showNumber(42);
+Q>
+Q> With JMock it would be
 Q>
 Q>        context.checking(new Expectations() {{
 Q>          allowing(model).getNumber(); will(returnValue(42));

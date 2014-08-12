@@ -24,4 +24,21 @@ public class UnitDoctorTest {
 
         unitDoctor.onChange();
     }
+
+    @Test
+    public void showsConversionNotSupported() throws Exception {
+        context.checking(new Expectations() {{
+            allowing(view).inputNumber(); will(returnValue(anyDouble()));
+            allowing(view).fromUnit(); will(returnValue("XYZ"));
+            allowing(view).toUnit(); will(returnValue("ABC"));
+            oneOf(view).showConversionNotSupported();
+        }});
+
+        unitDoctor.onChange();
+    }
+
+    private double anyDouble() {
+        return Math.random();
+    }
+
 }

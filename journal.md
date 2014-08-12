@@ -89,8 +89,13 @@ Che cosa ho imparato:
 
 Che cosa manca da fare:
 
+  - supportare F to C
+  - supportare C to F, cm to m
   - salvare lo stato dell'applicazione quando viene fermata, recuperarlo nella onCreate
-
+  - convertire metri in ft + in??
+  - convertire gradi centesimali in ore, min, secondi
+  - convertire ore o minuti in giorni
+  - mostrare come gli oggetti rimuovono la catena di IF
 
 
 

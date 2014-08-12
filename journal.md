@@ -70,13 +70,27 @@ Next steps
 
 2014-08-12
 
- Riprendo l'esercizio UnitDoctor
+Riprendo l'esercizio UnitDoctor
 
  Dopo avere un failing end2end test, creo il modulo UnitDoctorCore
-
  Sviluppo l'oggetto UnitDoctor in stile presenter-first alla JBrains
+ Poi devo sviluppare la view... e si torna al modulo app con un integration test
 
- Poi devo sviluppare la view... e si torna al modulo app
+Che cosa ho imparato:
+
+  - se fai TextView.setText, l'evento onKey non scatta
+  - potresti farlo scattare con sendKeys, ma e' impestatissimo perche' fai
+    molta fatica a controllare quale field ha il focus (anzi non ci sono riuscito)
+  - ho risolto usando TextView.setOnTextChangedListener.
+
+  - Usare la MainActivity come "main" funziona benissimo
+
+Che cosa manca da fare:
+
+  - salvare lo stato dell'applicazione quando viene fermata, recuperarlo nella onCreate
+
+
+
 
 
 

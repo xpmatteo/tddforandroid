@@ -11,5 +11,5 @@ do
   echo $status
   sleep 3
 done
-
+echo "done"
 open "https://leanpub.com/tddforandroid/preview/links"

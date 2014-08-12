@@ -9,33 +9,53 @@ public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCas
         super(MainActivity.class);
     }
 
-    @UiThreadTest
-    public void testInchesToCentimeters() throws Exception {
+    public void testInchesToCentimeters() throws Throwable {
         givenTheUserSelectedConversion("in", "cm");
         whenTheUserEnters("2");
-        thenTheResultIs("2 in = 5.08 cm");
+        thenTheResultIs("2.00 in = 5.08 cm");
     }
 
-    @UiThreadTest
-    public void testFahrenheitToCelsius() throws Exception {
+    public void testFahrenheitToCelsius() throws Throwable {
         givenTheUserSelectedConversion("F", "C");
         whenTheUserEnters("50");
         thenTheResultIs("50.00 F = 10.00 C");
     }
 
-    @UiThreadTest
-    public void testUnknownUnits() throws Exception {
+    public void testUnknownUnits() throws Throwable {
         givenTheUserSelectedConversion("ABC", "XYZ");
         thenTheResultIs("I don't know how to convert this");
     }
 
-    private void givenTheUserSelectedConversion(String fromUnit, String toUnit) {
-        getField(R.id.fromUnit).setText(fromUnit);
-        getField(R.id.toUnit).setText(toUnit);
+    private void givenTheUserSelectedConversion(String fromUnit, String toUnit) throws Throwable {
+        setText(R.id.fromUnit, fromUnit);
+        setText(R.id.toUnit, toUnit);
     }
 
-    private void whenTheUserEnters(String inputNumber) {
-        getField(R.id.inputNumber).setText(inputNumber);
+    private void whenTheUserEnters(String inputNumber) throws Throwable {
+        sendKeys(R.id.inputNumber, inputNumber);
+    }
+
+    private void setText(final int id, final String text) throws Throwable {
+        final TextView field = getField(id);
+        runTestOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                field.setText(text);
+            }
+        });
+    }
+
+    private void sendKeys(final int id, final String text) throws Throwable {
+        final TextView field = getField(id);
+        runTestOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+//                field.requestFocus();
+            }
+        });
+        for (String s : text.split("")) {
+            sendKeys(s);
+        }
     }
 
     private void thenTheResultIs(String expectedResult) {

@@ -21,7 +21,10 @@ public class AndroidUnitDoctorView implements UnitDoctorView {
 
     @Override
     public double inputNumber() {
-        return Double.valueOf(inputNumberField.getText().toString());
+        String inputString = inputNumberField.getText().toString();
+        if (inputString.isEmpty())
+            return 0.0;
+        return Double.valueOf(inputString);
     }
 
     @Override

@@ -30,6 +30,11 @@ public class AndroidUnitDoctorViewTest extends AndroidTestCase {
         assertEquals("TO", view.toUnit());
     }
 
+    public void testDoesNotBreakWhenInputFieldIsEmpty() throws Exception {
+        inputNumberField.setText("");
+        assertEquals(0.0, view.inputNumber());
+    }
+
     public void testSetsResult() {
         inputNumberField.setText("3.14159");
         fromUnitField.setText("A");

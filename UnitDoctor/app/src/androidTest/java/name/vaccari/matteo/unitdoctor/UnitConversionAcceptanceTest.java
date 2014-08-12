@@ -32,7 +32,7 @@ public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCas
     }
 
     private void whenTheUserEnters(String inputNumber) throws Throwable {
-        sendKeys(R.id.inputNumber, inputNumber);
+        setText(R.id.inputNumber, inputNumber);
     }
 
     private void setText(final int id, final String text) throws Throwable {
@@ -43,19 +43,6 @@ public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCas
                 field.setText(text);
             }
         });
-    }
-
-    private void sendKeys(final int id, final String text) throws Throwable {
-        final TextView field = getField(id);
-        runTestOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-//                field.requestFocus();
-            }
-        });
-        for (String s : text.split("")) {
-            sendKeys(s);
-        }
     }
 
     private void thenTheResultIs(String expectedResult) {

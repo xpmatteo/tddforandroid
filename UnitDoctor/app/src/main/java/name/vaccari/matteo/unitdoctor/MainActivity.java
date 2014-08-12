@@ -2,13 +2,14 @@ package name.vaccari.matteo.unitdoctor;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.*;
 import android.view.*;
 import android.widget.TextView;
 
 import name.vaccari.matteo.unitdoctor.core.UnitDoctor;
 
 
-public class MainActivity extends Activity implements View.OnKeyListener {
+public class MainActivity extends Activity implements TextWatcher {
     private UnitDoctor doctor;
 
     @Override
@@ -24,7 +25,9 @@ public class MainActivity extends Activity implements View.OnKeyListener {
 
         doctor = new UnitDoctor(view);
 
-        inputNumberField.setOnKeyListener(this);
+        inputNumberField.addTextChangedListener(this);
+        fromUnitField.addTextChangedListener(this);
+        toUnitField.addTextChangedListener(this);
     }
 
 
@@ -48,8 +51,17 @@ public class MainActivity extends Activity implements View.OnKeyListener {
     }
 
     @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
         doctor.onChange();
-        return false;
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

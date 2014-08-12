@@ -68,3 +68,6 @@ Next steps
  - reboot the exercise
 
 
+2014-08-12
+
+Riprendo l'esercizio Units

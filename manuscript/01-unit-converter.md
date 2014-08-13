@@ -342,8 +342,7 @@ We'd love to see the application running now, but there's a snag... where is the
 
 We pick "convert input number to double" from the list and write:
 
-    public class AndroidUnitDoctorViewTest
-                          extends AndroidTestCase {
+    public class AndroidUnitDoctorViewTest extends AndroidTestCase {
 
       public void testReturnInputValues() throws Exception {
         EditText inputNumberField = new EditText(getContext());
@@ -358,7 +357,7 @@ We pick "convert input number to double" from the list and write:
 Notes:
 
 * We must interact with the elements of the user interface.  Therefore this test needs to be in the "app" module.
-* In the "app" module we must use JUnit 3
+* In the "app" module we must use JUnit 3, while in the "Core" module we can use JUnit 4
 * In order to create an EditText we need an Android `Context`.  The easiest way to get one is to extend `AndroidTestCase`.
 * The name of the class is obtained by prefixing a qualifier "Android-" to the name of the interface.  This is much better than using the "-Impl" suffix (bleah!) or adding an "I-" prefix to the interface name (also bleah!).  So, `AndroidUnitDoctorView` means "the Android implementation of `UnitDoctorView`".
 * The interface `UnitDoctorView` lives in the UnitDoctorCore module, while its implementation `AndroidUnitDoctorView` lives in the "app" module.  This is correct: the interface talks exclusively in terms of the application *domain language*, so it belongs in the "core" module.  Also, interfaces belong to their clients, not to their implementations, so it's OK that they live near the clients.
@@ -385,8 +384,7 @@ Making the above test pass is easy:
 
 Next test: "Format output message"
 
-    public class AndroidUnitDoctorViewTest
-                        extends AndroidTestCase {
+    public class AndroidUnitDoctorViewTest extends AndroidTestCase {
 
       EditText inputNumberField;
       TextView fromUnitField;
@@ -466,11 +464,14 @@ Not so fast... we still haven't bound the UnitDoctor object and its view to the 
 
 This is the *magic ingredient* that is missed by many.  We use the `MainActivity` as our "main" function.
 
-Q> *What do you mean by "main function"? Aren't we in Android?  There is no "main" function here!*  \\ Simple Java applications start with a *main* method.  The main method is where we build our objects, we combine them together forming a graph of communicating objects, and then we set them running by calling something like `run()` or `execute()`.  Alas, when we work with complex framework, such as Java Enterprise Edition or Android, we have no control of the real "main" method.  Oftentimes, the framework builds our objects for us, robbing us of the chance to customize them with the collaborators that we want.  This is expecially severe in Android, where the Android framework creates all of the important Android objects such as activities and services.
+Q> *What do you mean by "main function"? Aren't we in Android?  There is no "main" function here!*  \\
+Q> Simple Java applications start with a *main* method.  The main method is where we build our objects, we combine them together forming a graph of communicating objects, and then we set them running by calling something like `run()` or `execute()`.  Alas, when we work with complex framework, such as Java Enterprise Edition or Android, we have no control of the real "main" method.  Oftentimes, the framework builds our objects for us, robbing us of the chance to customize them with the collaborators that we want.  This is expecially severe in Android, where the Android framework creates all of the important Android objects such as activities and services.
 
-Q> *What's a TDDer to do then?*  \\ Not to worry: we are still in control.  Just treat the activity `onCreate()` method as if it was our main.  It *is* our main.  The trick is to use the activity just for building objects, linking them together appropriately, and letting them run.  We keep the logic *out* of the activity, and implement all of the interesting stuff in our own objects, that are created by the activity.
+Q> *What's a TDDer to do then?*  \\
+Q> Not to worry: we are still in control.  Just treat the activity's `onCreate()` method as if it was our main.  It *is* our main.  The trick is to use the activity just for building objects, linking them together appropriately, and letting them run.  We keep the logic *out* of the activity, and implement all of the interesting stuff in our own objects, that are created by the activity.
 
-Q> *How do I test an activity?  How do I inject dependencies in an activity?* \\Normally we'd like to inject dependency in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes.  We can't customize the constructor for an activity.  This is not a problem if you follow the approach in our book, because
+Q> *How do I test an activity?  How do I inject dependencies in an activity?* \\
+Q> Normally we'd like to inject dependency in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes.  We can't customize the constructor for an activity.  This is not a problem if you follow the approach in our book, because
 Q>
 Q>   1. The activity is tested through the end-to-end acceptance tests.
 Q>   2. The activity contains only construction and configuration, not logic.

@@ -1,4 +1,4 @@
 
-# Appendix: JMock {#jmock-appendix}
+# Appendix: JMock {#appendix-jmock}
 
 TBD

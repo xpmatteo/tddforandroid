@@ -8,7 +8,7 @@ Yes, I know this feature is already implemented by Google on all phones. I use t
 
 
 
-## Examples
+## Examples {#unit-doctor-examples}
 
 The feature we want to implement is "convert a number from one unit to another".  To clarify what we want to do to ourselves and our customer, it's a good idea to write down a few examples (a.k.a. scenarios) of how the feature will work.
 
@@ -208,6 +208,7 @@ We make sure that "app" depends on "UnitDoctorCore", so that code in "app" can u
 
 TDD should start with a *test list*: a list of all the *operations* that we should support. Right now we have
 
+{#unitdoctor-test-list}
 * Convert in to cm
 * Convert F to C
 * Report conversion not supported
@@ -227,9 +228,9 @@ We will use a technique called *presenter-first*.  We assume that we have an obj
 
 The responsibilities of the "view" object are to return what the user has entered, and to show the results to the user.
 
-This is the first test.  If you find the syntax weird, look for an explanation in [the JMock appendix](#jmock-appendix).
+This is the first test.  If you find the syntax weird, look for an explanation in [the JMock appendix](#appendix-jmock).
 
-{line-numbers=on, crop-start-line=10, crop-end-line=26}
+{line-numbers=on, starting-line-number=10, crop-start-line=10, crop-end-line=27}
 <<(../our-android-examples/UnitDoctor/UnitDoctorCore/src/test/java/name/vaccari/matteo/unitdoctor/core/UnitDoctorTest.java)
 
 Notes:
@@ -237,11 +238,75 @@ Notes:
  * We have defined an interface UnitDoctorView.  This interface is being *mocked* here.
  * The whole point of "mocking" is to define how the object we are testing, the UnitDoctor, interacts with its collaborator (the UnitDoctorView).
  * We don't have yet an implementation for UnitDoctorView.  Yet we are able to make progress on the UnitDoctor by mocking the collaborator.
+ * We don't want UnitDoctor to decide how to format the string to the user; so we just tell the view what is the number to show, and delegate the actual formatting to the view itself.
 
+In order to make this test compile, we have defined the interface
+~~~~
+public interface UnitDoctorView {
+  double inputNumber();
+  String fromUnit();
+  String toUnit();
+  void showResult(double result);
+}
+~~~~
 Making this test pass is easy:
+~~~~~
+public class UnitDoctor {
+  private UnitDoctorView view;
 
+  public UnitDoctor(UnitDoctorView view) {
+    this.view = view;
+  }
 
-Q> Wouldn't it be better to use Mockito instead of JMock?  \\
+  public void convert() {
+    double inputNumber = view.inputNumber();
+    view.showResult(inputNumber * 2.54);
+  }
+}
+~~~~~
+The next test forces us to take also the units into account.  Looking at [our test list](#unitdoctor-test-list) we choose "Report conversion not supported".
+~~~~~
+@Test
+public void showsConversionNotSupported() throws Exception {
+  context.checking(new Expectations() {{
+    allowing(view).inputNumber(); will(returnValue(anyDouble()));
+    allowing(view).fromUnit(); will(returnValue("XYZ"));
+    allowing(view).toUnit(); will(returnValue("ABC"));
+    oneOf(view).showConversionNotSupported();
+  }});
+
+  unitDoctor.convert();
+}
+
+private double anyDouble() {
+    return Math.random();
+}
+~~~~~
+This forces us to add method `showConversionNotSupported` to the `UnitDoctorView` interface. We make it pass with
+~~~~
+public void convert() {
+  double inputNumber = view.inputNumber();
+  if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
+    view.showResult(inputNumber * 2.54);
+  else
+    view.showConversionNotSupported();
+}
+~~~~
+Continuing down this path we add another test (not shown) to add support for Fahrenheit-to-Celsius:
+~~~~
+public void convert() {
+  double inputNumber = view.inputNumber();
+  if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
+    view.showResult(inputNumber * 2.54);
+  else if (view.fromUnit().equals("F") && view.toUnit().equals("C"))
+    view.showResult((inputNumber - 32) * 5.0/9.0);
+  else
+    view.showConversionNotSupported();
+}
+~~~~
+This chain of ifs we don't like, but we'll leave it be for the moment.  We have implemented the logic for [our original examples](#unit-doctor-examples), so our priority now is to see the application running!
+
+Q> *Wouldn't it be better to use Mockito instead of JMock?*
 Q> Well, I find that Mockito is easier to learn, but I prefer JMock.  There is more than one reason. The most compelling is that it lets me write tests that are more expressive.  With Mockito you must say, for instance:
 Q>
 Q>        when(model.getNumber()).thenReturn(42);
@@ -261,4 +326,178 @@ Q>        presenter.render();
 Q>
 Q> I like the last example better, because the description of the interaction of `presenter` with its collaborators is clearly written in one place.  In the Mockito example we have that the interaction is described in two places, before and after the execution of `presenter.render()` and I find this is less clear.
 
+
+## Wait.... and the view?
+
+We'd love to see the application running now, but there's a snag... where is the implementation of the `UnitDoctorView`?  There are three things to remind us that we have yet to do this:
+
+ 1. there's no way to see the application working without it
+ 2. there's no way to pass the acceptance tests without it
+ 3. there are still things left to do in our test list:
+     * (DONE) Convert in to cm
+     * (DONE) Convert F to C
+     * (DONE) Report conversion not supported
+     * Convert input number to double
+     * Format output message
+
+We pick "convert input number to double" from the list and write:
+~~~~
+public class AndroidUnitDoctorViewTest
+                      extends AndroidTestCase {
+
+  public void testReturnInputValues() throws Exception {
+    EditText inputNumberField = new EditText(getContext());
+    inputNumberField.setText("3.14159");
+
+    AndroidUnitDoctorView view
+        = new AndroidUnitDoctorView(inputNumberField);
+
+    assertEquals(3.14159, view.inputNumber());
+  }
+~~~~
+Notes:
+
+* We must interact with the elements of the user interface.  Therefore this test needs to be in the "app" module.
+* In the "app" module we must use JUnit 3
+* In order to create an EditText we need an Android `Context`.  The easiest way to get one is to extend `AndroidTestCase`.
+* The name of the class is obtained by prefixing a qualifier "Android-" to the name of the interface.  This is much better than using the "-Impl" suffix (bleah!) or adding an "I-" prefix to the interface name (also bleah!).  So, `AndroidUnitDoctorView` means "the Android implementation of `UnitDoctorView`".
+* The interface `UnitDoctorView` lives in the UnitDoctorCore module, while its implementation `AndroidUnitDoctorView` lives in the "app" module.  This is correct: the interface talks exclusively in terms of the application *domain language*, so it belongs in the "core" module.  Also, interfaces belong to their clients, not to their implementations, so it's OK that they live near the clients.
+
+Making the above test pass is easy:
+~~~~
+public class AndroidUnitDoctorView implements UnitDoctorView {
+  private TextView inputNumberField;
+
+  public AndroidUnitDoctorView(TextView inputNumberField) {
+    this.inputNumberField = inputNumberField;
+    this.fromUnitField = fromUnitField;
+    this.toUnitField = toUnitField;
+    this.resultField = resultField;
+  }
+
+  @Override
+  public double inputNumber() {
+    String inputString = inputNumberField.getText().toString();
+    return Double.valueOf(inputString);
+  }
+  // ...
+}
+~~~~
+Next test: "Format output message"
+~~~~
+public class AndroidUnitDoctorViewTest
+                    extends AndroidTestCase {
+
+  EditText inputNumberField;
+  TextView fromUnitField;
+  TextView toUnitField;
+  TextView resultField;
+  AndroidUnitDoctorView view;
+
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
+    inputNumberField = new EditText(getContext());
+    fromUnitField = new TextView(getContext());
+    toUnitField = new TextView(getContext());
+    resultField = new TextView(getContext());
+    view = new AndroidUnitDoctorView(inputNumberField, fromUnitField, toUnitField, resultField);
+  }
+
+  public void testSetsResult() {
+    inputNumberField.setText("3.14159");
+    fromUnitField.setText("A");
+    toUnitField.setText("B");
+
+    view.showResult(1.123456789);
+
+    assertEquals("3.14 A = 1.12 B", resultField.getText());
+  }
+~~~~
+Notes
+
+* We extended the constructor of `AndroidUnitDoctorView` to accept all the UI elements it needs to talk to
+* We moved creation of these elements to a shared `setUp` method
+
+Making this pass is still easy:
+~~~~
+public class AndroidUnitDoctorView implements UnitDoctorView {
+  private TextView inputNumberField;
+  private TextView fromUnitField;
+  private TextView toUnitField;
+  private TextView resultField;
+
+  public AndroidUnitDoctorView(TextView inputNumberField, TextView fromUnitField, TextView toUnitField, TextView resultField) {
+    this.inputNumberField = inputNumberField;
+    this.fromUnitField = fromUnitField;
+    this.toUnitField = toUnitField;
+    this.resultField = resultField;
+  }
+
+  @Override
+  public void showResult(double result) {
+    String message =
+        String.format("%.2f %s = %.2f %s",
+            inputNumber(), fromUnit(), result, toUnit());
+    resultField.setText(message);
+  }
+
+  @Override
+  public String fromUnit() {
+    return fromUnitField.getText().toString();
+  }
+
+  @Override
+  public String toUnit() {
+    return toUnitField.getText().toString();
+  }
+  // ...
+~~~~
+
+We still have to implement `UnitDoctorView.showConversionNotSupported()`.  We write a test (not shown) and make it pass (also not shown, but see [Appendix: Unit Doctor]{#appendix-unit-doctor} for complete code listings.)
+
+Now we are ready to see the app running, right?  Are we there yet?
+
+## The *main partition*
+
+Not so fast... we still haven't bound the UnitDoctor object and its view to the Android application.  Even if we forget to do this, we'll be reminded because:
+
+ 1. The acceptance tests still don't pass
+ 2. We can run the application, but it does not convert anything yet.
+
+This is the *magic ingredient* that is missed by many.  We use the `MainActivity` as our "main" function.
+
+Q> *What do you mean by *main function*? Aren't we in Android?  There is no "main" function here!*  Simple Java applications start with a *main* method.  The main method is where we build our objects, we combine them together forming a graph of communicating objects, and then we set them running by calling something like `run()` or `execute()`.  Alas, when we work with complex framework, such as Java Enterprise Edition or Android, we have no control of the real "main" method.  Oftentimes, the framework builds our objects for us, robbing us of the chance to customize them with the collaborators that we want.  This is expecially severe in Android, where the Android framework creates all of the important Android objects such as activities and services.
+
+Q> *What's a TDDer to do then?*  Not to worry: we are still in control.  Just treat the activity `onCreate()` method as if it was our main.  It *is* our main.  The trick is to use the activity just for building objects, linking them together appropriately, and letting them run.  We keep the logic *out* of the activity, and implement all of the interesting stuff in our own objects, that are created by the activity.
+
+Q> *How do I test an activity?  How do I inject dependencies in an activity?*  Normally we'd like to inject dependency in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes.  We can't customize the constructor for an activity.  This is not a problem if you follow the approach in our book, because
+Q>   1. The activity is tested through the end-to-end acceptance tests.
+Q>   2. The activity contains only construction and configuration, not logic.  So there is no need to test many cases: if it works in the ATs, it will probably work.
+
+
+Q> What is good practice with the *main* functions?
+
+
+Q> *What is a **main partition** ?*  It is a set of code files that contain the "main" functions of our application, and the factories and the configurations.  It's where all the objects of our application are created and assembled together.
+
+
+
+
+## The compile-time project structure {#unitdoctor-compile-time-structure}
+
+  * Project UnitDoctor
+    * Module app
+      * Source folder "src/main/java"
+          * Class AndroidUnitDoctorView
+          * Class MainActivity
+      * Source folder "src/androidTest/java"
+          * Class AndroidUnitDoctorViewTest
+          * Class UnitConversionAcceptanceTest
+    * Module UnitDoctorCore
+      * Source folder "src/main/java"
+          * Class UnitDoctor
+          * Interface UnitDoctorView
+      * Source folder "src/test/java"
+          * Class UnitDoctorTest
 

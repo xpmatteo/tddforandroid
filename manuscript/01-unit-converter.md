@@ -196,7 +196,7 @@ In order to do this we will start by assuming that we have a kernel of the appli
 
 T> Tip: keep android-free code in a separate module or project.  Keep android-dependent code in a module that depends on the android-free module.
 
-The project structure then is:
+The project structure so far then is:
 
   * "UnitDoctor" project
     * "app" module, where Android-dependent code lives
@@ -241,69 +241,69 @@ Notes:
  * We don't want UnitDoctor to decide how to format the string to the user; so we just tell the view what is the number to show, and delegate the actual formatting to the view itself.
 
 In order to make this test compile, we have defined the interface
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public interface UnitDoctorView {
-  double inputNumber();
-  String fromUnit();
-  String toUnit();
-  void showResult(double result);
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    public interface UnitDoctorView {
+      double inputNumber();
+      String fromUnit();
+      String toUnit();
+      void showResult(double result);
+    }
+
 Making this test pass is easy:
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public class UnitDoctor {
-  private UnitDoctorView view;
 
-  public UnitDoctor(UnitDoctorView view) {
-    this.view = view;
-  }
+    public class UnitDoctor {
+      private UnitDoctorView view;
 
-  public void convert() {
-    double inputNumber = view.inputNumber();
-    view.showResult(inputNumber * 2.54);
-  }
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~
+      public UnitDoctor(UnitDoctorView view) {
+        this.view = view;
+      }
+
+      public void convert() {
+        double inputNumber = view.inputNumber();
+        view.showResult(inputNumber * 2.54);
+      }
+    }
+
 The next test forces us to take also the units into account.  Looking at [our test list](#unitdoctor-test-list) we choose "Report conversion not supported".
-~~~~~~~~~~~~~~~~~~~~~~~~~
-@Test
-public void showsConversionNotSupported() throws Exception {
-  context.checking(new Expectations() {{
-    allowing(view).inputNumber(); will(returnValue(anyDouble()));
-    allowing(view).fromUnit(); will(returnValue("XYZ"));
-    allowing(view).toUnit(); will(returnValue("ABC"));
-    oneOf(view).showConversionNotSupported();
-  }});
 
-  unitDoctor.convert();
-}
+    @Test
+    public void showsConversionNotSupported() throws Exception {
+      context.checking(new Expectations() {{
+        allowing(view).inputNumber(); will(returnValue(anyDouble()));
+        allowing(view).fromUnit(); will(returnValue("XYZ"));
+        allowing(view).toUnit(); will(returnValue("ABC"));
+        oneOf(view).showConversionNotSupported();
+      }});
 
-private double anyDouble() {
-    return Math.random();
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~
+      unitDoctor.convert();
+    }
+
+    private double anyDouble() {
+        return Math.random();
+    }
+
 This forces us to add method `showConversionNotSupported` to the `UnitDoctorView` interface. We make it pass with
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public void convert() {
-  double inputNumber = view.inputNumber();
-  if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
-    view.showResult(inputNumber * 2.54);
-  else
-    view.showConversionNotSupported();
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    public void convert() {
+      double inputNumber = view.inputNumber();
+      if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
+        view.showResult(inputNumber * 2.54);
+      else
+        view.showConversionNotSupported();
+    }
+
 Continuing down this path we add another test (not shown) to add support for Fahrenheit-to-Celsius:
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public void convert() {
-  double inputNumber = view.inputNumber();
-  if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
-    view.showResult(inputNumber * 2.54);
-  else if (view.fromUnit().equals("F") && view.toUnit().equals("C"))
-    view.showResult((inputNumber - 32) * 5.0/9.0);
-  else
-    view.showConversionNotSupported();
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    public void convert() {
+      double inputNumber = view.inputNumber();
+      if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
+        view.showResult(inputNumber * 2.54);
+      else if (view.fromUnit().equals("F") && view.toUnit().equals("C"))
+        view.showResult((inputNumber - 32) * 5.0/9.0);
+      else
+        view.showConversionNotSupported();
+    }
+
 This chain of ifs we don't like, but we'll leave it be for the moment.  We have implemented the logic for [our original examples](#unit-doctor-examples), so our priority now is to see the application running!
 
 Q> *Wouldn't it be better to use Mockito instead of JMock?*
@@ -341,20 +341,20 @@ We'd love to see the application running now, but there's a snag... where is the
      * Format output message
 
 We pick "convert input number to double" from the list and write:
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public class AndroidUnitDoctorViewTest
-                      extends AndroidTestCase {
 
-  public void testReturnInputValues() throws Exception {
-    EditText inputNumberField = new EditText(getContext());
-    inputNumberField.setText("3.14159");
+    public class AndroidUnitDoctorViewTest
+                          extends AndroidTestCase {
 
-    AndroidUnitDoctorView view
-        = new AndroidUnitDoctorView(inputNumberField);
+      public void testReturnInputValues() throws Exception {
+        EditText inputNumberField = new EditText(getContext());
+        inputNumberField.setText("3.14159");
 
-    assertEquals(3.14159, view.inputNumber());
-  }
-~~~~~~~~~~~~~~~~~~~~~~~~~
+        AndroidUnitDoctorView view
+            = new AndroidUnitDoctorView(inputNumberField);
+
+        assertEquals(3.14159, view.inputNumber());
+      }
+
 Notes:
 
 * We must interact with the elements of the user interface.  Therefore this test needs to be in the "app" module.
@@ -364,95 +364,95 @@ Notes:
 * The interface `UnitDoctorView` lives in the UnitDoctorCore module, while its implementation `AndroidUnitDoctorView` lives in the "app" module.  This is correct: the interface talks exclusively in terms of the application *domain language*, so it belongs in the "core" module.  Also, interfaces belong to their clients, not to their implementations, so it's OK that they live near the clients.
 
 Making the above test pass is easy:
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public class AndroidUnitDoctorView implements UnitDoctorView {
-  private TextView inputNumberField;
 
-  public AndroidUnitDoctorView(TextView inputNumberField) {
-    this.inputNumberField = inputNumberField;
-    this.fromUnitField = fromUnitField;
-    this.toUnitField = toUnitField;
-    this.resultField = resultField;
-  }
+    public class AndroidUnitDoctorView implements UnitDoctorView {
+      private TextView inputNumberField;
 
-  @Override
-  public double inputNumber() {
-    String inputString = inputNumberField.getText().toString();
-    return Double.valueOf(inputString);
-  }
-  // ...
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~
+      public AndroidUnitDoctorView(TextView inputNumberField) {
+        this.inputNumberField = inputNumberField;
+        this.fromUnitField = fromUnitField;
+        this.toUnitField = toUnitField;
+        this.resultField = resultField;
+      }
+
+      @Override
+      public double inputNumber() {
+        String inputString = inputNumberField.getText().toString();
+        return Double.valueOf(inputString);
+      }
+      // ...
+    }
+
 Next test: "Format output message"
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public class AndroidUnitDoctorViewTest
-                    extends AndroidTestCase {
 
-  EditText inputNumberField;
-  TextView fromUnitField;
-  TextView toUnitField;
-  TextView resultField;
-  AndroidUnitDoctorView view;
+    public class AndroidUnitDoctorViewTest
+                        extends AndroidTestCase {
 
-  @Override
-  public void setUp() throws Exception {
-    super.setUp();
-    inputNumberField = new EditText(getContext());
-    fromUnitField = new TextView(getContext());
-    toUnitField = new TextView(getContext());
-    resultField = new TextView(getContext());
-    view = new AndroidUnitDoctorView(inputNumberField, fromUnitField, toUnitField, resultField);
-  }
+      EditText inputNumberField;
+      TextView fromUnitField;
+      TextView toUnitField;
+      TextView resultField;
+      AndroidUnitDoctorView view;
 
-  public void testSetsResult() {
-    inputNumberField.setText("3.14159");
-    fromUnitField.setText("A");
-    toUnitField.setText("B");
+      @Override
+      public void setUp() throws Exception {
+        super.setUp();
+        inputNumberField = new EditText(getContext());
+        fromUnitField = new TextView(getContext());
+        toUnitField = new TextView(getContext());
+        resultField = new TextView(getContext());
+        view = new AndroidUnitDoctorView(inputNumberField, fromUnitField, toUnitField, resultField);
+      }
 
-    view.showResult(1.123456789);
+      public void testSetsResult() {
+        inputNumberField.setText("3.14159");
+        fromUnitField.setText("A");
+        toUnitField.setText("B");
 
-    assertEquals("3.14 A = 1.12 B", resultField.getText());
-  }
-~~~~~~~~~~~~~~~~~~~~~~~~~
+        view.showResult(1.123456789);
+
+        assertEquals("3.14 A = 1.12 B", resultField.getText());
+      }
+
 Notes
 
 * We extended the constructor of `AndroidUnitDoctorView` to accept all the UI elements it needs to talk to
 * We moved creation of these elements to a shared `setUp` method
 
 Making this pass is still easy:
-~~~~~~~~~~~~~~~~~~~~~~~~~
-public class AndroidUnitDoctorView implements UnitDoctorView {
-  private TextView inputNumberField;
-  private TextView fromUnitField;
-  private TextView toUnitField;
-  private TextView resultField;
 
-  public AndroidUnitDoctorView(TextView inputNumberField, TextView fromUnitField, TextView toUnitField, TextView resultField) {
-    this.inputNumberField = inputNumberField;
-    this.fromUnitField = fromUnitField;
-    this.toUnitField = toUnitField;
-    this.resultField = resultField;
-  }
+    public class AndroidUnitDoctorView implements UnitDoctorView {
+      private TextView inputNumberField;
+      private TextView fromUnitField;
+      private TextView toUnitField;
+      private TextView resultField;
 
-  @Override
-  public void showResult(double result) {
-    String message =
-        String.format("%.2f %s = %.2f %s",
-            inputNumber(), fromUnit(), result, toUnit());
-    resultField.setText(message);
-  }
+      public AndroidUnitDoctorView(TextView inputNumberField, TextView fromUnitField, TextView toUnitField, TextView resultField) {
+        this.inputNumberField = inputNumberField;
+        this.fromUnitField = fromUnitField;
+        this.toUnitField = toUnitField;
+        this.resultField = resultField;
+      }
 
-  @Override
-  public String fromUnit() {
-    return fromUnitField.getText().toString();
-  }
+      @Override
+      public void showResult(double result) {
+        String message =
+            String.format("%.2f %s = %.2f %s",
+                inputNumber(), fromUnit(), result, toUnit());
+        resultField.setText(message);
+      }
 
-  @Override
-  public String toUnit() {
-    return toUnitField.getText().toString();
-  }
-  // ...
-~~~~~~~~~~~~~~~~~~~~~~~~~
+      @Override
+      public String fromUnit() {
+        return fromUnitField.getText().toString();
+      }
+
+      @Override
+      public String toUnit() {
+        return toUnitField.getText().toString();
+      }
+      // ...
+
 We still have to implement `UnitDoctorView.showConversionNotSupported()`.  We write a test (not shown) and make it pass (also not shown, but see [Appendix: Unit Doctor]{#appendix-unit-doctor} for complete code listings.)
 
 Now we are ready to see the app running, right?  Are we there yet?
@@ -466,19 +466,22 @@ Not so fast... we still haven't bound the UnitDoctor object and its view to the 
 
 This is the *magic ingredient* that is missed by many.  We use the `MainActivity` as our "main" function.
 
-Q> *What do you mean by *main function*? Aren't we in Android?  There is no "main" function here!*  Simple Java applications start with a *main* method.  The main method is where we build our objects, we combine them together forming a graph of communicating objects, and then we set them running by calling something like `run()` or `execute()`.  Alas, when we work with complex framework, such as Java Enterprise Edition or Android, we have no control of the real "main" method.  Oftentimes, the framework builds our objects for us, robbing us of the chance to customize them with the collaborators that we want.  This is expecially severe in Android, where the Android framework creates all of the important Android objects such as activities and services.
+Q> *What do you mean by "main function"? Aren't we in Android?  There is no "main" function here!*  \\ Simple Java applications start with a *main* method.  The main method is where we build our objects, we combine them together forming a graph of communicating objects, and then we set them running by calling something like `run()` or `execute()`.  Alas, when we work with complex framework, such as Java Enterprise Edition or Android, we have no control of the real "main" method.  Oftentimes, the framework builds our objects for us, robbing us of the chance to customize them with the collaborators that we want.  This is expecially severe in Android, where the Android framework creates all of the important Android objects such as activities and services.
 
-Q> *What's a TDDer to do then?*  Not to worry: we are still in control.  Just treat the activity `onCreate()` method as if it was our main.  It *is* our main.  The trick is to use the activity just for building objects, linking them together appropriately, and letting them run.  We keep the logic *out* of the activity, and implement all of the interesting stuff in our own objects, that are created by the activity.
+Q> *What's a TDDer to do then?*  \\ Not to worry: we are still in control.  Just treat the activity `onCreate()` method as if it was our main.  It *is* our main.  The trick is to use the activity just for building objects, linking them together appropriately, and letting them run.  We keep the logic *out* of the activity, and implement all of the interesting stuff in our own objects, that are created by the activity.
 
-Q> *How do I test an activity?  How do I inject dependencies in an activity?*  Normally we'd like to inject dependency in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes.  We can't customize the constructor for an activity.  This is not a problem if you follow the approach in our book, because
+Q> *How do I test an activity?  How do I inject dependencies in an activity?* \\Normally we'd like to inject dependency in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes.  We can't customize the constructor for an activity.  This is not a problem if you follow the approach in our book, because
+Q>
 Q>   1. The activity is tested through the end-to-end acceptance tests.
-Q>   2. The activity contains only construction and configuration, not logic.  So there is no need to test many cases: if it works in the ATs, it will probably work.  We will not write unit tests for an activity.
+Q>   2. The activity contains only construction and configuration, not logic.
+Q>
+Q> So there is no need to test many cases: if it works in the ATs, it will probably work.  We will not write unit tests for an activity.
 
-Q> *But, but, but, ... what if I must have logic in an activiti?*  Move it *out* of the activity in a separate object.  Then you unit test that object.
+Q> *But, but, but, ... what if I must have logic in an activity?*  \\
+Q> Keep it *out* of the activity in a separate object.  Then you test-drive that object.
 
-
-
-Q> *What is a **main partition** ?*  It is a set of code files that contain the "main" functions of our application, and the factories and the configurations.  It's where all the objects of our application are created and assembled together.
+Q> *What is a **main partition**?*  \\
+Q> It is a set of code files that contain the "main" functions of our application, and the factories and the configurations.  It's where all the objects of our application are created and assembled together.  All the compile-time dependencies run from the main partition to the
 
 
 
@@ -493,6 +496,8 @@ Q> *What is a **main partition** ?*  It is a set of code files that contain the 
       * Source folder "src/androidTest/java"
           * Class AndroidUnitDoctorViewTest
           * Class UnitConversionAcceptanceTest
+      * Source folder "src/main/res"
+          * Layout
     * Module UnitDoctorCore
       * Source folder "src/main/java"
           * Class UnitDoctor

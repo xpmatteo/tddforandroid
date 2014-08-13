@@ -22,7 +22,7 @@ public class UnitDoctorTest {
             oneOf(view).showResult(2.54);
         }});
 
-        unitDoctor.onChange();
+        unitDoctor.convert();
     }
 
     @Test
@@ -34,7 +34,7 @@ public class UnitDoctorTest {
             oneOf(view).showConversionNotSupported();
         }});
 
-        unitDoctor.onChange();
+        unitDoctor.convert();
     }
 
     private double anyDouble() {

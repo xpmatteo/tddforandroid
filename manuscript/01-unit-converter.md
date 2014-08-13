@@ -1,4 +1,4 @@
-# Example: Unit Converter
+# Example: Unit Doctor
 
 ## Problem description
 
@@ -42,10 +42,10 @@ Our spike implements the "inches to cm" and the "unsupported units" scenario.  I
 {width=60%}
 ![How the unit conversion spike looks like](images/spike-units-screenshot.png)
 
-<<[The activity for the unit conversion spike](../UnitConversionSpike/app/src/main/java/name/vaccari/matteo/unitconversionspike/MyActivity.java)
+<<[The activity for the unit conversion spike](../our-android-examples/UnitConversionSpike/app/src/main/java/name/vaccari/matteo/unitconversionspike/MyActivity.java)
 
 {lang="xml"}
-<<[The layout for the unit conversion spike](../UnitConversionSpike/app/src/main/res/layout/activity_my.xml)
+<<[The layout for the unit conversion spike](../our-android-examples/UnitConversionSpike/app/src/main/res/layout/activity_my.xml)
 
 What I learned:
 
@@ -180,31 +180,65 @@ We also observe that Android Studio colors the tests differently, to tell us tha
 
 T> Tip: Always check the error message, to make sure that the tests are failing for the right reason.
 
-Q> What is the difference between a *failure* and an *error*?  A "failure" is when your tests fails because of a broken assertion.  An "error" is when the test fails because of an exception.  In general, we want our test to produce failures, not errors, because errors mean that our software is doing something  unexpected.
+Q> What is the difference between a *failure* and an *error*?  A "failure" is when your test fails because of a broken assertion.  An "error" is when the test fails because of an exception.  In general, we want our test to produce failures, not errors, because errors mean that our software is doing something  unexpected.
 
 
 ## Shift to TDD
 
 Now that we have some failing acceptance tests, we leave them be.  We now shift to a faster gear by starting to write some *unit* tests.
 
-In order to do this we will start by assuming that we have a kernel of the application that does not need to use Android at all.  For this reason we open a new module inside the project.  (If I were using Eclipse, I would start a new project.)
+Q> *Shouldn't we make the acceptance tests pass before we continue?*  Not necessarily.  AT's usually take a long time to pass.  For the moment, we leave them broken.  If we worked in a team then we wouldn't want to break the build, so we would comment them out or "ignore" them by adding an "x" to the beginning of the name of each test method, so that JUnit does not run them.
+
+
+### Unit tests live in their own module
+
+In order to do this we will start by assuming that we have a kernel of the application that does not need to use Android at all.  For this reason we open a new module inside the project.  (If I were using Eclipse, I would start a new project in the workspace.)  We call the new module **UnitDoctorCore**.
 
 T> Tip: keep android-free code in a separate module or project.  Keep android-dependent code in a module that depends on the android-free module.
 
-Test list:
+The project structure then is:
+
+  * "UnitDoctor" project
+    * "app" module, where Android-dependent code lives
+    * "UnitDoctorCore" module, where the pure, Android-free logic of the program lives
+
+We make sure that "app" depends on "UnitDoctorCore", so that code in "app" can use objects defined in "UnitDoctorCore".  The latter must not depend on "app": the application logic should not depend on the GUI or other infrastructure details.
+
+### Our test list
+
+TDD should start with a *test list*: a list of all the *operations* that we should support. Right now we have
+
+* Convert in to cm
+* Convert F to C
+* Report conversion not supported
+
+from the acceptance tests. It's clear that some additional operations we need are
 
  * Convert input number to double
  * Format output message
- * Convert in to cm
- * Convert cm to in
- * Convert F to C
- * Convert C to F
 
- * Convert cm to feet and inches
+Now we choose one test from the list.  One that seems interesting is "Convert in to cm", so we do that first.  We want to write a test for this operation and the question is: "which object will support this operation?"
 
-We will use a technique called *presenter-first*.
+We will use a technique called *presenter-first*.  We assume that we have an object that represents the whole application.  We give it the name of the application: `UnitDoctor`.  We also assume that we will have a "view" object, that represents the Android GUI.  The gist of what we want to test is
 
+    If the view says that the inputs are 1.0, "in" and "cm"
+    When we are asked to perform a conversion
+    Then we should tell the view that the result is 2.54.
 
+The responsibilities of the "view" object are to return what the user has entered, and to show the results to the user.
+
+This is the gist of the first test.  If you find the syntax weird, look for an explanation in [the JMock appendix](#jmock-appendix).
+
+{starting-line-number=10, ending-line-number=26}
+<<(../our-android-examples/UnitDoctor/UnitDoctorCore/src/test/java/name/vaccari/matteo/unitdoctor/core/UnitDoctorTest.java)
+
+Notes:
+
+ * We have defined an interface UnitDoctorView.  This interface is being *mocked* here.
+ * The whole point of "mocking" is to define how the object we are testing, the UnitDoctor, interacts with its collaborator (the UnitDoctorView).
+ * We don't have yet an implementation for UnitDoctorView.  Yet we are able to make progress on the UnitDoctor by mocking the collaborator.
+
+Making this test pass is easy:
 
 
 Q> Wouldn't it be better to use Mockito instead of JMock?  \\

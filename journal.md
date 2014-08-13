@@ -1,4 +1,39 @@
 
+2014-08-13
+
+TODO: rename "app" module to something else
+
+
+2014-08-12
+
+Riprendo l'esercizio UnitDoctor
+
+ Dopo avere un failing end2end test, creo il modulo UnitDoctorCore
+ Sviluppo l'oggetto UnitDoctor in stile presenter-first alla JBrains
+ Poi devo sviluppare la view... e si torna al modulo app con un integration test
+
+Che cosa ho imparato:
+
+  - se fai TextView.setText, l'evento onKey non scatta
+  - potresti farlo scattare con sendKeys, ma e' impestatissimo perche' fai
+    molta fatica a controllare quale field ha il focus (anzi non ci sono riuscito)
+  - ho risolto usando TextView.setOnTextChangedListener.
+
+  - Usare la MainActivity come "main" funziona benissimo
+
+  - genymotion alternativa come emulatore piu' veloce
+
+Che cosa manca da fare:
+
+  - supportare F to C
+  - supportare C to F, cm to m
+  - salvare lo stato dell'applicazione quando viene fermata, recuperarlo nella onCreate
+  - convertire metri in ft + in??
+  - convertire gradi centesimali in ore, min, secondi
+  - convertire ore o minuti in giorni
+  - mostrare come gli oggetti rimuovono la catena di IF
+
+
 2014-08-04
 
 Studiato il libro di Rainsberger.
@@ -66,38 +101,5 @@ Next steps
  - try a spike: a horizontal linear layout with 4 buttons.  When you click a button, its id (0,1,2,3) should appear as a toast message.
  - try again with a simpler exercise (average annual growth)
  - reboot the exercise
-
-
-2014-08-12
-
-Riprendo l'esercizio UnitDoctor
-
- Dopo avere un failing end2end test, creo il modulo UnitDoctorCore
- Sviluppo l'oggetto UnitDoctor in stile presenter-first alla JBrains
- Poi devo sviluppare la view... e si torna al modulo app con un integration test
-
-Che cosa ho imparato:
-
-  - se fai TextView.setText, l'evento onKey non scatta
-  - potresti farlo scattare con sendKeys, ma e' impestatissimo perche' fai
-    molta fatica a controllare quale field ha il focus (anzi non ci sono riuscito)
-  - ho risolto usando TextView.setOnTextChangedListener.
-
-  - Usare la MainActivity come "main" funziona benissimo
-
-  - genymotion alternativa come emulatore piu' veloce
-
-Che cosa manca da fare:
-
-  - supportare F to C
-  - supportare C to F, cm to m
-  - salvare lo stato dell'applicazione quando viene fermata, recuperarlo nella onCreate
-  - convertire metri in ft + in??
-  - convertire gradi centesimali in ore, min, secondi
-  - convertire ore o minuti in giorni
-  - mostrare come gli oggetti rimuovono la catena di IF
-
-
-
 
 

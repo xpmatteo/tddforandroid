@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        doctor.onChange();
+        doctor.convert();
     }
 
     @Override

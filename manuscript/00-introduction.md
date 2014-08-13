@@ -26,5 +26,6 @@ This will not be a "stream-of-consciousness".  We will present the samples of co
 
  - You know Java
  - You have built and run an Android application before
+ - You have a basic understanding of what testing is and how JUnit works
  - You use Android Studio
 

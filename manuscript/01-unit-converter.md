@@ -241,16 +241,16 @@ Notes:
  * We don't want UnitDoctor to decide how to format the string to the user; so we just tell the view what is the number to show, and delegate the actual formatting to the view itself.
 
 In order to make this test compile, we have defined the interface
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public interface UnitDoctorView {
   double inputNumber();
   String fromUnit();
   String toUnit();
   void showResult(double result);
 }
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Making this test pass is easy:
-~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public class UnitDoctor {
   private UnitDoctorView view;
 
@@ -263,9 +263,9 @@ public class UnitDoctor {
     view.showResult(inputNumber * 2.54);
   }
 }
-~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 The next test forces us to take also the units into account.  Looking at [our test list](#unitdoctor-test-list) we choose "Report conversion not supported".
-~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 @Test
 public void showsConversionNotSupported() throws Exception {
   context.checking(new Expectations() {{
@@ -281,9 +281,9 @@ public void showsConversionNotSupported() throws Exception {
 private double anyDouble() {
     return Math.random();
 }
-~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 This forces us to add method `showConversionNotSupported` to the `UnitDoctorView` interface. We make it pass with
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public void convert() {
   double inputNumber = view.inputNumber();
   if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
@@ -291,9 +291,9 @@ public void convert() {
   else
     view.showConversionNotSupported();
 }
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Continuing down this path we add another test (not shown) to add support for Fahrenheit-to-Celsius:
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public void convert() {
   double inputNumber = view.inputNumber();
   if (view.fromUnit().equals("in") && view.toUnit().equals("cm"))
@@ -303,7 +303,7 @@ public void convert() {
   else
     view.showConversionNotSupported();
 }
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 This chain of ifs we don't like, but we'll leave it be for the moment.  We have implemented the logic for [our original examples](#unit-doctor-examples), so our priority now is to see the application running!
 
 Q> *Wouldn't it be better to use Mockito instead of JMock?*
@@ -341,7 +341,7 @@ We'd love to see the application running now, but there's a snag... where is the
      * Format output message
 
 We pick "convert input number to double" from the list and write:
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public class AndroidUnitDoctorViewTest
                       extends AndroidTestCase {
 
@@ -354,7 +354,7 @@ public class AndroidUnitDoctorViewTest
 
     assertEquals(3.14159, view.inputNumber());
   }
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Notes:
 
 * We must interact with the elements of the user interface.  Therefore this test needs to be in the "app" module.
@@ -364,7 +364,7 @@ Notes:
 * The interface `UnitDoctorView` lives in the UnitDoctorCore module, while its implementation `AndroidUnitDoctorView` lives in the "app" module.  This is correct: the interface talks exclusively in terms of the application *domain language*, so it belongs in the "core" module.  Also, interfaces belong to their clients, not to their implementations, so it's OK that they live near the clients.
 
 Making the above test pass is easy:
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public class AndroidUnitDoctorView implements UnitDoctorView {
   private TextView inputNumberField;
 
@@ -382,9 +382,9 @@ public class AndroidUnitDoctorView implements UnitDoctorView {
   }
   // ...
 }
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Next test: "Format output message"
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public class AndroidUnitDoctorViewTest
                     extends AndroidTestCase {
 
@@ -413,14 +413,14 @@ public class AndroidUnitDoctorViewTest
 
     assertEquals("3.14 A = 1.12 B", resultField.getText());
   }
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Notes
 
 * We extended the constructor of `AndroidUnitDoctorView` to accept all the UI elements it needs to talk to
 * We moved creation of these elements to a shared `setUp` method
 
 Making this pass is still easy:
-~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 public class AndroidUnitDoctorView implements UnitDoctorView {
   private TextView inputNumberField;
   private TextView fromUnitField;
@@ -452,8 +452,7 @@ public class AndroidUnitDoctorView implements UnitDoctorView {
     return toUnitField.getText().toString();
   }
   // ...
-~~~~
-
+~~~~~~~~~~~~~~~~~~~~~~~~~
 We still have to implement `UnitDoctorView.showConversionNotSupported()`.  We write a test (not shown) and make it pass (also not shown, but see [Appendix: Unit Doctor]{#appendix-unit-doctor} for complete code listings.)
 
 Now we are ready to see the app running, right?  Are we there yet?
@@ -473,10 +472,10 @@ Q> *What's a TDDer to do then?*  Not to worry: we are still in control.  Just tr
 
 Q> *How do I test an activity?  How do I inject dependencies in an activity?*  Normally we'd like to inject dependency in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes.  We can't customize the constructor for an activity.  This is not a problem if you follow the approach in our book, because
 Q>   1. The activity is tested through the end-to-end acceptance tests.
-Q>   2. The activity contains only construction and configuration, not logic.  So there is no need to test many cases: if it works in the ATs, it will probably work.
+Q>   2. The activity contains only construction and configuration, not logic.  So there is no need to test many cases: if it works in the ATs, it will probably work.  We will not write unit tests for an activity.
 
+Q> *But, but, but, ... what if I must have logic in an activiti?*  Move it *out* of the activity in a separate object.  Then you unit test that object.
 
-Q> What is good practice with the *main* functions?
 
 
 Q> *What is a **main partition** ?*  It is a set of code files that contain the "main" functions of our application, and the factories and the configurations.  It's where all the objects of our application are created and assembled together.

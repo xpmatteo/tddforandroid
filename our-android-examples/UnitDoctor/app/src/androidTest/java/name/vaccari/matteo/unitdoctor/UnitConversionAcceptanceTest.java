@@ -52,5 +52,4 @@ public class UnitConversionAcceptanceTest extends ActivityInstrumentationTestCas
     private TextView getField(int id) {
         return (TextView) getActivity().findViewById(id);
     }
-
 }

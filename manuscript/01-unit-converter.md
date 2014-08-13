@@ -75,7 +75,7 @@ We create a new project (remember, we don't want to "evolve" the spike!).  I use
 
 Android Studio set up a source folder named `src/androidTest`.  I create a new Java class there.
 
-{linenos=on}
+{line-numbers=on}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 package name.vaccari.matteo.unitdoctor;
 
@@ -221,15 +221,15 @@ Now we choose one test from the list.  One that seems interesting is "Convert in
 
 We will use a technique called *presenter-first*.  We assume that we have an object that represents the whole application.  We give it the name of the application: `UnitDoctor`.  We also assume that we will have a "view" object, that represents the Android GUI.  The gist of what we want to test is
 
-    If the view says that the inputs are 1.0, "in" and "cm"
-    When we are asked to perform a conversion
-    Then we should tell the view that the result is 2.54.
+>    If the view says that the inputs are 1.0, "in" and "cm" \\
+>    When we are asked to perform a conversion \\
+>    Then we should tell the view that the result is 2.54.
 
 The responsibilities of the "view" object are to return what the user has entered, and to show the results to the user.
 
-This is the gist of the first test.  If you find the syntax weird, look for an explanation in [the JMock appendix](#jmock-appendix).
+This is the first test.  If you find the syntax weird, look for an explanation in [the JMock appendix](#jmock-appendix).
 
-{starting-line-number=10, ending-line-number=26}
+{line-numbers=on, crop-start-line=10, crop-end-line=26}
 <<(../our-android-examples/UnitDoctor/UnitDoctorCore/src/test/java/name/vaccari/matteo/unitdoctor/core/UnitDoctorTest.java)
 
 Notes:

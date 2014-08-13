@@ -6,8 +6,8 @@ slug="tddforandroid"
 status=""
 while ! echo $status | grep -q "Book generation complete"
 do
-  status=$(curl -s "https://leanpub.com/$slug/book_status?api_key=$LEANPUB_API_KEY" \
-    | tr , '\n' | grep -e message -e status)
+  response=$(curl -s "https://leanpub.com/$slug/book_status?api_key=$LEANPUB_API_KEY")
+  status=$(echo $response | tr , '\n' | grep -e message -e status)
   echo $status
   sleep 3
 done

@@ -10,6 +10,8 @@ cd "$(dirname "$0")"/..
 
 commit_message="$1"
 
+ls -1 *-*.md > Book.txt
+
 git add -A :/
 git commit -m "$commit_message"
 git push

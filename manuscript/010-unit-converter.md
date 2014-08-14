@@ -474,18 +474,18 @@ Q> *What's a TDDer to do then?*  \\
 Q> Not to worry: we are still in control.  Just treat the activity's `onCreate()` method as if it was our main.  It *is* our main.  The trick is to use the activity just for building objects, linking them together appropriately, and letting them run.  We keep the logic *out* of the activity, and implement all of the interesting stuff in our own objects, that are created by the activity.
 
 Q> *How do I test an activity?  How do I inject dependencies in an activity?* \\
-Q> Normally we'd like to inject dependency in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes.  We can't customize the constructor for an activity.  This is not a problem if you follow the approach in our book, because
+Q> Normally we'd like to inject dependencies in an object via its constructor.  But this is impossible to do to an activity, for the activity is created by the O.S. behind the scenes; so we can't customize the constructor for an activity.  But this is not a problem if you follow the approach in this book, because
 Q>
 Q>   1. The activity is tested through the end-to-end acceptance tests.
 Q>   2. The activity contains only construction and configuration, not logic.
 Q>
-Q> So there is no need to test many cases: if it works in the ATs, it will probably work.  We will not write unit tests for an activity.
+Q> So there is no need to test many cases: if the activity works in the ATs, it will probably work.  We will not write unit tests for an activity.
 
 Q> *But, but, but, ... what if I must have logic in an activity?*  \\
-Q> Keep it *out* of the activity, in a separate object.  Then you test-drive that object.
+Q> Keep it *out* of the activity, in a separate object.  You test-drive that object; then you create that object and use it in the activity.
 
 Q> *What is the "main partition"?*  \\
-Q> It is a set of code files that contain the "main" functions of our application, and the factories and the configurations.  It's where all the objects of our application are created and assembled together.  All the compile-time dependencies run from the main partition to the
+Q> It is a set of code files that contain the "main" functions of our application, and the factories and the configurations.  It's where all the objects of our application are created and assembled together.  All the compile-time dependencies run from the main partition to the core of the application.  The main partition is important because that is the place where all the configuration details are set up.
 
 Our "main function" has the following responsibilities:
 

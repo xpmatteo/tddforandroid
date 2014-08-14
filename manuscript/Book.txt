@@ -1,5 +1,7 @@
-00-introduction.md
-01-unit-converter.md
-backmatter:
-90-appendix-jmock.md
-91-appendix-unitdoctor.md
+000-introduction.md
+010-unit-converter.md
+020-more-conversion-logic.md
+910-appendix-junit.md
+910-appendix-types-of-tests.md
+920-appendix-jmock.md
+950-appendix-unitdoctor.md

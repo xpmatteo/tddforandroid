@@ -2,6 +2,11 @@
 
 set -e
 
+[ -z "$LEANPUB_API_KEY" ] && {
+  echo "Please setup your LEANPUB_API_KEY env var"
+  exit 1
+}
+
 slug="tddforandroid"
 status=""
 while ! echo $status | grep -q "Book generation complete"

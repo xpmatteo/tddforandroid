@@ -462,10 +462,13 @@ Not so fast... we still haven't bound the UnitDoctor object and its view to the 
  1. The acceptance tests still don't pass
  2. We can run the application, but it does not convert anything yet.
 
-This is the *magic ingredient* that is missed by many.  We use the `MainActivity` as our "main" function.
+We need a place to instantiate the UnitDoctor and its AndroidUnitDoctorView.  This will be our "main function".   Our "main function" is the first place where the Android O.S. gives control to our own code.  In practice this is the `onCreate()` of `MainActivity`.
+
 
 Q> *What do you mean by "main function"? Aren't we in Android?  There is no "main" function here!*  \\
-Q> Simple Java applications start with a *main* method.  The main method is where we build our objects, we combine them together forming a graph of communicating objects, and then we set them running by calling something like `run()` or `execute()`.  Alas, when we work with complex framework, such as Java Enterprise Edition or Android, we have no control of the real "main" method.  Oftentimes, the framework builds our objects for us, robbing us of the chance to customize them with the collaborators that we want.  This is expecially severe in Android, where the Android framework creates all of the important Android objects such as activities and services.
+Q> Simple Java applications start with a *main* method.  The main method is where we build our objects, we combine them together forming a graph of communicating objects, and then we set them running by calling something like `run()` or `execute()`.
+Q>
+Q> Alas, when we work with complex frameworks, such as Java Enterprise Edition or Android, we have no control over the real "main" method.  The framework builds our objects for us, robbing us of the chance to customize them with the collaborators that we want.  This is expecially severe in Android, where the O.S. creates all the important Android objects such as activities and services.
 
 Q> *What's a TDDer to do then?*  \\
 Q> Not to worry: we are still in control.  Just treat the activity's `onCreate()` method as if it was our main.  It *is* our main.  The trick is to use the activity just for building objects, linking them together appropriately, and letting them run.  We keep the logic *out* of the activity, and implement all of the interesting stuff in our own objects, that are created by the activity.
@@ -479,10 +482,52 @@ Q>
 Q> So there is no need to test many cases: if it works in the ATs, it will probably work.  We will not write unit tests for an activity.
 
 Q> *But, but, but, ... what if I must have logic in an activity?*  \\
-Q> Keep it *out* of the activity in a separate object.  Then you test-drive that object.
+Q> Keep it *out* of the activity, in a separate object.  Then you test-drive that object.
 
-Q> *What is a **main partition**?*  \\
+Q> *What is the "main partition"?*  \\
 Q> It is a set of code files that contain the "main" functions of our application, and the factories and the configurations.  It's where all the objects of our application are created and assembled together.  All the compile-time dependencies run from the main partition to the
+
+Our "main function" has the following responsibilities:
+
+ * Instantiate the UnitDoctor and its view
+ * Call the UnitDoctor whenever the user changes something
+
+<<(../our-android-examples/UnitDoctor/app/src/main/java/name/vaccari/matteo/unitdoctor/MainActivity.java)
+
+We let `MainActivity` implement `TextWatcher` so that the `MainActivity` itself will listen for any change in the text fields.
+
+Now that we have implemented our "main" we run all the Android tests, including the acceptance tests.  And... they still fail!!!
+
+![Awww! The ATs still fail](images/unitdoctor-at-almost-passing.png)
+
+What happened?  We have an exception:
+
+{lang=text}
+    java.lang.NumberFormatException: Invalid double: ""
+    at java.lang.StringToReal.invalidReal(StringToReal.java:63)
+    ...
+    at name.vaccari.matteo.unitdoctor.AndroidUnitDoctorView.inputNumber(AndroidUnitDoctorView.java:27)
+    at name.vaccari.matteo.unitdoctor.core.UnitDoctor.convert(UnitDoctor.java:11)
+    at name.vaccari.matteo.unitdoctor.MainActivity.onTextChanged(MainActivity.java:39)
+
+It seems we forgot to take care of the case when the inputNumber field contains an empty string.  Oh well, the fix is simple: first we write a new unit test for `AndroidUnitDoctorView`:
+
+    public void testDoesNotBreakWhenInputFieldIsEmpty() throws Exception {
+      inputNumberField.setText("");
+      assertEquals(0.0, view.inputNumber());
+    }
+
+We add the necessary IF to the production code, and then run again all the tests.  And ... they all pass!!!
+
+![All the Android tests passing, finally!](images/unitdoctor-at-passing.png)
+
+Now that the ATs are passing, we fire the app on the emulator... and it works.
+
+![The app works](images/unitdoctor-works.png)
+
+
+Q> *Shouldn't we also check for a non-numeric string?* \\
+Q> Not really.  Since we declared in the xml layout that the inputNumber field will only accept numeric input, this shouldn't happen.
 
 
 
@@ -492,17 +537,22 @@ Q> It is a set of code files that contain the "main" functions of our applicatio
   * Project UnitDoctor
     * Module app
       * Source folder "src/main/java"
-          * Class AndroidUnitDoctorView
-          * Class MainActivity
+          * Class `AndroidUnitDoctorView`
+          * Class `MainActivity`
       * Source folder "src/androidTest/java"
-          * Class AndroidUnitDoctorViewTest
-          * Class UnitConversionAcceptanceTest
+          * Class `AndroidUnitDoctorViewTest`
+          * Class `UnitConversionAcceptanceTest`
       * Source folder "src/main/res"
-          * Layout
+          * Layout `activity_main.xml`
     * Module UnitDoctorCore
       * Source folder "src/main/java"
-          * Class UnitDoctor
-          * Interface UnitDoctorView
+          * Class `UnitDoctor`
+          * Interface `UnitDoctorView`
       * Source folder "src/test/java"
-          * Class UnitDoctorTest
+          * Class `UnitDoctorTest`
+
+
+## What now?
+
+We have started a project with tests.  Now our options are open: we can improve the UI or we can improve the core functions of the application.
 

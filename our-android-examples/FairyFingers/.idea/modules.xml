@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidDependent/AndroidDependent.iml" filepath="$PROJECT_DIR$/AndroidDependent/AndroidDependent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidFree/AndroidFree.iml" filepath="$PROJECT_DIR$/AndroidFree/AndroidFree.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FairyFingers.iml" filepath="$PROJECT_DIR$/FairyFingers.iml" />
+    </modules>
+  </component>
+</project>
+

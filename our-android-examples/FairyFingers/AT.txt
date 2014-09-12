@@ -1,0 +1,24 @@
+
+
+Acceptance Tests
+
+ Single Finger
+
+ touch and drag finger: one line appears
+
+
+ Second line
+
+ touch and drag again; now we have two lines
+
+
+ Two fingers
+
+ Touch with one then two fingers
+ Two lines appear
+ Drag with the two fingers
+ the lines follow the fingers
+ Pull up one finger and drag the other
+ One line stops the other follows the finger
+
+

@@ -1,4 +1,21 @@
 
+
+2014-09-12
+
+Carlo e Matteo insieme.
+
+Esaminiamo il problema proposto da Carlo Pescio qui: http://www.aspectroid.com/
+
+Facciamo una Spike.  La API di Android e' veramente facile da usare.  Ogni touchEvent contiene un certo numero di "puntatori" (dita.)  Ad ogni evento successivo ci dice dove si sono spostate quelle dita.
+
+Facciamo partire il progetto vero.  Imbarazzo: come lo testiamo?
+
+ - tentativo 1: scriviamo un oggetto 'App' che non dipende da Android e ragioniamo in maniera astratta, per poi collegarlo al sistema Android.  Siamo arrivati a buon punto.
+
+ - tentativo 2: testiamo la activity, cercando di fare emergere i comportamenti dalla simulazione di un tocco.  Come facciamo a sviluppare il primo passo?  E come faccio a fare un test unitario, dato che qualsiasi cosa io provi a testare all'interno del modulo AndroidDependent fa partire il download del codice sul dispositivo?
+
+
+
 2014-08-13
 
 TODO: rename "app" module to something else

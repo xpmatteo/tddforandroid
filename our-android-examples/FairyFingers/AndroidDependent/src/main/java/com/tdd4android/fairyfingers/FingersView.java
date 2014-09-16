@@ -2,7 +2,7 @@ package com.tdd4android.fairyfingers;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.AttributeSet;
+import android.util.*;
 import android.view.*;
 
 import com.tdd4android.fairyfingers.core.FairyFingersApp;
@@ -30,7 +30,7 @@ public class FingersView extends View {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
-    app.touch(10, 20, 30);
+    Log.v("TOUCH-EVENT", event.toString());
     return true;
   }
 }

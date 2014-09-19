@@ -39,10 +39,37 @@ public class FairyFingersView extends View {
   }
 
   @Override
-  public boolean onTouchEvent(MotionEvent event) {
-    MotionEvent.PointerCoords coords = new MotionEvent.PointerCoords();
-    event.getPointerCoords(0, coords);
-    core.touch(event.getAction(), event.getX(), event.getY());
+  public boolean onTouchEvent(final MotionEvent event) {
+    core.touch(new CoreMotionEvent() {
+      @Override
+      public int getPointerCount() {
+        return event.getPointerCount();
+      }
+
+      @Override
+      public void getPointerCoords(int pointerIndex, CorePoint outPointerCoords) {
+        MotionEvent.PointerCoords coords = new MotionEvent.PointerCoords();
+        event.getPointerCoords(pointerIndex, coords);
+        outPointerCoords.x = coords.x;
+        outPointerCoords.y = coords.y;
+      }
+
+      @Override
+      public int getAction() {
+        return event.getAction();
+      }
+
+      @Override
+      public float getX() {
+        return event.getX();
+      }
+
+      @Override
+      public float getY() {
+        return event.getY();
+      }
+    });
+
     invalidate();
     return true;
   }

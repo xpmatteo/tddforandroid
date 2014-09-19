@@ -10,36 +10,6 @@ public class FairyFingersCore {
 
   private List<Line> lines = new ArrayList<Line>();
 
-  private static class Point {
-    float x, y;
-    Point(float x, float y) {
-      this.x = x; this.y = y;
-    }
-  }
-
-  private static class Line {
-    private float startX;
-    private float startY;
-    private List<Point> points = new ArrayList<Point>();
-
-    public Line(float x, float y) {
-      this.startX = x;
-      this.startY = y;
-    }
-
-    public void addPoint(float x, float y) {
-      points.add(new Point(x, y));
-    }
-
-    public String toString() {
-      String result = String.format("(%s,%s)", startX, startY);
-      for (Point p : points) {
-        result += String.format("->(%s,%s)", p.x, p.y);
-      }
-      return result;
-    }
-  }
-
   public void touch(int action, final float x, final float y) {
     if (action == ACTION_DOWN) {
       lines.add(new Line(x, y));

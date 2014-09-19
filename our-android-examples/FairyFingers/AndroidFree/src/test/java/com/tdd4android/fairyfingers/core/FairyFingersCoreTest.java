@@ -40,7 +40,7 @@ public class FairyFingersCoreTest {
   }
 
   @Test
-  public void twoLines() throws Exception {
+  public void dashDash() throws Exception {
     core.touch(FairyFingersCore.ACTION_DOWN, 10.0f, 110.0f);
     core.touch(FairyFingersCore.ACTION_MOVE, 20.0f, 120.0f);
     core.touch(FairyFingersCore.ACTION_UP, 20.0f, 120.0f);

@@ -15,20 +15,14 @@ public class FairyFingersCore {
   private List<Line> lines = new ArrayList<Line>();
 
   public void touch(CoreMotionEvent event) {
+    CorePoint p = new CorePoint();
     if (event.getAction() == ACTION_DOWN) {
-      lines.add(new Line(event.getX(), event.getY()));
+      event.getPointerCoords(0, p);
+      lines.add(new Line(p.x, p.y));
     }
     if (event.getAction() == ACTION_MOVE) {
-      lines.get(lines.size()-1).addPoint(event.getX(), event.getY());
-    }
-  }
-
-  public void touch(int action, final float x, final float y) {
-    if (action == ACTION_DOWN) {
-      lines.add(new Line(x, y));
-    }
-    if (action == ACTION_MOVE) {
-      lines.get(lines.size()-1).addPoint(x, y);
+      event.getPointerCoords(0, p);
+      lines.get(lines.size()-1).addPoint(p.x, p.y);
     }
   }
 

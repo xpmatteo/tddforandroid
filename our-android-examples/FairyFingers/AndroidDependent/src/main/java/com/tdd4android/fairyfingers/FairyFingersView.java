@@ -47,6 +47,11 @@ public class FairyFingersView extends View {
       }
 
       @Override
+      public int getPointerId(int pointerIndex) {
+        return event.getPointerId(pointerIndex);
+      }
+
+      @Override
       public void getPointerCoords(int pointerIndex, CorePoint outPointerCoords) {
         MotionEvent.PointerCoords coords = new MotionEvent.PointerCoords();
         event.getPointerCoords(pointerIndex, coords);

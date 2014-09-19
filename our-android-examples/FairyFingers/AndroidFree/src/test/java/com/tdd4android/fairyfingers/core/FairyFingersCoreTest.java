@@ -54,5 +54,23 @@ public class FairyFingersCoreTest {
   }
 
 
+  @Test
+  public void twoFingers() throws Exception {
+    core.touch(FairyFingersCore.ACTION_DOWN, 10.0f, 110.0f);
+
+    core.touch(FairyFingersCore.ACTION_MOVE, 20.0f, 120.0f);
+    core.touch(FairyFingersCore.ACTION_POINTER_DOWN, 20.0f, 120.0f);
+    core.touch(FairyFingersCore.ACTION_MOVE, 20.0f, 120.0f);
+
+    core.touch(FairyFingersCore.ACTION_POINTER_UP, 20.0f, 120.0f);
+
+    core.touch(FairyFingersCore.ACTION_MOVE, 220.0f, 320.0f);
+    core.touch(FairyFingersCore.ACTION_UP, 220.0f, 320.0f);
+
+    assertEquals("(10.0,110.0)->(20.0,120.0)", core.lines(0).toString());
+    assertEquals("(210.0,310.0)->(220.0,320.0)", core.lines(1).toString());
+  }
+
+
 
 }

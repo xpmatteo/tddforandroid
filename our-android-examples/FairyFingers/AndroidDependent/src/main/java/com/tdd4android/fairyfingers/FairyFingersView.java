@@ -40,6 +40,10 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
+    event.getPointerCount();
+    event.getPointerId(0);
+    MotionEvent.PointerCoords coords = new MotionEvent.PointerCoords();
+    event.getPointerCoords(0, coords);
     core.touch(event.getAction(), event.getX(), event.getY());
     invalidate();
     return true;

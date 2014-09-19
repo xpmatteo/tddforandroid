@@ -23,4 +23,12 @@ class Line {
     }
     return result;
   }
+
+  public void drawOn(Drawable canvas) {
+    Point last = new Point(startX, startY);
+    for (Point point : points) {
+      canvas.drawLine(last.x, last.y, point.x, point.y);
+      last = point;
+    }
+  }
 }

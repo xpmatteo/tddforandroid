@@ -5,11 +5,11 @@ import android.graphics.Canvas;
 import android.util.*;
 import android.view.*;
 
-import com.tdd4android.fairyfingers.core.FairyFingersApp;
+import com.tdd4android.fairyfingers.core.FairyFingersCore;
 
 public class FingersView extends View {
 
-  FairyFingersApp app = new FairyFingersApp(null);
+  FairyFingersCore app = new FairyFingersCore(null);
 
   public FingersView(Context context) {
     super(context);

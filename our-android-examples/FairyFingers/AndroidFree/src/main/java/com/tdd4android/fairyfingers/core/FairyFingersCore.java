@@ -40,10 +40,6 @@ public class FairyFingersCore {
     }
   }
 
-  public FairyFingersCore(PathStorage pathStorage) {
-
-  }
-
   public void touch(int action, final float x, final float y) {
     if (action == ACTION_DOWN) {
       lines.add(new Line(x, y));

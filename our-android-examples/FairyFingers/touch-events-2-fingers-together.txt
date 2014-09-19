@@ -1,3 +1,7 @@
+
+Used two fingers at the same time.
+
+
 09-19 14:02:37.656    4903-4903/com.tdd4android.fairyfingers V/TOUCH-EVENT﹕ MotionEvent { action=ACTION_DOWN, id[0]=0, x[0]=381.1559, y[0]=387.34833, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=443753688, downTime=443753688, deviceId=9, source=0x1002 }
 09-19 14:02:37.656    4903-4903/com.tdd4android.fairyfingers V/TOUCH-EVENT﹕ MotionEvent { action=ACTION_POINTER_DOWN(1), id[0]=0, x[0]=381.1559, y[0]=387.34833, toolType[0]=TOOL_TYPE_FINGER, id[1]=1, x[1]=273.38046, y[1]=137.66043, toolType[1]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=2, historySize=0, eventTime=443753689, downTime=443753688, deviceId=9, source=0x1002 }
 09-19 14:02:37.786    4903-4903/com.tdd4android.fairyfingers V/TOUCH-EVENT﹕ MotionEvent { action=ACTION_MOVE, id[0]=0, x[0]=366.1871, y[0]=390.3446, toolType[0]=TOOL_TYPE_FINGER, id[1]=1, x[1]=260.40747, y[1]=143.65295, toolType[1]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=2, historySize=4, eventTime=443753829, downTime=443753688, deviceId=9, source=0x1002 }

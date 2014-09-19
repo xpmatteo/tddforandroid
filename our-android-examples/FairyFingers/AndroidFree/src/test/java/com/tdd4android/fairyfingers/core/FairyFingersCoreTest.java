@@ -54,7 +54,7 @@ public class FairyFingersCoreTest {
   }
 
 
-  @Test
+  @Test@Ignore("not finished")
   public void twoFingers() throws Exception {
     core.touch(FairyFingersCore.ACTION_DOWN, 10.0f, 110.0f);
 

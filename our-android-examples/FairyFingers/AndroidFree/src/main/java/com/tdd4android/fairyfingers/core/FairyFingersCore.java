@@ -14,27 +14,14 @@ public class FairyFingersCore {
 
   private List<Line> lines = new ArrayList<Line>();
 
-  public static class Pointer {
-    public int id;
-    public float x;
-    public float y;
-
-    public Pointer(int id, float x, float y) {
-      this.id = id;
-      this.x = x;
-      this.y = y;
+  public void touch(CoreMotionEvent event) {
+    if (event.getAction() == ACTION_DOWN) {
+      lines.add(new Line(event.getX(), event.getY()));
+    }
+    if (event.getAction() == ACTION_MOVE) {
+      lines.get(lines.size()-1).addPoint(event.getX(), event.getY());
     }
   }
-
-  public void touch(int action, Collection<Pointer> pointers) {
-    if (action == ACTION_DOWN) {
-      lines.add(new Line(x, y));
-    }
-    if (action == ACTION_MOVE) {
-      lines.get(lines.size()-1).addPoint(x, y);
-    }
-  }
-
 
   public void touch(int action, final float x, final float y) {
     if (action == ACTION_DOWN) {

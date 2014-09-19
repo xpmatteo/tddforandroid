@@ -19,7 +19,7 @@ public class FairyFingersCore {
     }
   }
 
-  public Collection lines() {
+  public Collection<Line> lines() {
     return lines;
   }
 

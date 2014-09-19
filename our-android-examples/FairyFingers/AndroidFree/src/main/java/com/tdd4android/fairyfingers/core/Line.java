@@ -2,7 +2,7 @@ package com.tdd4android.fairyfingers.core;
 
 import java.util.*;
 
-class Line {
+public class Line {
   private float startX;
   private float startY;
   private List<Point> points = new ArrayList<Point>();

@@ -15,7 +15,7 @@ public class FairyFingersCoreTest {
 
   @Test
   public void startOneLine() throws Exception {
-    core.touch(down(10.0f, 100.0f));
+    core.onTouch(down(10.0f, 100.0f));
 
     assertEquals(1, core.lines().size());
     assertEquals("(10.0,100.0)", core.lines(0).toString());
@@ -23,19 +23,19 @@ public class FairyFingersCoreTest {
 
   @Test
   public void oneLineDownMove() throws Exception {
-    core.touch(down(10.0f, 110.0f));
-    core.touch(move(20.0f, 120.0f));
-    core.touch(move(30.0f, 130.0f));
+    core.onTouch(down(10.0f, 110.0f));
+    core.onTouch(move(20.0f, 120.0f));
+    core.onTouch(move(30.0f, 130.0f));
 
     assertEquals("(10.0,110.0)->(20.0,120.0)->(30.0,130.0)", core.lines(0).toString());
   }
 
   @Test
   public void oneLineDownMoveUp() throws Exception {
-    core.touch(down(10.0f, 100.0f));
-    core.touch(move(20.9f, 120.0f));
-    core.touch(move(30.0f, 130.0f));
-    core.touch(up(30.0f, 130.0f));
+    core.onTouch(down(10.0f, 100.0f));
+    core.onTouch(move(20.9f, 120.0f));
+    core.onTouch(move(30.0f, 130.0f));
+    core.onTouch(up(30.0f, 130.0f));
 
     assertEquals(1, core.lines().size());
     assertEquals("(10.0,100.0)->(20.9,120.0)->(30.0,130.0)", core.lines(0).toString());
@@ -44,31 +44,31 @@ public class FairyFingersCoreTest {
 
   @Test
   public void dashDash() throws Exception {
-    core.touch(down(10.0f, 110.0f));
-    core.touch(move(20.0f, 120.0f));
-    core.touch(up(20.0f, 120.0f));
+    core.onTouch(down(10.0f, 110.0f));
+    core.onTouch(move(20.0f, 120.0f));
+    core.onTouch(up(20.0f, 120.0f));
 
-    core.touch(down(210.0f, 310.0f));
-    core.touch(move(220.0f, 320.0f));
-    core.touch(up(220.0f, 320.0f));
+    core.onTouch(down(210.0f, 310.0f));
+    core.onTouch(move(220.0f, 320.0f));
+    core.onTouch(up(220.0f, 320.0f));
 
     assertEquals("(10.0,110.0)->(20.0,120.0)", core.lines(0).toString());
     assertEquals("(210.0,310.0)->(220.0,320.0)", core.lines(1).toString());
   }
 
 
-  @Test@Ignore("not finished")
+  @Test@Ignore
   public void twoFingersStaggered() throws Exception {
-    core.touch(touch(ACTION_DOWN, 0, 1f, 2f));
-    core.touch(touch(ACTION_MOVE, 0, 3f, 4f));
+    core.onTouch(touch(ACTION_DOWN, 0, 1f, 2f));
+    core.onTouch(touch(ACTION_MOVE, 0, 3f, 4f));
 
-    core.touch(touch(ACTION_POINTER_DOWN, 0, 3f, 4f, 1, 100f, 200f));
-    core.touch(touch(ACTION_MOVE, 0, 5f, 6f, 1, 300f, 400f));
+    core.onTouch(pointerDown(1, 100f, 200f));
+    core.onTouch(touch(ACTION_MOVE, 0, 5f, 6f, 1, 300f, 400f));
 
-    core.touch(touch(ACTION_POINTER_UP, 0, 5f, 6f, 1, 300f, 400f));
+    core.onTouch(pointerUp(0));
 
-    core.touch(touch(ACTION_MOVE, 1, 500f, 600f));
-    core.touch(touch(ACTION_UP, 1, 500f, 600f));
+    core.onTouch(touch(ACTION_MOVE, 1, 500f, 600f));
+    core.onTouch(up());
 
     assertEquals(2, core.lines().size());
     assertEquals("(1.0,2.0)->(3.0,4.0)->(5.0,6.0)", core.lines(0).toString());
@@ -79,8 +79,8 @@ public class FairyFingersCoreTest {
     return touch(ACTION_DOWN, x, y);
   }
 
-  private CoreMotionEvent up(final float x, final float y) {
-    return touch(ACTION_UP, x, y);
+  private CoreMotionEvent up() {
+    return touch(ACTION_UP, -1, -1);
   }
 
   private CoreMotionEvent move(final float x, final float y) {

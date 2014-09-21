@@ -40,7 +40,7 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(final MotionEvent event) {
-    core.touch(new CoreMotionEvent() {
+    core.onTouch(new CoreMotionEvent() {
       @Override
       public int getPointerCount() {
         return event.getPointerCount();
@@ -60,18 +60,13 @@ public class FairyFingersView extends View {
       }
 
       @Override
+      public int getActionIndex() {
+        return event.getActionIndex();
+      }
+
+      @Override
       public int getAction() {
         return event.getAction();
-      }
-
-      @Override
-      public float getX() {
-        return event.getX();
-      }
-
-      @Override
-      public float getY() {
-        return event.getY();
       }
     });
 

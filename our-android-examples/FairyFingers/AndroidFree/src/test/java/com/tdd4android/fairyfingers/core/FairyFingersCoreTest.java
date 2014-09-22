@@ -61,15 +61,15 @@ public class FairyFingersCoreTest {
 
   @Test@Ignore
   public void twoFingersStaggered() throws Exception {
-    core.onTouch(touch(ACTION_DOWN, 0, 1f, 2f));
-    core.onTouch(touch(ACTION_MOVE, 0, 3f, 4f));
+    core.onTouch(down(1f, 2f));
+    core.onTouch(move(0, 3f, 4f));
 
     core.onTouch(pointerDown(1, 100f, 200f));
-    core.onTouch(touch(ACTION_MOVE, 0, 5f, 6f, 1, 300f, 400f));
+    core.onTouch(move(0, 5f, 6f, 1, 300f, 400f));
 
     core.onTouch(pointerUp(0));
 
-    core.onTouch(touch(ACTION_MOVE, 1, 500f, 600f));
+    core.onTouch(move(1, 500f, 600f));
     core.onTouch(up());
 
     assertEquals(2, core.lines().size());
@@ -77,12 +77,20 @@ public class FairyFingersCoreTest {
     assertEquals("(100.0,200.0)->(300.0,400.0)->(500.0,600.0)", core.lines(1).toString());
   }
 
+  private CoreMotionEvent move(int id, float x, float y) {
+    return touch(ACTION_MOVE, id, id, x, y);
+  }
+
+  private CoreMotionEvent move(int id0, float x0, float y0, int id1, float x1, float y1) {
+    return touch(ACTION_MOVE, -1, id0, x0, y0, id1, x1, y1);
+  }
+
   private CoreMotionEvent pointerUp(int pointerId) {
-    return null;
+    return touch(ACTION_POINTER_UP, pointerId, pointerId, -1, -1);
   }
 
   private CoreMotionEvent pointerDown(int pointerId, float x, float y) {
-    return null;
+    return touch(ACTION_POINTER_DOWN, pointerId, pointerId, x, y);
   }
 
   private CoreMotionEvent down(final float x, final float y) {
@@ -98,10 +106,10 @@ public class FairyFingersCoreTest {
   }
 
   private CoreMotionEvent touch(final int action, final float x, final float y) {
-    return touch(action, 0, x, y);
+    return touch(action, 0, 0, x, y);
   }
 
-  private CoreMotionEvent touch(final int action, final int pointerId, final float x, final float y) {
+  private CoreMotionEvent touch(final int action, final int actionIndex, final int pointerId, final float x, final float y) {
     return new CoreMotionEvent() {
       @Override
       public int getPointerCount() {
@@ -123,7 +131,7 @@ public class FairyFingersCoreTest {
 
       @Override
       public int getActionIndex() {
-        throw new NotImplementedException();
+        return actionIndex;
       }
 
       @Override
@@ -133,7 +141,7 @@ public class FairyFingersCoreTest {
     };
   }
 
-  private CoreMotionEvent touch(final int action, final int id0, final float x0, final float y0, final int id1, final float x1, final float y1) {
+  private CoreMotionEvent touch(final int action, final int actionIndex, final int id0, final float x0, final float y0, final int id1, final float x1, final float y1) {
     return new CoreMotionEvent() {
       @Override
       public int getPointerCount() {
@@ -166,7 +174,7 @@ public class FairyFingersCoreTest {
 
       @Override
       public int getActionIndex() {
-        throw  new NotImplementedException();
+        return actionIndex;
       }
 
       @Override

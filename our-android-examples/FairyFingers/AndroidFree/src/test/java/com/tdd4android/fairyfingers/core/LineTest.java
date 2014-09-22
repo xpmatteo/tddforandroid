@@ -4,6 +4,8 @@ import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.*;
 
+import static org.junit.Assert.assertEquals;
+
 public class LineTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -45,4 +47,23 @@ public class LineTest {
     line.drawOn(coreCanvas);
   }
 
+  @Test
+  public void testStoreOpacityInSegment() throws Exception {
+    line.addPoint(10.0f, 20.0f);
+
+    assertEquals(255, line.getAlpha(0));
+  }
+
+  @Test
+  public void testDecrementOpacity() throws Exception {
+      line.addPoint(10.0f,20.0f);
+      line.invecchia();
+
+      assertEquals(250,line.getAlpha(0));
+      line.addPoint(20.0f,20.0f);
+      line.invecchia();
+
+      assertEquals(245,line.getAlpha(0));
+      assertEquals(250,line.getAlpha(1));
+  }
 }

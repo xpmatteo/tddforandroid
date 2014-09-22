@@ -31,4 +31,13 @@ public class Line {
       last = point;
     }
   }
+
+  public int getAlpha(int i) {
+    return points.get(i).alpha;
+  }
+
+  public void invecchia() {
+    for (CorePoint point : points)
+      point.alpha -= 5;
+  }
 }

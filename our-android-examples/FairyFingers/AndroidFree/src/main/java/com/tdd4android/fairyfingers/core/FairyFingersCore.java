@@ -51,15 +51,8 @@ public class FairyFingersCore {
         break;
       }
       default:
-        throw new IllegalArgumentException("OHIBO OHIBO!" + event.getAction());
+        throw new IllegalArgumentException("Unexpected motion event type " + event.getAction());
     }
-  }
-
-  private Line removeOpenLine(int pointerId) {
-    Line line = openLines.remove(pointerId);
-    if (null == line)
-      throw new IllegalStateException("Could not find open line with id " + pointerId);
-    return line;
   }
 
   public List<Line> lines() {
@@ -69,7 +62,14 @@ public class FairyFingersCore {
     return lines;
   }
 
-  public Object lines(int index) {
+  public Line lines(int index) {
     return lines().get(index);
+  }
+
+  private Line removeOpenLine(int pointerId) {
+    Line line = openLines.remove(pointerId);
+    if (null == line)
+      throw new IllegalStateException("Could not find open line with id " + pointerId);
+    return line;
   }
 }

@@ -27,7 +27,7 @@ public class FairyFingersView extends View {
   @Override
   protected void onDraw(final Canvas canvas) {
     paint.setColor(Color.BLUE);
-    paint.setStrokeWidth(4);
+    paint.setStrokeWidth(8);
     for (Line line : core.lines()) {
       line.drawOn(new CoreCanvas() {
         @Override
@@ -40,8 +40,6 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(final MotionEvent event) {
-    Log.d("CARLOMATTEO", event.toString());
-    Log.d("CARLOMATTEO", "idx = " + event.getActionIndex());
     core.onTouch(new CoreMotionEvent() {
       @Override
       public int getPointerCount() {

@@ -122,11 +122,13 @@ public class FairyFingersCoreTest {
       }
 
       @Override
-      public void getPointerCoords(int pointerIndex, CorePoint outPointerCoords) {
-        if (pointerIndex != 0)
-          throw new IllegalArgumentException("PointerIndex " + pointerIndex);
-        outPointerCoords.x = x;
-        outPointerCoords.y = y;
+      public float getX(int pointerIndex) {
+        return x;
+      }
+
+      @Override
+      public float getY(int pointerIndex) {
+        return y;
       }
 
       @Override
@@ -158,16 +160,19 @@ public class FairyFingersCoreTest {
       }
 
       @Override
-      public void getPointerCoords(int pointerIndex, CorePoint outPointerCoords) {
+      public float getX(int pointerIndex) {
         switch (pointerIndex) {
-          case 0:
-            outPointerCoords.x = x0;
-            outPointerCoords.y = y0;
-            break;
-          case 1:
-            outPointerCoords.x = x1;
-            outPointerCoords.y = y1;
-            break;
+          case 0: return x0;
+          case 1: return x1;
+          default: throw new IllegalArgumentException("" + pointerIndex);
+        }
+      }
+
+      @Override
+      public float getY(int pointerIndex) {
+        switch (pointerIndex) {
+          case 0: return y0;
+          case 1: return y1;
           default: throw new IllegalArgumentException("" + pointerIndex);
         }
       }

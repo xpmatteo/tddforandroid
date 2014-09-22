@@ -10,13 +10,10 @@ public class FairyFingersCore {
   public static final int ACTION_MOVE             = 2;
 
   /**
-   * Constant for {@link #getActionMasked}: A non-primary pointer has gone down.
-   * <p>
-   * Use {@link #getActionIndex} to retrieve the index of the pointer that changed.
-   * </p><p>
-   * The index is encoded in the {@link #ACTION_POINTER_INDEX_MASK} bits of the
-   * unmasked action returned by {@link #getAction}.
-   * </p>
+   * Constant for getActionMasked: A non-primary pointer has gone down.
+   * Use getActionIndex to retrieve the index of the pointer that changed.
+   * The index is encoded in the ACTION_POINTER_INDEX_MASK bits of the
+   * unmasked action returned by getAction.
    */
   public static final int ACTION_POINTER_DOWN     = 5;
   public static final int ACTION_POINTER_UP       = 6;
@@ -25,14 +22,11 @@ public class FairyFingersCore {
   private List<Line> closedLines = new ArrayList<Line>();
 
   public void onTouch(CoreMotionEvent event) {
-    CorePoint p = new CorePoint();
     if (event.getAction() == ACTION_DOWN) {
-      event.getPointerCoords(0, p);
-      openLines.add(new Line(p.x, p.y));
+      openLines.add(new Line(event.getX(0), event.getY(0)));
     }
     if (event.getAction() == ACTION_POINTER_DOWN) {
-      event.getPointerCoords(0, p);
-      openLines.add(new Line(p.x, p.y));
+      openLines.add(new Line(event.getX(0), event.getY(0)));
     }
     if (event.getAction() == ACTION_POINTER_UP) {
       closedLines.add(openLines.remove(0));
@@ -42,8 +36,7 @@ public class FairyFingersCore {
     }
     if (event.getAction() == ACTION_MOVE) {
       for (int pointerIndex = 0; pointerIndex < event.getPointerCount(); pointerIndex++) {
-        event.getPointerCoords(pointerIndex, p);
-        openLines.get(openLines.size()-1).addPoint(p.x, p.y);
+        openLines.get(openLines.size()-1).addPoint(event.getX(pointerIndex), event.getY(pointerIndex));
       }
     }
   }

@@ -4,6 +4,7 @@ public interface CoreMotionEvent {
   int getAction();
   int getPointerCount();
   int getPointerId(int pointerIndex);
-  void getPointerCoords(int pointerIndex, CorePoint outPointerCoords);
+  float getX(int pointerIndex);
+  float getY(int pointerIndex);
   int getActionIndex();
 }

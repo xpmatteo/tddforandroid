@@ -22,30 +22,44 @@ public class FairyFingersCore {
   private List<Line> closedLines = new ArrayList<Line>();
 
   public void onTouch(CoreMotionEvent event) {
-    if (event.getAction() == ACTION_DOWN) {
-      openLines.put(0, new Line(event.getX(0), event.getY(0)));
-    } else if (event.getAction() == ACTION_POINTER_DOWN) {
-      int i = event.getActionIndex();
-      openLines.put(event.getPointerId(i), new Line(event.getX(i), event.getY(i)));
-    } else if (event.getAction() == ACTION_UP) {
-      Line line = openLines.remove(event.getPointerId(0));
-      if (null == line)
-        throw new IllegalStateException("doppio ohibo' " + event.getPointerId(0));
-      closedLines.add(line);
-    } else if (event.getAction() == ACTION_POINTER_UP) {
-      int i = event.getActionIndex();
-      Line line = openLines.remove(event.getPointerId(i));
-      if (null == line)
-        throw new IllegalStateException("ohibo' " + event.getPointerId(i));
-      closedLines.add(line);
-    } else if (event.getAction() == ACTION_MOVE) {
-      for (int i = 0; i < event.getPointerCount(); i++) {
-        Line line = openLines.get(event.getPointerId(i));
-        line.addPoint(event.getX(i), event.getY(i));
+    switch (event.getAction()) {
+      case ACTION_DOWN: {
+        openLines.put(0, new Line(event.getX(0), event.getY(0)));
+        break;
       }
-    } else {
-      throw new IllegalArgumentException("OHIBO OHIBO!" + event.getAction());
+      case ACTION_POINTER_DOWN: {
+        int i = event.getActionIndex();
+        openLines.put(event.getPointerId(i), new Line(event.getX(i), event.getY(i)));
+        break;
+      }
+      case ACTION_UP: {
+        Line line = removeOpenLine(event.getPointerId(0));
+        closedLines.add(line);
+        break;
+      }
+      case ACTION_POINTER_UP: {
+        int i = event.getActionIndex();
+        Line line = removeOpenLine(event.getPointerId(i));
+        closedLines.add(line);
+        break;
+      }
+      case  ACTION_MOVE: {
+        for (int i = 0; i < event.getPointerCount(); i++) {
+          Line line = openLines.get(event.getPointerId(i));
+          line.addPoint(event.getX(i), event.getY(i));
+        }
+        break;
+      }
+      default:
+        throw new IllegalArgumentException("OHIBO OHIBO!" + event.getAction());
     }
+  }
+
+  private Line removeOpenLine(int pointerId) {
+    Line line = openLines.remove(pointerId);
+    if (null == line)
+      throw new IllegalStateException("Could not find open line with id " + pointerId);
+    return line;
   }
 
   public List<Line> lines() {

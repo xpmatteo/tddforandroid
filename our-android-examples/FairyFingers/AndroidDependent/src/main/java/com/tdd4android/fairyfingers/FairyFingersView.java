@@ -40,6 +40,8 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(final MotionEvent event) {
+    Log.d("CARLOMATTEO", event.toString());
+    Log.d("CARLOMATTEO", "idx = " + event.getActionIndex());
     core.onTouch(new CoreMotionEvent() {
       @Override
       public int getPointerCount() {
@@ -68,7 +70,7 @@ public class FairyFingersView extends View {
 
       @Override
       public int getAction() {
-        return event.getAction();
+        return event.getActionMasked();
       }
     });
 

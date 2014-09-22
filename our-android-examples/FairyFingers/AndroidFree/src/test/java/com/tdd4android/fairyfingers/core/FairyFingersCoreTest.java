@@ -37,7 +37,7 @@ public class FairyFingersCoreTest {
     core.onTouch(down(10.0f, 100.0f));
     core.onTouch(move(20.9f, 120.0f));
     core.onTouch(move(30.0f, 130.0f));
-    core.onTouch(up());
+    core.onTouch(up(0));
 
     assertEquals(1, core.lines().size());
     assertEquals("(10.0,100.0)->(20.9,120.0)->(30.0,130.0)", core.lines(0).toString());
@@ -48,18 +48,18 @@ public class FairyFingersCoreTest {
   public void dashDash() throws Exception {
     core.onTouch(down(10.0f, 110.0f));
     core.onTouch(move(20.0f, 120.0f));
-    core.onTouch(up());
+    core.onTouch(up(0));
 
     core.onTouch(down(210.0f, 310.0f));
     core.onTouch(move(220.0f, 320.0f));
-    core.onTouch(up());
+    core.onTouch(up(0));
 
     assertEquals("(10.0,110.0)->(20.0,120.0)", core.lines(0).toString());
     assertEquals("(210.0,310.0)->(220.0,320.0)", core.lines(1).toString());
   }
 
 
-  @Test@Ignore
+  @Test
   public void twoFingersStaggered() throws Exception {
     core.onTouch(down(1f, 2f));
     core.onTouch(move(0, 3f, 4f));
@@ -70,7 +70,7 @@ public class FairyFingersCoreTest {
     core.onTouch(pointerUp(0));
 
     core.onTouch(move(1, 500f, 600f));
-    core.onTouch(up());
+    core.onTouch(up(1));
 
     assertEquals(2, core.lines().size());
     assertEquals("(1.0,2.0)->(3.0,4.0)->(5.0,6.0)", core.lines(0).toString());
@@ -78,7 +78,7 @@ public class FairyFingersCoreTest {
   }
 
   private CoreMotionEvent move(int id, float x, float y) {
-    return touch(ACTION_MOVE, id, id, x, y);
+    return touch(ACTION_MOVE, -1, id, x, y);
   }
 
   private CoreMotionEvent move(int id0, float x0, float y0, int id1, float x1, float y1) {
@@ -86,7 +86,7 @@ public class FairyFingersCoreTest {
   }
 
   private CoreMotionEvent pointerUp(int pointerId) {
-    return touch(ACTION_POINTER_UP, pointerId, pointerId, -1, -1);
+    return touch(ACTION_POINTER_UP, 1, -1, -1, -1, pointerId, -1, -1);
   }
 
   private CoreMotionEvent pointerDown(int pointerId, float x, float y) {
@@ -97,12 +97,12 @@ public class FairyFingersCoreTest {
     return touch(ACTION_DOWN, x, y);
   }
 
-  private CoreMotionEvent up() {
-    return touch(ACTION_UP, -1, -1);
+  private CoreMotionEvent up(int pointerId) {
+    return touch(ACTION_UP, 0, pointerId, -1, -1);
   }
 
   private CoreMotionEvent move(final float x, final float y) {
-    return touch(ACTION_MOVE, x, y);
+    return touch(ACTION_MOVE, 0, 0, x, y);
   }
 
   private CoreMotionEvent touch(final int action, final float x, final float y) {

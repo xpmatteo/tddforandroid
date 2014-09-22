@@ -29,7 +29,7 @@ public class FairyFingersView extends View {
     paint.setColor(Color.BLUE);
     paint.setStrokeWidth(4);
     for (Line line : core.lines()) {
-      line.drawOn(new Drawable() {
+      line.drawOn(new CoreCanvas() {
         @Override
         public void drawLine(float startX, float startY, float stopX, float stopY) {
           canvas.drawLine(startX, startY, stopX, stopY, paint);
@@ -52,11 +52,13 @@ public class FairyFingersView extends View {
       }
 
       @Override
-      public void getPointerCoords(int pointerIndex, CorePoint outPointerCoords) {
-        MotionEvent.PointerCoords coords = new MotionEvent.PointerCoords();
-        event.getPointerCoords(pointerIndex, coords);
-        outPointerCoords.x = coords.x;
-        outPointerCoords.y = coords.y;
+      public float getX(int pointerIndex) {
+        return event.getX(pointerIndex);
+      }
+
+      @Override
+      public float getY(int pointerIndex) {
+        return event.getY(pointerIndex);
       }
 
       @Override

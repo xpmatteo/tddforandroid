@@ -25,16 +25,11 @@ public class FairyFingersCore {
     if (event.getAction() == ACTION_DOWN) {
       openLines.add(new Line(event.getX(0), event.getY(0)));
     }
-    if (event.getAction() == ACTION_POINTER_DOWN) {
-      openLines.add(new Line(event.getX(0), event.getY(0)));
-    }
-    if (event.getAction() == ACTION_POINTER_UP) {
-      closedLines.add(openLines.remove(0));
-    }
     if (event.getAction() == ACTION_UP) {
       closedLines.add(openLines.remove(0));
     }
     if (event.getAction() == ACTION_MOVE) {
+
       for (int pointerIndex = 0; pointerIndex < event.getPointerCount(); pointerIndex++) {
         openLines.get(openLines.size()-1).addPoint(event.getX(pointerIndex), event.getY(pointerIndex));
       }

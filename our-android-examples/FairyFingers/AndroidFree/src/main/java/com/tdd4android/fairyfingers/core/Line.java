@@ -24,7 +24,7 @@ public class Line {
     return result;
   }
 
-  public void drawOn(Drawable canvas) {
+  public void drawOn(CoreCanvas canvas) {
     CorePoint last = new CorePoint(startX, startY);
     for (CorePoint point : points) {
       canvas.drawLine(last.x, last.y, point.x, point.y);

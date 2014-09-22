@@ -2,31 +2,14 @@ package com.tdd4android.fairyfingers;
 
 import android.content.Context;
 import android.graphics.*;
-import android.os.*;
 import android.util.*;
 import android.view.*;
 
 import com.tdd4android.fairyfingers.core.*;
 
-import java.util.concurrent.Delayed;
-
 public class FairyFingersView extends View {
-
-  private static final long REFRESH_INTERVAL = 50;
-
   private Paint paint = new Paint();
   private FairyFingersCore core = new FairyFingersCore();
-
-  Runnable updateView = new Runnable() {
-    @Override
-    public void run() {
-      core.decay();
-      invalidate();
-      handler.postDelayed(updateView, REFRESH_INTERVAL);
-    }
-  };
-
-  private Handler handler;
 
   public FairyFingersView(Context context) {
     super(context);
@@ -42,13 +25,6 @@ public class FairyFingersView extends View {
 
   @Override
   protected void onDraw(final Canvas canvas) {
-    if (null == handler) {
-      this.handler = new Handler();
-      handler.post(updateView);
-    }
-
-    // stop refresh with handler.removeCallbacks(updateView);
-
     paint.setColor(Color.BLUE);
     paint.setStrokeWidth(8);
     for (Line line : core.lines()) {
@@ -97,5 +73,10 @@ public class FairyFingersView extends View {
     });
     invalidate();
     return true;
+  }
+
+  public void decay() {
+    core.decay();
+    invalidate();
   }
 }

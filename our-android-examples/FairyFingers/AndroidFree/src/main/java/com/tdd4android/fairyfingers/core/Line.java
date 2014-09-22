@@ -27,7 +27,7 @@ public class Line {
   public void drawOn(CoreCanvas canvas) {
     CorePoint last = new CorePoint(startX, startY);
     for (CorePoint point : points) {
-      canvas.drawLine(last.x, last.y, point.x, point.y);
+      canvas.drawLine(last.x, last.y, point.x, point.y, point.alpha);
       last = point;
     }
   }
@@ -36,8 +36,9 @@ public class Line {
     return points.get(i).alpha;
   }
 
-  public void invecchia() {
-    for (CorePoint point : points)
-      point.alpha -= 5;
+  public void decay() {
+    for (CorePoint point : points) {
+      point.decay();
+    }
   }
 }

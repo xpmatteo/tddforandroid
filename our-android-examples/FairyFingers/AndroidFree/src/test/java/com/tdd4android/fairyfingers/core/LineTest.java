@@ -26,7 +26,7 @@ public class LineTest {
   @Test
   public void drawOneSegment() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f);
+      oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f, 255);
     }});
 
     line.addPoint(30f, 40f);
@@ -36,9 +36,9 @@ public class LineTest {
   @Test
   public void drawMoreSegments() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(coreCanvas).drawLine(10f, 20f, 100f, 400f);
-      oneOf(coreCanvas).drawLine(100f, 400f, 200f, 500f);
-      oneOf(coreCanvas).drawLine(200f, 500f, 300f, 600f);
+      oneOf(coreCanvas).drawLine(10f, 20f, 100f, 400f, 255);
+      oneOf(coreCanvas).drawLine(100f, 400f, 200f, 500f, 255);
+      oneOf(coreCanvas).drawLine(200f, 500f, 300f, 600f, 255);
     }});
 
     line.addPoint(100f, 400f);
@@ -57,11 +57,11 @@ public class LineTest {
   @Test
   public void testDecrementOpacity() throws Exception {
       line.addPoint(10.0f,20.0f);
-      line.invecchia();
+      line.decay();
 
       assertEquals(250,line.getAlpha(0));
       line.addPoint(20.0f,20.0f);
-      line.invecchia();
+      line.decay();
 
       assertEquals(245,line.getAlpha(0));
       assertEquals(250,line.getAlpha(1));

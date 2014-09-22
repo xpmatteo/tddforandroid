@@ -72,4 +72,10 @@ public class FairyFingersCore {
       throw new IllegalStateException("Could not find open line with id " + pointerId);
     return line;
   }
+
+  public void decay() {
+    for (Line line : lines()) {
+      line.decay();
+    }
+  }
 }

@@ -9,6 +9,7 @@ class CorePoint {
     this.x = x; this.y = y; this.alpha=255;
   }
 
-  public CorePoint() {
+  public void decay() {
+    this.alpha = Math.max(alpha-25, 0);
   }
 }

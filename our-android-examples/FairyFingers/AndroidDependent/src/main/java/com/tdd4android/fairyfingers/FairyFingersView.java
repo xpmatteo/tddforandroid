@@ -11,7 +11,7 @@ public class FairyFingersView extends View {
   private Paint paint = new Paint();
   private FairyFingersCore core = new FairyFingersCore();
 
-  public FairyFingersView(Context context) {
+    public FairyFingersView(Context context) {
     super(context);
   }
 
@@ -25,20 +25,21 @@ public class FairyFingersView extends View {
 
   @Override
   protected void onDraw(final Canvas canvas) {
-    paint.setColor(Color.BLUE);
-    paint.setStrokeWidth(8);
-    for (Line line : core.lines()) {
-      line.drawOn(new CoreCanvas() {
-        @Override
-        public void drawLine(float startX, float startY, float stopX, float stopY, int alpha) {
-          paint.setAlpha(alpha);
-          canvas.drawLine(startX, startY, stopX, stopY, paint);
-        }
-      });
-    }
+      paint.setColor(Color.BLUE);
+      int width = 8;
+      paint.setStrokeWidth(width);
+      CoreCanvas canvas1 = new CoreCanvas() {
+          @Override
+          public void drawLine(float startX, float startY, float stopX, float stopY, int alpha) {
+              paint.setAlpha(alpha);
+              canvas.drawLine(startX, startY, stopX, stopY, paint);
+          }
+      };
+      for (Line line : core.lines())
+          line.drawOn(canvas1);
   }
 
-  @Override
+    @Override
   public boolean onTouchEvent(final MotionEvent event) {
     core.onTouch(new CoreMotionEvent() {
       @Override

@@ -56,14 +56,13 @@ public class LineTest {
 
   @Test
   public void testDecrementOpacity() throws Exception {
-      line.addPoint(10.0f,20.0f);
+      line.addPoint(10.0f, 20.0f);
       line.decay();
 
-      assertEquals(250,line.getAlpha(0));
-      line.addPoint(20.0f,20.0f);
+      line.addPoint(20.0f, 20.0f);
       line.decay();
 
-      assertEquals(245,line.getAlpha(0));
-      assertEquals(250,line.getAlpha(1));
+      assertEquals(255 - 50, line.getAlpha(0));
+      assertEquals(255 - 25, line.getAlpha(1));
   }
 }

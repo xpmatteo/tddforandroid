@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidDependent/AndroidDependent.iml" filepath="$PROJECT_DIR$/AndroidDependent/AndroidDependent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AndroidDependentTests/AndroidDependentTests.iml" filepath="$PROJECT_DIR$/AndroidDependentTests/AndroidDependentTests.iml" />
       <module fileurl="file://$PROJECT_DIR$/AndroidFree/AndroidFree.iml" filepath="$PROJECT_DIR$/AndroidFree/AndroidFree.iml" />
       <module fileurl="file://$PROJECT_DIR$/FairyFingers.iml" filepath="$PROJECT_DIR$/FairyFingers.iml" />
     </modules>

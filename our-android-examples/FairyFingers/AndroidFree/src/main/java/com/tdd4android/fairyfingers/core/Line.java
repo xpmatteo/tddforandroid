@@ -3,11 +3,13 @@ package com.tdd4android.fairyfingers.core;
 import java.util.*;
 
 public class Line {
+  private int color;
   private float startX;
   private float startY;
   private List<CorePoint> points = new ArrayList<CorePoint>();
 
-  public Line(float x, float y) {
+  public Line(int color, float x, float y) {
+    this.color = color;
     this.startX = x;
     this.startY = y;
   }
@@ -27,7 +29,7 @@ public class Line {
   public void drawOn(CoreCanvas canvas) {
     CorePoint last = new CorePoint(startX, startY);
     for (CorePoint point : points) {
-      canvas.drawLine(last.x, last.y, point.x, point.y, point.alpha);
+      canvas.drawLine(last.x, last.y, point.x, point.y, color, point.alpha);
       last = point;
     }
   }

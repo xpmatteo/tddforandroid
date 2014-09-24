@@ -8,7 +8,7 @@ import static com.tdd4android.fairyfingers.core.FairyFingersCore.*;
 import static org.junit.Assert.assertEquals;
 
 public class FairyFingersCoreTest {
-  FairyFingersCore core = new FairyFingersCore();
+  FairyFingersCore core = new FairyFingersCore(new ColorSequence(0xFF0000FF));
 
   @Test
   public void noLinesAtStart() throws Exception {

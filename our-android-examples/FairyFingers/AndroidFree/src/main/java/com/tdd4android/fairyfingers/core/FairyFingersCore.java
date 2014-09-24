@@ -20,16 +20,21 @@ public class FairyFingersCore {
 
   private Map<Integer, Line> openLines = new HashMap<Integer, Line>();
   private List<Line> closedLines = new ArrayList<Line>();
+  private Iterator<Integer> colors;
+
+  public FairyFingersCore(Iterator<Integer> colors) {
+    this.colors = colors;
+  }
 
   public void onTouch(CoreMotionEvent event) {
     switch (event.getAction()) {
       case ACTION_DOWN: {
-        openLines.put(0, new Line(event.getX(0), event.getY(0)));
+        openLines.put(0, new Line(newColor(), event.getX(0), event.getY(0)));
         break;
       }
       case ACTION_POINTER_DOWN: {
         int i = event.getActionIndex();
-        openLines.put(event.getPointerId(i), new Line(event.getX(i), event.getY(i)));
+        openLines.put(event.getPointerId(i), new Line(newColor(), event.getX(i), event.getY(i)));
         break;
       }
       case ACTION_UP: {
@@ -53,6 +58,10 @@ public class FairyFingersCore {
       default:
         throw new IllegalArgumentException("Unexpected motion event type " + event.getAction());
     }
+  }
+
+  private int newColor() {
+    return colors.next();
   }
 
   public List<Line> lines() {

@@ -7,10 +7,12 @@ import org.junit.*;
 import static org.junit.Assert.assertEquals;
 
 public class LineTest {
+  private final int COLOR = 0xFF123456;
+
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
   private CoreCanvas coreCanvas = context.mock(CoreCanvas.class);
-  private Line line = new Line(10f, 20f);
+  private Line line = new Line(COLOR, 10f, 20f);
 
 
   @Test
@@ -26,7 +28,7 @@ public class LineTest {
   @Test
   public void drawOneSegment() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f, 255);
+      oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f, COLOR, 255);
     }});
 
     line.addPoint(30f, 40f);
@@ -36,9 +38,9 @@ public class LineTest {
   @Test
   public void drawMoreSegments() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(coreCanvas).drawLine(10f, 20f, 100f, 400f, 255);
-      oneOf(coreCanvas).drawLine(100f, 400f, 200f, 500f, 255);
-      oneOf(coreCanvas).drawLine(200f, 500f, 300f, 600f, 255);
+      oneOf(coreCanvas).drawLine(10f, 20f, 100f, 400f, COLOR, 255);
+      oneOf(coreCanvas).drawLine(100f, 400f, 200f, 500f, COLOR, 255);
+      oneOf(coreCanvas).drawLine(200f, 500f, 300f, 600f, COLOR, 255);
     }});
 
     line.addPoint(100f, 400f);

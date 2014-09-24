@@ -7,9 +7,12 @@ import android.view.*;
 
 import com.tdd4android.fairyfingers.core.*;
 
+import java.util.Iterator;
+
 public class FairyFingersView extends View {
   private Paint paint = new Paint();
-  private FairyFingersCore core = new FairyFingersCore();
+  private Iterator<Integer> colors = new SummerPalette();
+  private FairyFingersCore core = new FairyFingersCore(colors);
 
   public FairyFingersView(Context context) {
     super(context);
@@ -25,12 +28,12 @@ public class FairyFingersView extends View {
 
   @Override
   protected void onDraw(final Canvas canvas) {
-    paint.setColor(Color.BLUE);
-    paint.setStrokeWidth(8);
+    paint.setStrokeWidth(10);
     for (Line line : core.lines()) {
       line.drawOn(new CoreCanvas() {
         @Override
-        public void drawLine(float startX, float startY, float stopX, float stopY, int alpha) {
+        public void drawLine(float startX, float startY, float stopX, float stopY, int color, int alpha) {
+          paint.setColor(color);
           paint.setAlpha(alpha);
           canvas.drawLine(startX, startY, stopX, stopY, paint);
         }

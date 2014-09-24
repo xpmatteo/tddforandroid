@@ -2,8 +2,6 @@ package com.tdd4android.fairyfingers.core;
 
 import org.junit.*;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import static com.tdd4android.fairyfingers.core.FairyFingersCore.*;
 import static org.junit.Assert.assertEquals;
 

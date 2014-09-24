@@ -5,6 +5,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class LineTest {
   private final int COLOR = 0xFF123456;
@@ -64,4 +65,17 @@ public class LineTest {
       line.addPoint(300f, 600f);
       line.drawOn(coreCanvas);
   }
+
+    @Test
+    public void testEmptyLineDeletedNotBeDrawn() throws Exception {
+        context.checking(new Expectations() {{
+            never(coreCanvas);
+        }});
+
+        line.addPoint(100f, 400f);
+        for (int i = 0; i <12 ; i++) line.decay();
+        assertTrue(line.emptyLine());
+        line.drawOn(coreCanvas);
+    }
+
 }

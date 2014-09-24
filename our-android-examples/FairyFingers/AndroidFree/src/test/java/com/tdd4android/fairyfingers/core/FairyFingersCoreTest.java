@@ -75,7 +75,32 @@ public class FairyFingersCoreTest {
     assertEquals("(100.0,200.0)->(300.0,400.0)->(500.0,600.0)", core.lines(1).toString());
   }
 
-  private CoreMotionEvent move(int id, float x, float y) {
+    @Test
+    public void oldLineDeletion() throws Exception {
+        core.onTouch(down(10.0f, 110.0f));
+        core.onTouch(move(20.0f, 120.0f));
+        core.onTouch(up(0));
+
+        assertEquals(1, core.lines().size());
+
+        for (int i = 0; i < 6; i++) core.decay();
+
+        core.onTouch(down(100.0f, 110.0f));
+        core.onTouch(move(200.0f, 120.0f));
+        core.onTouch(up(0));
+
+        assertEquals(2, core.lines().size());
+
+        for (int i = 0; i < 6; i++) core.decay();
+
+        assertEquals(1, core.lines().size());
+
+        for (int i = 0; i < 6; i++) core.decay();
+
+        assertEquals(0, core.lines().size());
+    }
+
+    private CoreMotionEvent move(int id, float x, float y) {
     return touch(ACTION_MOVE, -1, id, x, y);
   }
 

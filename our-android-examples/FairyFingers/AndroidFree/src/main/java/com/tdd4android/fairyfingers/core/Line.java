@@ -35,6 +35,13 @@ public class Line {
     }
   }
 
+  public boolean emptyLine() {
+      for (CorePoint point: points)
+          if (point.alpha > 0)
+              return false;
+      return true;
+  }
+
   public void decay() {
     for (CorePoint point : points) {
       point.decay();

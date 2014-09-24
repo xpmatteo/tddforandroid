@@ -65,8 +65,12 @@ public class FairyFingersCore {
   }
 
   public List<Line> lines() {
-    List lines = new ArrayList();
+    List<Line> lines = new ArrayList<Line>();
     lines.addAll(closedLines);
+    for (Line line : lines)
+        if (line.emptyLine()) {
+            closedLines.remove(line);
+        }
     lines.addAll(openLines.values());
     return lines;
   }

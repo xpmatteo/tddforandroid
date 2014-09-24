@@ -26,14 +26,14 @@ public class LineTest {
 
 
   @Test
-  public void drawOneSegment() throws Exception {
-    context.checking(new Expectations() {{
-      oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f, COLOR, 255);
-    }});
+   public void drawOneSegment() throws Exception {
+        context.checking(new Expectations() {{
+            oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f, COLOR, 255);
+        }});
 
-    line.addPoint(30f, 40f);
-    line.drawOn(coreCanvas);
-  }
+        line.addPoint(30f, 40f);
+        line.drawOn(coreCanvas);
+    }
 
   @Test
   public void drawMoreSegments() throws Exception {
@@ -50,21 +50,18 @@ public class LineTest {
   }
 
   @Test
-  public void testStoreOpacityInSegment() throws Exception {
-    line.addPoint(10.0f, 20.0f);
+  public void testLineDecay() throws Exception {
+      context.checking(new Expectations() {{
+          oneOf(coreCanvas).drawLine(10f, 20f, 100f, 400f, COLOR, 205);
+          oneOf(coreCanvas).drawLine(100f, 400f, 200f, 500f, COLOR, 230);
+          oneOf(coreCanvas).drawLine(200f, 500f, 300f, 600f, COLOR, 255);
+      }});
 
-    assertEquals(255, line.getAlpha(0));
-  }
-
-  @Test
-  public void testDecrementOpacity() throws Exception {
-      line.addPoint(10.0f, 20.0f);
+      line.addPoint(100f, 400f);
       line.decay();
-
-      line.addPoint(20.0f, 20.0f);
+      line.addPoint(200f, 500f);
       line.decay();
-
-      assertEquals(255 - 50, line.getAlpha(0));
-      assertEquals(255 - 25, line.getAlpha(1));
+      line.addPoint(300f, 600f);
+      line.drawOn(coreCanvas);
   }
 }

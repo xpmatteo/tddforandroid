@@ -29,13 +29,10 @@ public class Line {
   public void drawOn(CoreCanvas canvas) {
     CorePoint last = new CorePoint(startX, startY);
     for (CorePoint point : points) {
-      canvas.drawLine(last.x, last.y, point.x, point.y, color, point.alpha);
+        if (point.alpha > 0)
+            canvas.drawLine(last.x, last.y, point.x, point.y, color, point.alpha);
       last = point;
     }
-  }
-
-  public int getAlpha(int i) {
-    return points.get(i).alpha;
   }
 
   public void decay() {

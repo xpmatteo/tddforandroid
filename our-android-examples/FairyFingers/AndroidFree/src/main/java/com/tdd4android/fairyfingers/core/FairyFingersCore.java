@@ -20,9 +20,9 @@ public class FairyFingersCore {
 
   private Map<Integer, Line> openLines = new HashMap<Integer, Line>();
   private List<Line> closedLines = new ArrayList<Line>();
-  private Iterator<Integer> colors;
+  private ColorSequence colors;
 
-  public FairyFingersCore(Iterator<Integer> colors) {
+  public FairyFingersCore(ColorSequence colors) {
     this.colors = colors;
   }
 

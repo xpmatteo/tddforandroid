@@ -2,8 +2,6 @@ package com.tdd4android.fairyfingers.core;
 
 import org.junit.*;
 
-import java.util.Iterator;
-
 import static org.junit.Assert.assertEquals;
 
 public class ColorSequenceTest {
@@ -16,7 +14,7 @@ public class ColorSequenceTest {
 
   @Test
   public void oneColor() throws Exception {
-    Iterator sequence = new ColorSequence(0x1111111);
+    ColorSequence sequence = new ColorSequence(0x1111111);
     assertEquals(0x1111111, sequence.next());
     assertEquals(0x1111111, sequence.next());
     assertEquals(0x1111111, sequence.next());
@@ -25,7 +23,7 @@ public class ColorSequenceTest {
 
   @Test
   public void alternateColors() throws Exception {
-    Iterator sequence = new ColorSequence(1, 2, 3);
+    ColorSequence sequence = new ColorSequence(1, 2, 3);
     assertEquals(1, sequence.next());
     assertEquals(2, sequence.next());
     assertEquals(3, sequence.next());

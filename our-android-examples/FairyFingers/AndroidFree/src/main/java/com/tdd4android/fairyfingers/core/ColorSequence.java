@@ -2,7 +2,7 @@ package com.tdd4android.fairyfingers.core;
 
 import java.util.Iterator;
 
-public class ColorSequence implements Iterator<Integer> {
+public class ColorSequence {
   private int[] colors;
   private int index;
 
@@ -10,13 +10,7 @@ public class ColorSequence implements Iterator<Integer> {
     this.colors = colors;
   }
 
-  @Override
-  public boolean hasNext() {
-    return false;
-  }
-
-  @Override
-  public Integer next() {
+  public int next() {
     return colors[index++ % colors.length];
   }
 

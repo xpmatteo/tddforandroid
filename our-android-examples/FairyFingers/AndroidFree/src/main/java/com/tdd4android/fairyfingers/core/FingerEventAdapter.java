@@ -1,6 +1,6 @@
 package com.tdd4android.fairyfingers.core;
 
-public class Pippo {
+public class FingerEventAdapter {
   // Constants copied from android.view.MotionEvent
   public static final int ACTION_DOWN             = 0;
   public static final int ACTION_UP               = 1;
@@ -13,9 +13,9 @@ public class Pippo {
    */
   public static final int ACTION_POINTER_DOWN     = 5;
   public static final int ACTION_POINTER_UP       = 6;
-  private FingerEvent target;
+  private FingerEventTarget target;
 
-  public Pippo(FingerEvent target) {
+  public FingerEventAdapter(FingerEventTarget target) {
     this.target = target;
   }
 

@@ -4,14 +4,14 @@ import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.*;
 
-import static com.tdd4android.fairyfingers.core.Pippo.*;
+import static com.tdd4android.fairyfingers.core.FingerEventAdapter.*;
 
-public class PippoTest {
+public class FingerEventAdapterTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private FingerEvent target = context.mock(FingerEvent.class);
-  private Pippo pippo = new Pippo(target);
+  private FingerEventTarget target = context.mock(FingerEventTarget.class);
+  private FingerEventAdapter fingerEventAdapter = new FingerEventAdapter(target);
 
   @Test
   public void convertActionDownToFingerDown() throws Exception {
@@ -19,7 +19,7 @@ public class PippoTest {
       oneOf(target).onFingerDown(0, 100f, 200f);
     }});
 
-    pippo.onTouchEvent(touch(ACTION_DOWN, 0, 0, 100f, 200f));
+    fingerEventAdapter.onTouchEvent(touch(ACTION_DOWN, 0, 0, 100f, 200f));
   }
 
   @Test
@@ -30,13 +30,13 @@ public class PippoTest {
 
     // { action=ACTION_POINTER_DOWN(1), id[0]=0, x[0]=381.1559, y[0]=387.34833, id[1]=1, x[1]=273.38046, y[1]=137.66043, }
 
-    pippo.onTouchEvent(touch(ACTION_POINTER_DOWN, 1, 0, -1, -1, 33, 200f, 300f));
+    fingerEventAdapter.onTouchEvent(touch(ACTION_POINTER_DOWN, 1, 0, -1, -1, 33, 200f, 300f));
   }
 
   @Test(expected=UnrecognizedActionException.class)
   public void unrecognizedEvent() throws Exception {
     int unrecognizedAction = 1001;
-    pippo.onTouchEvent(touch(unrecognizedAction, -1, -1, -1, -1));
+    fingerEventAdapter.onTouchEvent(touch(unrecognizedAction, -1, -1, -1, -1));
   }
 
   @Test
@@ -45,7 +45,7 @@ public class PippoTest {
       oneOf(target).onFingerMove(0, 123f, 456f);
     }});
 
-    pippo.onTouchEvent(touch(ACTION_MOVE, -1, 0, 123f, 456f));
+    fingerEventAdapter.onTouchEvent(touch(ACTION_MOVE, -1, 0, 123f, 456f));
   }
 
   @Test
@@ -55,7 +55,7 @@ public class PippoTest {
       oneOf(target).onFingerMove(77, 78f, 79f);
     }});
 
-    pippo.onTouchEvent(touch(ACTION_MOVE, -1, 44, 45f, 46f, 77, 78f, 79f));
+    fingerEventAdapter.onTouchEvent(touch(ACTION_MOVE, -1, 44, 45f, 46f, 77, 78f, 79f));
   }
 
   @Test
@@ -64,7 +64,7 @@ public class PippoTest {
       oneOf(target).onFingerUp(99);
     }});
 
-    pippo.onTouchEvent(touch(ACTION_POINTER_UP, 1, -1, -1, -1, 99, -1, -1));
+    fingerEventAdapter.onTouchEvent(touch(ACTION_POINTER_UP, 1, -1, -1, -1, 99, -1, -1));
   }
 
   @Test
@@ -73,7 +73,7 @@ public class PippoTest {
       oneOf(target).onFingerUp(84);
     }});
 
-    pippo.onTouchEvent(touch(ACTION_UP, 0, 84, -1, -1));
+    fingerEventAdapter.onTouchEvent(touch(ACTION_UP, 0, 84, -1, -1));
   }
 
   private CoreMotionEvent touch(final int action, final int actionIndex, final int pointerId, final float x, final float y) {

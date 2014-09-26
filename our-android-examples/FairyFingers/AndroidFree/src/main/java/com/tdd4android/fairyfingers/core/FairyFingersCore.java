@@ -2,7 +2,7 @@ package com.tdd4android.fairyfingers.core;
 
 import java.util.*;
 
-public class FairyFingersCore implements FingerEvent {
+public class FairyFingersCore implements FingerEventTarget {
 
   private Map<Integer, Line> openLines = new HashMap<Integer, Line>();
   private List<Line> closedLines = new ArrayList<Line>();

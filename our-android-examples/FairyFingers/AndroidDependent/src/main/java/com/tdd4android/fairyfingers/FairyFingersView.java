@@ -11,7 +11,7 @@ public class FairyFingersView extends View {
   private Paint paint = new Paint();
   private ColorSequence colors = new SummerPalette();
   private FairyFingersCore core = new FairyFingersCore(colors);
-  private Pippo pippo = new Pippo(core);
+  private FingerEventAdapter fingerEventAdapter = new FingerEventAdapter(core);
 
   public FairyFingersView(Context context) {
     super(context);
@@ -43,37 +43,7 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(final MotionEvent event) {
-    pippo.onTouchEvent(new CoreMotionEvent() {
-      @Override
-      public int getPointerCount() {
-        return event.getPointerCount();
-      }
-
-      @Override
-      public int getPointerId(int pointerIndex) {
-        return event.getPointerId(pointerIndex);
-      }
-
-      @Override
-      public float getX(int pointerIndex) {
-        return event.getX(pointerIndex);
-      }
-
-      @Override
-      public float getY(int pointerIndex) {
-        return event.getY(pointerIndex);
-      }
-
-      @Override
-      public int getActionIndex() {
-        return event.getActionIndex();
-      }
-
-      @Override
-      public int getAction() {
-        return event.getActionMasked();
-      }
-    });
+    fingerEventAdapter.onTouchEvent(new CoreMotionEventAdapter(event));
     invalidate();
     return true;
   }
@@ -81,5 +51,43 @@ public class FairyFingersView extends View {
   public void decay() {
     core.decay();
     invalidate();
+  }
+
+  private static class CoreMotionEventAdapter implements CoreMotionEvent {
+    private final MotionEvent event;
+
+    public CoreMotionEventAdapter(MotionEvent event) {
+      this.event = event;
+    }
+
+    @Override
+    public int getPointerCount() {
+      return event.getPointerCount();
+    }
+
+    @Override
+    public int getPointerId(int pointerIndex) {
+      return event.getPointerId(pointerIndex);
+    }
+
+    @Override
+    public float getX(int pointerIndex) {
+      return event.getX(pointerIndex);
+    }
+
+    @Override
+    public float getY(int pointerIndex) {
+      return event.getY(pointerIndex);
+    }
+
+    @Override
+    public int getActionIndex() {
+      return event.getActionIndex();
+    }
+
+    @Override
+    public int getAction() {
+      return event.getActionMasked();
+    }
   }
 }

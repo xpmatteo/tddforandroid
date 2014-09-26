@@ -29,17 +29,16 @@ public class Line {
   public void drawOn(CoreCanvas canvas) {
     CorePoint last = new CorePoint(startX, startY);
     for (CorePoint point : points) {
-        if (point.alpha > 0)
-            canvas.drawLine(last.x, last.y, point.x, point.y, color, point.alpha);
+      canvas.drawLine(last.x, last.y, point.x, point.y, color, point.alpha);
       last = point;
     }
   }
 
   public boolean emptyLine() {
-      for (CorePoint point: points)
-          if (point.alpha > 0)
-              return false;
-      return true;
+    for (CorePoint point : points)
+      if (point.isVisible())
+        return false;
+    return true;
   }
 
   public void decay() {

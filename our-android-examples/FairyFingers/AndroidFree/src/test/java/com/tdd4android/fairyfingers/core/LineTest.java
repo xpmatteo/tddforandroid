@@ -25,16 +25,15 @@ public class LineTest {
     line.drawOn(coreCanvas);
   }
 
-
   @Test
    public void drawOneSegment() throws Exception {
-        context.checking(new Expectations() {{
-            oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f, COLOR, 255);
-        }});
+    context.checking(new Expectations() {{
+      oneOf(coreCanvas).drawLine(10f, 20f, 30f, 40f, COLOR, 255);
+    }});
 
-        line.addPoint(30f, 40f);
-        line.drawOn(coreCanvas);
-    }
+    line.addPoint(30f, 40f);
+    line.drawOn(coreCanvas);
+  }
 
   @Test
   public void drawMoreSegments() throws Exception {
@@ -52,30 +51,17 @@ public class LineTest {
 
   @Test
   public void testLineDecay() throws Exception {
-      context.checking(new Expectations() {{
-          oneOf(coreCanvas).drawLine(10f, 20f, 100f, 400f, COLOR, 205);
-          oneOf(coreCanvas).drawLine(100f, 400f, 200f, 500f, COLOR, 230);
-          oneOf(coreCanvas).drawLine(200f, 500f, 300f, 600f, COLOR, 255);
-      }});
+    context.checking(new Expectations() {{
+      oneOf(coreCanvas).drawLine(10f, 20f, 100f, 400f, COLOR, 205);
+      oneOf(coreCanvas).drawLine(100f, 400f, 200f, 500f, COLOR, 230);
+      oneOf(coreCanvas).drawLine(200f, 500f, 300f, 600f, COLOR, 255);
+    }});
 
-      line.addPoint(100f, 400f);
-      line.decay();
-      line.addPoint(200f, 500f);
-      line.decay();
-      line.addPoint(300f, 600f);
-      line.drawOn(coreCanvas);
+    line.addPoint(100f, 400f);
+    line.decay();
+    line.addPoint(200f, 500f);
+    line.decay();
+    line.addPoint(300f, 600f);
+    line.drawOn(coreCanvas);
   }
-
-    @Test
-    public void testEmptyLineDeletedNotBeDrawn() throws Exception {
-        context.checking(new Expectations() {{
-            never(coreCanvas);
-        }});
-
-        line.addPoint(100f, 400f);
-        for (int i = 0; i <12 ; i++) line.decay();
-        assertTrue(line.emptyLine());
-        line.drawOn(coreCanvas);
-    }
-
 }

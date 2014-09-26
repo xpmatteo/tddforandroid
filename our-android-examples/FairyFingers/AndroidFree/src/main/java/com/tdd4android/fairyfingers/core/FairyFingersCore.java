@@ -71,16 +71,16 @@ public class FairyFingersCore {
     return lines;
   }
 
-    private void deleteEmptyLines() {
-		for (Iterator<Line> it = closedLines.iterator(); it.hasNext(); ) {
-		    Line line = it.next();
-		    if (line.emptyLine()) {
-		        it.remove();
-		    }
-		}
+  private void deleteEmptyLines() {
+    for (Iterator<Line> it = closedLines.iterator(); it.hasNext(); ) {
+      Line line = it.next();
+      if (line.emptyLine()) {
+        it.remove();
+      }
     }
+  }
 
-    public Line lines(int index) {
+  public Line lines(int index) {
     return lines().get(index);
   }
 

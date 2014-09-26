@@ -12,4 +12,8 @@ class CorePoint {
   public void decay() {
     this.alpha = Math.max(alpha-25, 0);
   }
+
+  public boolean isVisible() {
+    return alpha > 0;
+  }
 }

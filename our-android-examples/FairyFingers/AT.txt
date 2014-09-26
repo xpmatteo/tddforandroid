@@ -6,10 +6,21 @@ Acceptance Tests
 
  touch and drag finger: one line appears
 
+ dragFinger(10,10, 200,300)
+ assertLineAppears(10,10, 200,300, approximately(orange))
+ waitFor(1000)
+ assertScreenIsEmpty
+
 
  Second line
 
  touch and drag again; now we have two lines
+
+
+
+
+
+
 
 
  Two fingers

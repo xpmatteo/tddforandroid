@@ -21,7 +21,7 @@ def drawLine(x,y,num_seg):
 # check for minimuum and maximum constraints on the color in point x y of the image
 def checkColor(shot,x,y,mr=0,mg=0,mb=0,MR=255,MG=255,MB=255):
     (al, red, gr, bl) = shot.getRawPixel (x,y)
-    #print  "COLOR : " + str(red) + " " + str(gr) + " " + str(bl)
+    print  "COLOR : " + str(red) + " " + str(gr) + " " + str(bl)
     return (red >= mr and red <= MR and
             gr  >= mg and gr  <= MG and
             bl  >= mb and bl  <= MB)
@@ -47,7 +47,7 @@ time.sleep(.5)
 ###  Single Finger
 ###       touch and drag finger
 
-(x,y) = drawLine(400,400,30)
+(x,y) = drawLine(200,200,10)
 
 
 ###
@@ -81,9 +81,9 @@ print "Test Line Decaying OK"
 ###
 ###     Draw other three lines
 
-(x,y) = drawLine(600,400,5)
-(x,y) = drawLine(400,400,5)
-(x,y) = drawLine(400,400,8)
+(x,y) = drawLine(100,100,5)
+(x,y) = drawLine(150,150,5)
+(x,y) = drawLine(200,200,8)
 
 ###
 ###           =>  the colour of the last line should be rgb(0, 160, 176)

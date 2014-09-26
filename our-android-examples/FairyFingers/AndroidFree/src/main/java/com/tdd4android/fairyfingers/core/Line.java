@@ -29,7 +29,7 @@ public class Line {
   public void drawOn(CoreCanvas canvas) {
     CorePoint last = new CorePoint(startX, startY);
     for (CorePoint point : points) {
-      canvas.drawLine(last.x, last.y, point.x, point.y, color, point.alpha);
+      point.drawFrom(canvas, last, color);
       last = point;
     }
   }

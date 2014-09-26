@@ -7,12 +7,11 @@ import android.view.*;
 
 import com.tdd4android.fairyfingers.core.*;
 
-import java.util.Iterator;
-
 public class FairyFingersView extends View {
   private Paint paint = new Paint();
   private ColorSequence colors = new SummerPalette();
   private FairyFingersCore core = new FairyFingersCore(colors);
+  private Pippo pippo = new Pippo(core);
 
   public FairyFingersView(Context context) {
     super(context);
@@ -44,7 +43,7 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(final MotionEvent event) {
-    core.onTouch(new CoreMotionEvent() {
+    pippo.onTouchEvent(new CoreMotionEvent() {
       @Override
       public int getPointerCount() {
         return event.getPointerCount();

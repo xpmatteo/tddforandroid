@@ -9,7 +9,7 @@ public class DrawActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+      super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_draw);
 
       FairyFingersView view = (FairyFingersView) findViewById(R.id.fingersView);

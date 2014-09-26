@@ -16,4 +16,8 @@ class CorePoint {
   public boolean isVisible() {
     return alpha > 0;
   }
+
+  public void drawFrom(CoreCanvas canvas, CorePoint last, int color1) {
+    canvas.drawLine(last.x, last.y, x, y, color1, alpha);
+  }
 }

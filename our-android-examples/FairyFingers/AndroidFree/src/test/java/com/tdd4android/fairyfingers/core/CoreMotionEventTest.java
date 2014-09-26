@@ -4,14 +4,14 @@ import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.*;
 
-import static com.tdd4android.fairyfingers.core.CoreMotionEvent1.*;
+import static com.tdd4android.fairyfingers.core.CoreMotionEvent.*;
 
-public class CoreMotionEvent1Test {
+public class CoreMotionEventTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   private FingerEventTarget target = context.mock(FingerEventTarget.class);
-  private CoreMotionEvent1 coreMotionEvent1 = new CoreMotionEvent1();
+  private CoreMotionEvent coreMotionEvent = new CoreMotionEvent();
 
   @Test
   public void convertActionDownToFingerDown() throws Exception {
@@ -33,7 +33,7 @@ public class CoreMotionEvent1Test {
     touch(ACTION_POINTER_DOWN, 1, 0, -1, -1, 33, 200f, 300f);
   }
 
-  @Test(expected=CoreMotionEvent1.UnrecognizedActionException.class)
+  @Test(expected=CoreMotionEvent.UnrecognizedActionException.class)
   public void unrecognizedEvent() throws Exception {
     int unrecognizedAction = 1001;
     touch(unrecognizedAction, -1, -1, -1, -1);
@@ -77,28 +77,28 @@ public class CoreMotionEvent1Test {
   }
 
   private void touch(final int action, final int actionIndex, final int pointerId, final float x, final float y) {
-    coreMotionEvent1.action = action;
-    coreMotionEvent1.actionIndex = actionIndex;
-    coreMotionEvent1.pointerCount = 1;
-    coreMotionEvent1.pointers[0].pointerId = pointerId;
-    coreMotionEvent1.pointers[0].x = x;
-    coreMotionEvent1.pointers[0].y = y;
+    coreMotionEvent.action = action;
+    coreMotionEvent.actionIndex = actionIndex;
+    coreMotionEvent.pointerCount = 1;
+    coreMotionEvent.pointers[0].pointerId = pointerId;
+    coreMotionEvent.pointers[0].x = x;
+    coreMotionEvent.pointers[0].y = y;
 
-    coreMotionEvent1.deliverEventTo(target);
+    coreMotionEvent.deliverEventTo(target);
   }
 
   private void touch(final int action, final int actionIndex, final int id0, final float x0, final float y0, final int id1, final float x1, final float y1) {
-    coreMotionEvent1.action = action;
-    coreMotionEvent1.actionIndex = actionIndex;
-    coreMotionEvent1.pointerCount = 2;
-    coreMotionEvent1.pointers[0].pointerId = id0;
-    coreMotionEvent1.pointers[0].x = x0;
-    coreMotionEvent1.pointers[0].y = y0;
-    coreMotionEvent1.pointers[1].pointerId = id1;
-    coreMotionEvent1.pointers[1].x = x1;
-    coreMotionEvent1.pointers[1].y = y1;
+    coreMotionEvent.action = action;
+    coreMotionEvent.actionIndex = actionIndex;
+    coreMotionEvent.pointerCount = 2;
+    coreMotionEvent.pointers[0].pointerId = id0;
+    coreMotionEvent.pointers[0].x = x0;
+    coreMotionEvent.pointers[0].y = y0;
+    coreMotionEvent.pointers[1].pointerId = id1;
+    coreMotionEvent.pointers[1].x = x1;
+    coreMotionEvent.pointers[1].y = y1;
 
-    coreMotionEvent1.deliverEventTo(target);
+    coreMotionEvent.deliverEventTo(target);
   }
 
 }

@@ -11,7 +11,7 @@ public class FairyFingersView extends View {
   private Paint paint = new Paint();
   private ColorSequence colors = new SummerPalette();
   private FairyFingersCore core = new FairyFingersCore(colors);
-  private CoreMotionEvent1 e = new CoreMotionEvent1();
+  private CoreMotionEvent e = new CoreMotionEvent();
 
   public FairyFingersView(Context context) {
     super(context);
@@ -28,6 +28,7 @@ public class FairyFingersView extends View {
   @Override
   protected void onDraw(final Canvas canvas) {
     paint.setStrokeWidth(10);
+    paint.setStrokeCap(Paint.Cap.ROUND);
     CoreCanvas coreCanvas = new CoreCanvas() {
       @Override
       public void drawLine(float startX, float startY, float stopX, float stopY, int color, int alpha) {

@@ -1,6 +1,6 @@
 package com.tdd4android.fairyfingers.core;
 
-public class CoreMotionEvent1 {
+public class CoreMotionEvent {
   // Constants copied from android.view.MotionEvent
   public static final int ACTION_DOWN             = 0;
   public static final int ACTION_UP               = 1;
@@ -19,7 +19,7 @@ public class CoreMotionEvent1 {
     public float x, y;
   }
 
-  public CoreMotionEvent1() {
+  public CoreMotionEvent() {
     for (int i = 0; i < pointers.length; i++) {
       pointers[i] = new PointerInfo();
     }

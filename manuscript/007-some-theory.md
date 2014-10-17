@@ -70,7 +70,7 @@ But we can go one step further.  What if the code was
       canvas.drawPoint(point.getX(), point.getY());
     }
 
-Why do we have to ask all this questions to the point object?  Couldnt we just ask it to draw itself unless it's invisible?
+Why do we have to ask all this questions to the point object?  Couldn't we just ask it to draw itself unless it's invisible?
 
     point.drawYourselfUnlessInvisibleOn(canvas);
 
@@ -84,43 +84,50 @@ but the new calling code does not change much
 
     point.drawYourselfUnlessInvisibleWithAppropriateColorOn(canvas);
 
-This is because there the protocol between point and canvas has become a detail hidden from the view of the user of the point.  We can step this isolation more by making the name of the message simpler:
+We can increase this isolation by making the name of the message simpler:
 
     point.drawYourselfOn(canvas)
 
-Here we don't want to know *any* detail: nothing about color, shape, visibility, or anything else.  This isolation makes code **much easier to change**, because changes in the protocol between point and canvas will not impact the users of point.
+Here we don't want to know *any* detail: nothing about color, shape, visibility, or anything else.  This isolation makes code **much easier to change**, because changes in the protocol between point and canvas will not impact the callers of either.
 
 This preference for telling objects to do things rather than asking objects to return values was called "Tell, don't ask!" in a famous paper by Andy Hunt and Dave Thomas.
 
+
 ### Mocks
 
-Now, I hope you're convinced that *Tell, don't ask* is good.  How do you test an object that does not have getters?
+I hope I've convinced you that *Tell, don't ask* is good.  Now you have a problem: how do you test an object that does not have getters?  Ha!
 
-The only way to do test such an object is to *observe its behaviour*.
+The only way to do test such an object is to *observe its behaviour*.  That is, we send it a message, and observe what other messages it sends to its neighbours.  I send a `drawYourselfOn(canvas)` message to the point, and I want to test that the canvas was used correctly.  How do I test that?  Should I ask the canvas?  But then, again, would require adding *getters* to the canvas.
 
+    // Bleah!  Don't do this!
+    for (int x=0; x<=canvas.getMaxX(); x++) {
+      for (int y=0; y<=canvas.getMaxY(); y++) {
+        if (x == point.getX() && y == point.getY())
+          assertEquals(point.getColor(), canvas.getColorAt(x, y))
+        else
+          assertEquals(WHITE, canvas.getColorAt(x, y))
+      }
+    }
 
+I'd rather express my test (in pseudocode) this way:
 
+    I expect that
+      canvas will receive drawPoint(x, y)
+    whenever I do
+      point.drawYourselfOn(canvas)
 
+So instead of an *assertion* we have an **expectation**.  We expect that the canvas will be called in a certain way, *and nothing else*.  The nice thing in this test is that *we don't care what's the behaviour of the canvas*.  For all we care, we can just assume that `canvas` is just an interface.  This means that we can develop an object with TDD before its collaborators even exist!
 
-If I have a calculator object, I can send a message asking it to divide 3 by 2. How do I know what the answer is?  One possible answer is to ask the Calculator to return the answer.
+The above test, expressed in JMock, would look like the following:
 
-    Calculator calculator = new Calculator();
-    calculator.divide(3, 2);
-    assertEquals(1.5, calculator.getAnswer());
+    Point point = new Point(10, 20);
+    Canvas canvas = context.mock(Canvas.class);
+    context.checking(new Expectations() {{
+      oneOf(canvas).drawPoint(10, 20);
+    }});
+    point.drawYourselfOn(canvas);
 
-Now this works more or less, but when we try to connect this Calculator object to the buttons and the display of its GUI, we discover that the protocols are not right.  The GUI has buttons for the ten digits
-
-
-But suppose that the reason why this calculator exists is to display the result on an electroing display.  How do we design the interaction between the Calculator and the Display?  The previous test leads to
-
-    Calculator calculator = new Calculator();
-    calculator.add(3, 4);
-    Display display = new Display();
-    display.showResult(calculator.getAnswer());
-    assertEquals(7, calculator.getAnswer());
-
-Now what if
-
+It looks a bit esoteric at first, but it will all make sense.  The details on how JMock works are [in the appendix](#appendix-jmock).  More about mocks in [GOOS].
 
 
 ## Presenter First

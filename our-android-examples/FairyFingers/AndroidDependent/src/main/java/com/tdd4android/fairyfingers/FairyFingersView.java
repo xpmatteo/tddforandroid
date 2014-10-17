@@ -44,13 +44,10 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(final MotionEvent event) {
-    e.action = event.getActionMasked();
-    e.pointerCount = event.getPointerCount();
-    e.actionIndex = event.getActionIndex();
+    e.resetEvent(event.getActionMasked(), event.getActionIndex());
+
     for (int i = 0; i < event.getPointerCount(); i++) {
-      e.pointers[i].pointerId = event.getPointerId(i);
-      e.pointers[i].x = event.getX(i);
-      e.pointers[i].y = event.getY(i);
+      e.addPointer(event.getPointerId(i), event.getX(i), event.getY(i));
     }
     e.deliverEventTo(core);
     invalidate();

@@ -1,4 +1,4 @@
-# Example: Unit Doctor
+# Exercise: Unit Doctor
 
 ## Problem description
 

@@ -1,5 +1,6 @@
 000-introduction.md
 005.so-difficult.md
+some-theory.md
 010-unit-converter.md
 020-more-conversion-logic.md
 910-appendix-junit.md

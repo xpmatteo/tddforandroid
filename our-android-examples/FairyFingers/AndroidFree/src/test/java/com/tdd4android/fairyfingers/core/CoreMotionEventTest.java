@@ -77,26 +77,16 @@ public class CoreMotionEventTest {
   }
 
   private void touch(final int action, final int actionIndex, final int pointerId, final float x, final float y) {
-    coreMotionEvent.action = action;
-    coreMotionEvent.actionIndex = actionIndex;
-    coreMotionEvent.pointerCount = 1;
-    coreMotionEvent.pointers[0].pointerId = pointerId;
-    coreMotionEvent.pointers[0].x = x;
-    coreMotionEvent.pointers[0].y = y;
+    coreMotionEvent.resetEvent(action, actionIndex);
+    coreMotionEvent.addPointer(pointerId, x, y);
 
     coreMotionEvent.deliverEventTo(target);
   }
 
   private void touch(final int action, final int actionIndex, final int id0, final float x0, final float y0, final int id1, final float x1, final float y1) {
-    coreMotionEvent.action = action;
-    coreMotionEvent.actionIndex = actionIndex;
-    coreMotionEvent.pointerCount = 2;
-    coreMotionEvent.pointers[0].pointerId = id0;
-    coreMotionEvent.pointers[0].x = x0;
-    coreMotionEvent.pointers[0].y = y0;
-    coreMotionEvent.pointers[1].pointerId = id1;
-    coreMotionEvent.pointers[1].x = x1;
-    coreMotionEvent.pointers[1].y = y1;
+    coreMotionEvent.resetEvent(action, actionIndex);
+    coreMotionEvent.addPointer(id0, x0, y0);
+    coreMotionEvent.addPointer(id1, x1, y1);
 
     coreMotionEvent.deliverEventTo(target);
   }

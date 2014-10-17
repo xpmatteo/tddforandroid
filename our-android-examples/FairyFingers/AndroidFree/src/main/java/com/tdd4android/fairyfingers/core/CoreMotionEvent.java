@@ -9,12 +9,25 @@ public class CoreMotionEvent {
   public static final int ACTION_POINTER_UP       = 6;
 
   // Data copied from the Android MotionEvent
-  public int action;
-  public int pointerCount;
-  public int actionIndex;
-  public PointerInfo[] pointers = new PointerInfo[100]; // 100 should be enough
+  private int action;
+  private int pointerCount;
+  private int actionIndex;
+  private PointerInfo[] pointers = new PointerInfo[100]; // 100 should be enough
 
-  public class PointerInfo {
+    public void resetEvent(int actionMasked, int index) {
+        action = actionMasked;
+        actionIndex = index;
+        pointerCount = 0;
+    }
+
+    public void addPointer(int pointerId, float x, float y) {
+        pointers[pointerCount].pointerId = pointerId;
+        pointers[pointerCount].x = x;
+        pointers[pointerCount].y = y;
+        pointerCount++;
+    }
+
+    public class PointerInfo {
     public int pointerId;
     public float x, y;
   }

@@ -15,11 +15,10 @@ One instance of the Child Test pattern is when we write an end-to-end acceptance
 
 For this reason, it pays to apply Child Test to end-to-end tests.  We start every feature by writing on paper some examples (scenarios) of how the feature will work.  Then we translate those scenarios into end-to-end acceptance tests.  When we are satisfied that they fail, and that they fail for the correct reason, then we comment them out.
 
-This style of work is sometimes called "Acceptance Test-Driven Development" or ATDD.  It was popularized by Freeman and Pryce in the book Growing Object-Oriented Software [GOOS](#goos).  Below you can see the picture from their book.
+This style of work is sometimes called "Acceptance Test-Driven Development" or ATDD.  It was popularized by Freeman and Pryce in the book Growing Object-Oriented Software [GOOS](#goos).  Below you can see the picture from their book:
 
-(figura da Freeman & Pryce)
 {width=100%}
-![The ATDD cycle](images/tdd-with-acceptance-tests.png)
+![The ATDD cycle (image [cc-by-sa](http://creativecommons.org/licenses/by-sa/4.0/) made )](images/tdd-with-acceptance-tests.png)
 
 
 When we do TDD we often exercise objects in isolation from each other.  The mocks approach explained in [GOOS](#goos) is particularly good in this respect.  The end-to-end AT helps making sure all the objects that we TDDed in isolation talk to each other correctly. Thus we mitigate the risk of mock-based tests making false assumptions on how the real (non-mocked) collaborators really work.

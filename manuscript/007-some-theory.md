@@ -21,7 +21,7 @@ For this reason, it pays to apply Child Test to end-to-end tests.  We start ever
 This style of work is sometimes called "Acceptance Test-Driven Development" or ATDD.  It was popularized by Freeman and Pryce in the book [Growing Object-Oriented Software](#goos).  Below you can see the picture from their book:
 
 {width=100%}
-![The ATDD cycle](images/tdd-with-acceptance-tests.png)
+![The ATDD cycle; image cc-by-sa courtesy of Freeman and Pryce](images/tdd-with-acceptance-tests.png)
 
 
 When we do TDD we often exercise objects in isolation from each other.  The mocks approach explained in [GOOS](#goos) is particularly good in this respect.  The end-to-end AT helps making sure all the objects that we TDDed in isolation talk to each other correctly. Thus we mitigate the risk of mock-based tests making false assumptions on how the real (non-mocked) collaborators really work.
@@ -103,14 +103,15 @@ The only way to do test such an object is to *observe its behaviour*.  That is, 
     for (int x=0; x<=canvas.getMaxX(); x++) {
       for (int y=0; y<=canvas.getMaxY(); y++) {
         if (x == point.getX() && y == point.getY())
-          assertEquals(point.getColor(), canvas.getColorAt(x, y))
+          assertEquals(point.getColor(), canvas.getColorAt(x, y));
         else
-          assertEquals(WHITE, canvas.getColorAt(x, y))
+          assertEquals(WHITE, canvas.getColorAt(x, y));
       }
     }
 
 I'd rather express my test (in pseudocode) this way:
 
+{lang=plain}
     I expect that
       canvas will receive drawPoint(x, y)
     whenever I do
@@ -127,7 +128,9 @@ The above test, expressed in JMock, would look like the following:
     }});
     point.drawYourselfOn(canvas);
 
-It looks a bit esoteric at first, but it will all make sense.  The details on how JMock works are [in the appendix](#appendix-jmock).  More about mocks in [GOOS].
+The point of this test is that we can use it to define how the point should talk to its collaborator.
+
+The syntax looks a bit esoteric at first, but it will all make sense.  The details on how JMock works are [in the appendix](#appendix-jmock).  More about mocks in [GOOS].
 
 
 ## Presenter First

@@ -145,9 +145,39 @@ These acceptance tests are meant to be executed manually.  Some can and will be 
 
 Note that we started using the word "trail" instead of "line".  We'd like to have a special name for the "things" that we draw with in this app, and the word "line" is both too generic and too specific.  The Android `canvas` object has a `drawLine` method; we'd like to distinguish our own "lines" from what Android calls a "line".  Therefore we will call them "trails".
 
-## Start TDDing
+## Setup the project
 
-We create a new project with the intention of implementing Fairy Fingers in TDD.  We start much like we did in the spike; we create a custom view and then we stop to consider.  What next?
+We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view and then we stop to consider.  What next?
+
+Before we can write any test, we need to update the project.  The pure Java tests will live in a separate, android-free module that we call `core`.
+
+1. We create a module of type "Java Library" with Android Studio.
+2. We name it `core`.
+3. We create the folder `core/src/test/java` in it.
+4. We add JUnit support to `core/build.gradle`
+
+The updated Gradle file looks like this:
+{line-numbers=on, lang="groovy"}
+~~~~~
+apply plugin: 'java'
+
+dependencies {
+   compile fileTree(dir: 'libs', include: ['*.jar'])
+   testCompile 'junit:junit-dep:4.11'
+   testCompile 'org.jmock:jmock-junit4:2.6.0'
+}
+
+test {
+   testLogging {
+       events "passed", "skipped", "failed", "standardOut", "standardError"
+   }
+}
+~~~~~
+  Lines 5-6 add support for JUnit and JMock.  Lines 9-13 improve the way Android Studio reports test results.
+
+
+
+## TDD
 
 The first step for TDD is to write a test list.  We start by copying things from the acceptance tests list:
 
@@ -162,30 +192,6 @@ Where do we start?  We choose "create a two points trail" because we'd like to d
 
 Which object will accumulate points?  I imagine there will be an object that represents a set of trails.  It will receive messages from the `onTouchEvent` method of the view and it will react accordingly.
 
-Before we can write any test, we need to setup the project.  The pure Java tests will live in a separate, android-free module that we call `core`.
-
-1. We create a module of type "Java Library" with Android Studio.
-2. We name it `core`.
-3. We create the folder `core/src/test/java` in it.
-4. We add JUnit support to `core/build.gradle`
-      {line-numbers=on}
-      ~~~~~
-      apply plugin: 'java'
-
-      dependencies {
-         compile fileTree(dir: 'libs', include: ['*.jar'])
-         testCompile 'junit:junit-dep:4.11'
-         testCompile 'org.jmock:jmock-junit4:2.6.0'
-      }
-
-      test {
-         testLogging {
-             events "passed", "skipped", "failed", "standardOut", "standardError"
-         }
-      }
-      ~~~~~
-  Lines 5-6 add support for JUnit and JMock.  Lines 9-13 improve the way Android Studio reports test results.
-
 Now we can write the first test.
 
 ~~~~~
@@ -196,20 +202,29 @@ import static org.junit.Assert.*;
 
 public class TrailSetTest {
   @Test
-  public void testAddNewUnfinishedTrail() throws Exception {
+  public void twoPointsTrail() throws Exception {
     TrailSet trailSet = new TrailSet();
 
     trailSet.onFingerDown(10, 20);
     trailSet.onFingerMove(30, 40);
+    trailSet.onFingerUp();
 
     assertEquals(1, trailSet.size());
   }
 }
 ~~~~~~
 
+While we write this test, we think of a simpler one:
 
+~~~~~
+@Test
+public void noTrails() throws Exception {
+  TrailSet trailSet = new TrailSet();
+  assertEquals(0, trailSet.size());
+}
+~~~~~~
 
-
+so we can pass this one
 
 
 

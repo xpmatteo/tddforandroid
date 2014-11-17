@@ -1,9 +1,11 @@
-package com.tdd4android.fairyfingers;
+package com.tdd4android.fairyfingers.android;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.tdd4android.fairyfingers.R;
 
 
 public class FairyFingersActivity extends Activity {

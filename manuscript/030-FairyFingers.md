@@ -21,6 +21,7 @@ The goals of the spike are:
 
 We create an empty project and check that it runs.  Then we modify the `res/layout/activity_my.xml` file, removing the standard "hello world" view and replacing it with a custom view.
 
+{lang="xml"}
 ~~~~~
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -65,9 +66,12 @@ public class MyView extends View {
 }
 ~~~~~
 We run it, and it works!
+
+{width=60%}
 ![We can draw a line!](images/spike-fairy-fingers-0.png)
 
 Now we want to track the user touching the screen.  Basically we must accumulate points in the `onTouchEvent` method, and draw them in the `onDraw` method.  We must also remember to call `invalidate` after every event. This notifies the OS that the screen should be updated; Android will answer by calling `onDraw` later.
+
 ~~~~~
 public class MyView extends View {
   // ...
@@ -94,12 +98,16 @@ public class MyView extends View {
   List<Point> points = new ArrayList<Point>();
 }
 ~~~~~
-We run it, we drag a finger on the screen and we see the following.
+
+We drag a finger on the screen and we see the following.
+
+{width=60%}
 ![We can track the user's finger](images/spike-fairy-fingers-1.png)
 
 At the moment, we draw a single line.  Touching again the screen makes the line longer.  The next thing we'd like to do is to draw a new line every time we touch the screen.
 
 The key here is how we use the `MotionEvent` data structure.  The relevant fields return the event coordinates with `getX` and `getY`, and the type of action, that is returned by `getActionMasked`.  The actions we are interested in at the moment are `ACTION_DOWN`, `ACTION_MOVE` and `ACTION_UP`, corresponding to touching, dragging and lifting the finger.  We can exploit this information to clear the old line whenever the finger goes down on the screen.
+
 ~~~~~
 public boolean onTouchEvent(MotionEvent event) {
   int action = event.getActionMasked();
@@ -114,7 +122,31 @@ public boolean onTouchEvent(MotionEvent event) {
 }
 ~~~~~
 
-So far, so good.  We could explore the `MotionEvent` further in order to understand how to deal with multitouch, but we can leave that for later.  We learned enough already for writing a first version of Fairy Fingers that only supports single touch.
+So far, so good.  We could explore the `MotionEvent` further in order to understand multitouch, but we can leave that for later.  We learned enough already for writing a first version of Fairy Fingers that only supports single touch.
+
+
+## Acceptance tests
+
+We start with the following acceptance tests:
+
+ - Single touch.  Dragging the finger should produce a colored line
+ - Fade.  The lines should fade to nothing.
+ - Many lines.  We draw a line, then we draw another.
+ - Many colours.  Every time we draw a line, we should get a different color
+ - Multi-touch.  Dragging two fingers should produce two lines.
+ - Multi-touch dashes.  We draw a continuous line with one finger, and a dashed line with another finger at the same time.  We should see a pattern like
+
+~~~~~
+--   --   --
+------------
+~~~~~
+
+These acceptance tests are meant to be executed manually.  Some can and will be automated.  The ones that deal with multi-touch cannot be automated with present-generation tools (Monkeyrunner).
+
+## Start TDDing
+
+We start a new project with the intention of implementing Fairy Fingers in TDD.
+
 
 
 

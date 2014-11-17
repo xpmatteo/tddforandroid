@@ -13,12 +13,26 @@ public class TrailSetTest {
   }
 
   @Test
-  public void testAddNewUnfinishedTrail() throws Exception {
+  public void unfinishedTrail() throws Exception {
     TrailSet trailSet = new TrailSet();
 
     trailSet.onFingerDown(10, 20);
     trailSet.onFingerMove(30, 40);
 
     assertEquals(1, trailSet.size());
+    assertEquals("(10,20)->(30,40)", trailSet.get(0).toString());
   }
+
+  @Test
+  public void twoPointsTrail() throws Exception {
+    TrailSet trailSet = new TrailSet();
+
+    trailSet.onFingerDown(10, 20);
+    trailSet.onFingerMove(30, 40);
+    trailSet.onFingerUp();
+
+    assertEquals(1, trailSet.size());
+    assertEquals("(10,20)->(30,40)", trailSet.get(0).toString());
+  }
+
 }

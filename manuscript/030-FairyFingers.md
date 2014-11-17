@@ -217,7 +217,7 @@ public class TrailSetTest {
 }
 ~~~~~~
 
-While we write this test, we think of a simpler one:
+While we write this test, we think of a two simpler ones:
 
 ~~~~~
 @Test
@@ -227,7 +227,67 @@ public void noTrails() throws Exception {
 }
 ~~~~~~
 
-so we can pass this one
+and
+
+~~~~~
+@Test
+public void unfinishedTrail() throws Exception {
+  TrailSet trailSet = new TrailSet();
+
+  trailSet.onFingerDown(10, 20);
+  trailSet.onFingerMove(30, 40);
+
+  assertEquals(1, trailSet.size());
+}
+~~~~~~
+
+The last one is needed because we expect the trail to be visible even while it's not finished yet.
+
+The first implementation of `TrailSet` makes these three tests pass, but is not very useful yet.
+
+~~~~~
+package com.tdd4android.fairyfingers.core;
+
+public class TrailSet {
+  private int trails;
+
+  public int size() {
+    return trails;
+  }
+
+  public void onFingerDown(int x, int y) {
+    trails++;
+  }
+
+  public void onFingerMove(int x, int y) {
+  }
+
+  public void onFingerUp() {
+  }
+}
+~~~~~
+
+How can we improve the tests in a way that forces us to make `TrailSet` more useful?
+
+(Pause for a minute.  What would YOU do?)
+
+The TrailSet should build a Trail object, and we'd like this Trail to contain exactly the coordinates that were supplied by the tests.  One way to do this is with getters:
+
+~~~~~
+assertEquals(10, trailSet.get(0).getPoints(0).getX());
+assertEquals(20, trailSet.get(0).getPoints(0).getY());
+~~~~~
+
+But this test code is extremely boring to write!  Being bored is an important signal.  It's the test pushing back: it doesn't want to be written like this.  One concrete problem is that there are too many "dots" in the assertion.  We dig too much further into the objects.  One other problem is that we are assuming that we will need getters for the coordinates; it's not clear yet that these getters will be used.
+
+Trick: use "toString".  The toString of the Trail will certainly be needed for debugging and logging.  How about:
+
+~~~~~
+assertEquals("(10,20)->(30,40)", trailSet.get(0).toString());
+~~~~~
+
+In this test, are only assuming that the TrailSet will return an object that contains the expected coordinates.  It looks good!
+
 
 
 

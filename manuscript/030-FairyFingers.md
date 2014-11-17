@@ -129,12 +129,12 @@ So far, so good.  We could explore the `MotionEvent` further in order to underst
 
 We start with the following acceptance tests:
 
- - Single touch.  Dragging the finger should produce a colored line
- - Fade.  The lines should fade to nothing.
- - Many lines.  We draw a line, then we draw another.
- - Many colours.  Every time we draw a line, we should get a different color
- - Multi-touch.  Dragging two fingers should produce two lines.
- - Multi-touch dashes.  We draw a continuous line with one finger, and a dashed line with another finger at the same time.  We should see a pattern like
+ - Single touch.  Dragging the finger should produce a colored trail
+ - Fade.  The trails should fade to nothing.
+ - Many trails.  We draw a trail, then we draw another.
+ - Many colours.  Every time we draw a trail, we should get a different colour
+ - Multi-touch.  Dragging two fingers should produce two trails.
+ - Multi-touch dashes.  We draw a continuous trail with one finger, and a dashed trail with another finger at the same time.  We should see a pattern like
 
 ~~~~~
 --   --   --
@@ -143,9 +143,73 @@ We start with the following acceptance tests:
 
 These acceptance tests are meant to be executed manually.  Some can and will be automated.  The ones that deal with multi-touch cannot be automated with present-generation tools (Monkeyrunner).
 
+Note that we started using the word "trail" instead of "line".  We'd like to have a special name for the "things" that we draw with in this app, and the word "line" is both too generic and too specific.  The Android `canvas` object has a `drawLine` method; we'd like to distinguish our own "lines" from what Android calls a "line".  Therefore we will call them "trails".
+
 ## Start TDDing
 
-We start a new project with the intention of implementing Fairy Fingers in TDD.
+We create a new project with the intention of implementing Fairy Fingers in TDD.  We start much like we did in the spike; we create a custom view and then we stop to consider.  What next?
+
+The first step for TDD is to write a test list.  We start by copying things from the acceptance tests list:
+
+ - create a two-points trail
+ - create a many-points trail
+ - create two trails
+ - fade a trail
+ - randomize colours
+ - draw all the trails
+
+Where do we start?  We choose "create a two points trail" because we'd like to discover how we will solve this.
+
+Which object will accumulate points?  I imagine there will be an object that represents a set of trails.  It will receive messages from the `onTouchEvent` method of the view and it will react accordingly.
+
+Before we can write any test, we need to setup the project.  The pure Java tests will live in a separate, android-free module that we call `core`.
+
+1. We create a module of type "Java Library" with Android Studio.
+2. We name it `core`.
+3. We create the folder `core/src/test/java` in it.
+4. We add JUnit support to `core/build.gradle`
+      {line-numbers=on}
+      ~~~~~
+      apply plugin: 'java'
+
+      dependencies {
+         compile fileTree(dir: 'libs', include: ['*.jar'])
+         testCompile 'junit:junit-dep:4.11'
+         testCompile 'org.jmock:jmock-junit4:2.6.0'
+      }
+
+      test {
+         testLogging {
+             events "passed", "skipped", "failed", "standardOut", "standardError"
+         }
+      }
+      ~~~~~
+  Lines 5-6 add support for JUnit and JMock.  Lines 9-13 improve the way Android Studio reports test results.
+
+Now we can write the first test.
+
+~~~~~
+package com.tdd4android.fairyfingers.core;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class TrailSetTest {
+  @Test
+  public void testAddNewUnfinishedTrail() throws Exception {
+    TrailSet trailSet = new TrailSet();
+
+    trailSet.onFingerDown(10, 20);
+    trailSet.onFingerMove(30, 40);
+
+    assertEquals(1, trailSet.size());
+  }
+}
+~~~~~~
+
+
+
+
 
 
 

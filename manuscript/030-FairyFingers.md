@@ -157,6 +157,7 @@ Before we can write any test, we need to update the project.  The pure Java test
 4. We add JUnit support to `core/build.gradle`
 
 The updated Gradle file looks like this:
+
 {line-numbers=on, lang="groovy"}
 ~~~~~
 apply plugin: 'java'
@@ -174,6 +175,8 @@ test {
 }
 ~~~~~
   Lines 5-6 add support for JUnit and JMock.  Lines 9-13 improve the way Android Studio reports test results.
+
+We test the setup by creating an simple test file and watching it fail.
 
 
 

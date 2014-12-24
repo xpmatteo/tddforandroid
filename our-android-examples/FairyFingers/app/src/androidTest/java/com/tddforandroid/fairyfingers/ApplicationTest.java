@@ -1,4 +1,4 @@
-package com.tdd4android.fairyfingers;
+package com.tddforandroid.fairyfingers;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

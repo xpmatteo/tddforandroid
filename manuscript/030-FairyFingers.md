@@ -19,9 +19,9 @@ The goals of the spike are:
  * Understand how to draw on the screen
  * Understand how to track the user's finger
 
-We create an empty project and check that it runs.  Then we modify the `res/layout/activity_my.xml` file, removing the standard "hello world" view and replacing it with a custom view.
+We create an empty project and check that it shows a "hello world" on our device.   Then we modify the `res/layout/activity_my.xml` file, removing the standard "hello world" view and replacing it with a custom view (see line 7 in next listing).
 
-{lang="xml"}
+{lang="xml", line-numbers=on}
 ~~~~~
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -70,10 +70,13 @@ We run it, and it works!
 {width=60%}
 ![We can draw a line!](images/spike-fairy-fingers-0.png)
 
-Now we want to track the user touching the screen.  Basically we must accumulate points in the `onTouchEvent` method, and draw them in the `onDraw` method.  We must also remember to call `invalidate` after every event. This notifies the OS that the screen should be updated; Android will answer by calling `onDraw` later.
+Now we want to track the user touching the screen.  Android calls the `onTouchEvent` method whenever the user touches or drags her finger on the screen.  It gives us a `MotionEvent` object that contains the screen coordinates of the user's finger.  We must store those coordinates in a list
+ and then draw them in the `onDraw` method.  We must also remember to call `invalidate` after every touch event. This notifies the OS that the screen should be updated; Android will answer by calling `onDraw` later.
 
 ~~~~~
 public class MyView extends View {
+  private List<Point> points = new ArrayList<Point>();
+
   // ...
 
   @Override
@@ -94,8 +97,6 @@ public class MyView extends View {
     invalidate();
     return true;
   }
-
-  List<Point> points = new ArrayList<Point>();
 }
 ~~~~~
 

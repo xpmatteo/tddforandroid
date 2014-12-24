@@ -1,14 +1,12 @@
-package com.tdd4android.fairyfingers.android;
+package com.tddforandroid.fairyfingers;
 
-import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.tdd4android.fairyfingers.R;
 
-
-public class FairyFingersActivity extends Activity {
+public class FairyFingersActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +18,7 @@ public class FairyFingersActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.fairy_fingers, menu);
+        getMenuInflater().inflate(R.menu.menu_fairy_fingers, menu);
         return true;
     }
 
@@ -30,9 +28,12 @@ public class FairyFingersActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

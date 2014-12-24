@@ -178,12 +178,26 @@ test {
   Lines 5-6 add support for JUnit and JMock.  Lines 9-13 improve the way Android Studio reports test results.
 
 We test the setup by creating an simple test file and watching it fail.
+~~~~~
+package com.tdd4android.fairyfingers.core;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class FairyFingersTest {
+    @Test
+    public void testName() throws Exception {
+        fail("foobar");
+    }
+}
+~~~~~
+
 
 
 
 ## TDD
 
-The first step for TDD is to write a test list.  We start by copying things from the acceptance tests list:
+The first step for TDD is to write a test list.  We start by writing a todo list from the acceptance tests list:
 
  - create a two-points trail
  - create a many-points trail

@@ -1,9 +1,12 @@
-package com.tddforandroid.fairyfingers;
+package com.tdd4android.fairyfingers;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.tdd4android.fairyfingers.core.MyClass;
+import com.tddforandroid.fairyfingers.R;
 
 
 public class FairyFingersActivity extends ActionBarActivity {
@@ -12,6 +15,7 @@ public class FairyFingersActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fairy_fingers);
+        new MyClass();
     }
 
 

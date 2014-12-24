@@ -163,6 +163,8 @@ The updated Gradle file looks like this:
 ~~~~~
 apply plugin: 'java'
 
+sourceCompatibility = 1.7
+
 dependencies {
    compile fileTree(dir: 'libs', include: ['*.jar'])
    testCompile 'junit:junit-dep:4.11'
@@ -175,9 +177,9 @@ test {
    }
 }
 ~~~~~
-  Lines 5-6 add support for JUnit and JMock.  Lines 9-13 improve the way Android Studio reports test results.
+Line 3 sets the version of Java that we want to use in the core module.  Version 1.7 is the highest supported version at the time.  Lines 7-8 add support for JUnit and JMock.  Lines 11-15 improve the way Android Studio reports test results.
 
-We test the setup by creating an simple test file and watching it fail.
+We test that JUnit works by creating an simple test file and watching it fail.
 ~~~~~
 package com.tdd4android.fairyfingers.core;
 
@@ -192,7 +194,39 @@ public class FairyFingersTest {
 }
 ~~~~~
 
+We also test that the `app` module can use classes from the `core` module.  We create a dummy `MyClass` class in `core/src/main/java/com/tdd4android/fairyfingers/core` and create an instance in our main Activity:
+{line-numbers=on}
+~~~~~~
+package com.tdd4android.fairyfingers;
+//...
+public class FairyFingersActivity extends ActionBarActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fairy_fingers);
+        new MyClass();
+    }
+    // ...
+}
+~~~~~
+We instantiate a dummy core object in line 8, just to prove that we can.
 
+We must tell Gradle that module `app` depends on module `core`.  We do that by modifing app/build.gradle as follows:
+
+{lang=groovy, line-numbers=on}
+~~~~~
+apply plugin: 'com.android.application'
+
+android {
+  // ...
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':core')
+}
+~~~~~
+We added the dependency on line 9.
 
 
 ## TDD

@@ -1,0 +1,23 @@
+
+MODEL-VIEW SEPARATION  ---> Craig Larman, Applying UML and patterns
+
+DEPENDENCY INVERSION   ---> Robert Martin, Agile SW Dev, principles, patterns, practices
+
+
+60 secondi rosso
+5 secondi giallo
+30 secondi verde
+
+
+interface Semaphore {
+  turnGreenOn();
+  turnGreenOff();
+  turnRedOn();
+  ....
+}
+
+
+
+GUI
+              tick
+Timer --------------------> LOGICA

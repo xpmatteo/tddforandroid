@@ -239,7 +239,7 @@ public void unfinishedTrail() throws Exception {
 
   assertEquals(1, trailSet.size());
 }
-~~~~~~
+~~~~~
 
 The last one is needed because we expect the trail to be visible even while it's not finished yet.
 
@@ -276,21 +276,18 @@ The TrailSet should build a Trail object, and we'd like this Trail to contain ex
 ~~~~~
 assertEquals(10, trailSet.get(0).getPoints(0).getX());
 assertEquals(20, trailSet.get(0).getPoints(0).getY());
+assertEquals(30, trailSet.get(0).getPoints(1).getX());
+assertEquals(40, trailSet.get(0).getPoints(1).getY());
 ~~~~~
 
-But this test code is extremely boring to write!  Being bored is an important signal.  It's the test pushing back: it doesn't want to be written like this.  One concrete problem is that there are too many "dots" in the assertion.  We dig too much further into the objects.  One other problem is that we are assuming that we will need getters for the coordinates; it's not clear yet that these getters will be used.
+But this test code is extremely boring to write!  Being bored is an important signal.  It's the test pushing back: it doesn't want to be written like this.  One concrete problem is that there are too many "dots" in the assertion.  We dig too much further into the objects.  One other problem is that we are assuming that we will need all those getters; it's not clear yet that these getters will be used in production code.
 
-Trick: use "toString".  The toString of the Trail will certainly be needed for debugging and logging.  How about:
+Trick: use "toString".  The `toString` of the `Trail` will certainly be needed for debugging and logging.  How about:
 
 ~~~~~
 assertEquals("(10,20)->(30,40)", trailSet.get(0).toString());
 ~~~~~
 
-In this test, are only assuming that the TrailSet will return an object that contains the expected coordinates.  It looks good!
-
-
-
-
-
+In this test, are only assuming that the `TrailSet` will return an object that contains the expected points in a certain order.  It looks promising!
 
 

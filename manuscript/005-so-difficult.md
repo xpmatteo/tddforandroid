@@ -1,29 +1,30 @@
 
 # Why doing TDD with Android is challenging
 
-## How a unit test is done
+
+
+## Android problem #1: the OS does the instantiating
 
 The usual way to write a unit test for a Java object is to
 
- 0. create the object, bringing it to a desired state
- 1. perform an action on it
- 2. assert the state of the object, or the state of its collaborators.
+ 1. create the object, bringing it to a desired state
+ 2. perform an action on it
+ 3. check the results
 
-There are two ways to accomplish the first step.  The first way is to pass the required state in the constructor.
+For instance, suppose we wanted to test a simple "dictionary" object.  We could do it by means of this test:
 
-    Dictionary dictionary = new Dictionary("cat", "gatto", "dog", "cane");
-
-The second is to create the object in a default state, and then modify it.
-
+    // 1. create the object and bring it to a desired state
     Dictionary dictionary = new Dictionary();
     dictionary.define("cat", "gatto");
     dictionary.define("dog", "cane");
 
-In the following, we describe why this simple act of instantiating is problematic in Android, and what can be done about it.
+    // 2. perform an action
+    String translation = dictionary.translationFor("cat");
 
-## Android problem #1: the OS does the instantiating
+    // 3. check the results
+    assertEquals("gatto", translation);
 
-In Android, all of the important objects: the Activity, the Views, the Services, the Content providers, are instantiated by the system.  This makes it very difficult to do a unit test on such objects, because we cannot even instantiate the objects; we must get the OS to instantiate them for us.
+The problem for Android programmers is that in Android, all of the important objects: the Activity, the Views, the Services, the Content providers, are instantiated by the system.  This makes it very difficult to do a unit test on such objects, because we cannot even instantiate the objects; we must get the OS to instantiate them for us.
 
 The solution: don't try to unit test them.  Regard them as a kind of "main" program.
 
@@ -35,7 +36,8 @@ Let's illustrate the principle with an example.  You have a simple Java program 
       public static void main(String ... args) throws IOException {
         String line;
         int count = 0;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader reader = new BufferedReader(
+            new InputStreamReader(System.in));
         while ((line = reader.readLine()) != null) {
           count++;
           System.out.println(String.format("%d %s", count, line));

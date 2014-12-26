@@ -31,19 +31,19 @@ Note that by writing down the examples we clarified what exactly the customer ex
 
 ## Start with a spike
 
-When you are using APIs you're not familiar with, it's better to do a *spike* before you start doing real TDD.   A *spike* is an experiment that you do in order to explore how to do a feature.  A spike will usually not have tests, will be quick and dirty, will not be complete, will not follow our usual rules for good quality.  It's just an exploration.  
-%% Cercherei di evidenziare graficamente quando diamo queste definizioni tramite regole!  una box? una icona?
-The rules for spikes are
+When you are using APIs you're not familiar with, it's better to do a *spike* before you start doing real TDD.
 
- 1. New project: start the spike in a new project (not by hacking into your production code)
- 2. Timebox: set yourself a time limit, for instance two hours.
- 3. Throw away: after you're done, you *throw away* the spike code.  You may keep the spike around as a *junkyard* of bits to copy from; but you never turn the spike into your production project.  Start production code with a fresh project.
+I> ## What is a spike?
+I>
+I> A *spike* is an experiment that you do in order to explore how to do a feature.  A spike will usually not have tests, will be quick and dirty, will not be complete, will not follow our usual rules for good quality.  It's just an exploration.  The rules for spikes are
+I>
+I>  1. New project: start the spike in a new project (not by hacking into your production code)
+I>  2. Timebox: set yourself a time limit, for instance two hours.
+I>  3. Throw away: after you're done, you *throw away* the spike code.  You may keep the spike around as a *junkyard* of bits to copy from; but you never turn the spike into your production project.  Start production code with a fresh project.
 
-The goal of the spike could be, for example, to understand how the Android API permit catching keypress events and how to position elements in a layout.
+The goal of our spike is to understand how the Android API permit catching keypress events and how to position elements in a layout.
 
-We estimate that this can be accomplished by implementing just the "inches to cm" and the "unsupported units" scenarios, 
-
-%% eviterei: It took me 3 pomodori to build.
+We estimate that this can be accomplished by implementing just the "inches to cm" and the "unsupported units" scenarios,
 
 {width=60%}
 ![How the unit conversion spike looks like](images/spike-units-screenshot.png)
@@ -57,8 +57,8 @@ As expected, the spike exercise permit us to learn (among other things):
 
  * How to change the result at every keypress
  * How to use a `RelativeLayout`
- 
-In general, we'll use in this book the spike technique as an help to discover the correct point where to place the boundary bewteen android dependent and android independent code. 
+
+In general, we'll use in this book the spike technique as an help to discover the correct point where to place the boundary bewteen android dependent and android independent code.
 
 
 ## Continue with an end-to-end acceptance test
@@ -367,8 +367,7 @@ Notes:
 * We must interact with the elements of the user interface.  Therefore this test needs to be in the "app" module.
 * In the "app" module we must use JUnit 3, while in the "Core" module we can use JUnit 4
 * In order to create an EditText we need an Android `Context`.  The easiest way to get one is to extend `AndroidTestCase`.
-* The name of the class is obtained by prefixing a qualifier "Android-" to the name of the interface.  This is much better than using the "-Impl" suffix (bleah!) or adding an "I-" prefix to the interface name (also bleah!).  So, `AndroidUnitDoctorView` means "the Android implementation of `UnitDoctorView`". 
-%% a cosa ti stai riferendo con I- e -Impl ? sicuro do volere essere così colloquiale?
+* The name of the class is obtained by prefixing a qualifier "Android-" to the name of the interface.  This is much better than using the "-Impl" suffix (bleah!) or adding an "I-" prefix to the interface name (also bleah!).  So, `AndroidUnitDoctorView` means "the Android implementation of `UnitDoctorView`".
 
 * The interface `UnitDoctorView` lives in the UnitDoctorCore module, while its implementation `AndroidUnitDoctorView` lives in the "app" module.  This is correct: the interface talks exclusively in terms of the application *domain language*, so it belongs in the "core" module.  Also, interfaces belong to their clients, not to their implementations, so it's OK that they live near the clients.
 

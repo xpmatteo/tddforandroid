@@ -3,7 +3,7 @@
 
 ## How TDD works
 
-
+TBD
 
 
 
@@ -90,14 +90,14 @@ We can increase this isolation by making the name of the message simpler:
 
 Here we don't want to know *any* detail: nothing about color, shape, visibility, or anything else.  This isolation makes code **much easier to change**, because changes in the protocol between point and canvas will not impact the callers of either.
 
-This preference for telling objects to do things rather than asking objects to return values was called "Tell, don't ask!" in a famous paper by Andy Hunt and Dave Thomas.
+This preference for telling objects to do things rather than asking objects to return values was called "Tell, don't ask!" in a famous paper by Andy Hunt and Dave Thomas (TBD - reference).
 
 
 ### Mocks
 
 I hope I've convinced you that *Tell, don't ask* is good.  Now you have a problem: how do you test an object that does not have getters?  Ha!
 
-The only way to do test such an object is to *observe its behaviour*.  That is, we send it a message, and observe what other messages it sends to its neighbours.  I send a `drawYourselfOn(canvas)` message to the point, and I want to test that the canvas was used correctly.  How do I test that?  Should I ask the canvas?  But then, again, would require adding *getters* to the canvas.
+The only way to do test such an object is to *observe its behaviour*.  That is, we send it a message, and observe what other messages it sends to its neighbours.  I send a `drawYourselfOn(canvas)` message to the point, and I want to test that the canvas was used correctly.  How could I test that?  Should I ask the canvas?  That would require adding *getters* to the canvas.
 
     // Bleah!  Don't do this!
     for (int x=0; x<=canvas.getMaxX(); x++) {
@@ -140,5 +140,5 @@ Reference ?  Forse Fowler
 
 ## Skin & Wrap the API
 
-Reference Working Effectively With Legacy Code
+TBD Reference Working Effectively With Legacy Code
 

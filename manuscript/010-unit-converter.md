@@ -41,9 +41,7 @@ I>  1. New project: start the spike in a new project (not by hacking into your p
 I>  2. Timebox: set yourself a time limit, for instance two hours.
 I>  3. Throw away: after you're done, you *throw away* the spike code.  You may keep the spike around as a *junkyard* of bits to copy from; but you never turn the spike into your production project.  Start production code with a fresh project.
 
-The goal of our spike is to understand how the Android API permit catching keypress events and how to position elements in a layout.
-
-We estimate that this can be accomplished by implementing just the "inches to cm" and the "unsupported units" scenarios,
+The goal of our spike is to understand how to receive text from the Android API and how to position form elements in a layout. Trying to implement just the "inches to cm" and the "unsupported units" scenarios should give us enough understanding.
 
 {width=60%}
 ![How the unit conversion spike looks like](images/spike-units-screenshot.png)

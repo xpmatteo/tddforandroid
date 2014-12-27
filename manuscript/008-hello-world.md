@@ -130,7 +130,7 @@ public class HelloWorld {
 
 We run all the tests in module `core`, and we see a failure: it seems that JUnit is not in the project classpath.
 
-{width=80%}
+{width=100%}
 ![We should add a dependency on JUnit](images/hello-world/130-add-unit-tests.png)
 
 We fix it by changing `core/build.gradle`
@@ -160,12 +160,12 @@ test {
 We run the tests again, and look!  We now fail for the right reason!
 
 
-{width=80%}
+{width=100%}
 ![Failing for the right reason](images/hello-world/140-add-unit-tests.png)
 
 We fix the `HelloWorld` class and we get a green bar.
 
-{width=80%}
+{width=100%}
 ![Finally, a green bar](images/hello-world/150-add-unit-tests.png)
 
 

@@ -1,6 +1,7 @@
 000-introduction.md
 005-so-difficult.md
 007-some-theory.md
+008-hello-world.md
 010-unit-converter.md
 020-more-conversion-logic.md
 030-FairyFingers.md

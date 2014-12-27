@@ -21,7 +21,7 @@ Start Android Studio and generate a new project with default options.  Change on
 
 Run the project and observe the "hello, world" message on the screen of your device.
 
-{width=60%}
+{width=50%}
 ![The app that the wizard built for us](images/hello-world/050-app-screenshot.png)
 
 
@@ -51,7 +51,7 @@ Now we alter the view.  We want to be able to change the "Hello, world!" message
 </RelativeLayout>
 ~~~~~
 
-We removed the canned message string, and we added an id to the TextView.  We also added a textSize attribute so that the message is shown much bigger. Now we can change the message in the `HelloWorldActivity`:
+We removed the canned message string, and we added an id to the TextView, on line 12.  We also added a textSize attribute so that the message is shown much bigger, on line 13. Now we can change the message in the `HelloWorldActivity`:
 
 ~~~~~
 public class HelloWorldActivity extends ActionBarActivity {
@@ -67,14 +67,14 @@ public class HelloWorldActivity extends ActionBarActivity {
 
 We run the application again, and we see that the message has changed.
 
-{width=60%}
+{width=50%}
 ![We changed the message programmatically](images/hello-world/060-app-screenshot.png)
 
 
 
 ## Introduce a new module
 
-We now want to move the logic that produces the error message away from the `app` module, into a new module that will contain pure Java logic, free from any dependency on the Android APIs.
+We now want to move the logic that produces the error message away from the `app` module, into a new module that will contain pure Java logic, free from any dependency on the Android APIs.  By convention, we always call this module `core`.
 
 Create a new module with Android Studio.  Remember to change the package name.  Android Studio requires us to name the first class in this module, so we call it `HelloWorld`.
 
@@ -97,7 +97,7 @@ We now introduce a first unit test.  Create directory `core/src/test/java`; you 
 
 Then you right-click your way through the project and create directory `test` under directory `src`, and then you create directory `java` under directory `test`.  The end result should be as in the following screenshot.
 
-{width=60%}
+{width=50%}
 ![Change from "Android" to "Project" view](images/hello-world/110-add-unit-tests.png)
 
 Now you create a new class called `HelloWorldTest` in directory `core/src/test/java` with the following content:
@@ -130,7 +130,7 @@ public class HelloWorld {
 
 We run all the tests in module `core`, and we see a failure: it seems that JUnit is not in the project classpath.
 
-{width=60%}
+{width=80%}
 ![We should add a dependency on JUnit](images/hello-world/130-add-unit-tests.png)
 
 We fix it by changing `core/build.gradle`
@@ -160,12 +160,12 @@ test {
 We run the tests again, and look!  We now fail for the right reason!
 
 
-{width=60%}
+{width=80%}
 ![Failing for the right reason](images/hello-world/140-add-unit-tests.png)
 
 We fix the `HelloWorld` class and we get a green bar.
 
-{width=60%}
+{width=80%}
 ![Finally, a green bar](images/hello-world/150-add-unit-tests.png)
 
 
@@ -177,17 +177,12 @@ Now we want to use our new nifty HelloWorld class to produce the message on the 
 ~~~~~
 package com.tdd4android.helloworld;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-
 import com.tdd4android.helloworld.core.HelloWorld;
 
-
-public class HelloWorldActivity extends ActionBarActivity {
+public class HelloWorldActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -239,7 +234,7 @@ dependencies {
 
 We run the application again and it works!
 
-{width=60%}
+{width=50%}
 ![Straight from the core](images/hello-world/210-app-screenshot.png)
 
 

@@ -238,3 +238,14 @@ We run the application again and it works!
 ![Straight from the core](images/hello-world/210-app-screenshot.png)
 
 
+## What we've done
+
+We've developed a miniature application, following a miniature version of the Android TDD process that we recommend.
+
+ 1. We check that the Android part works manually
+ 2. We move the logic to a `core` module that does not depend on Android; we further develop the logic with JUnit.
+ 3. We call the `core` module from the Android module as needed
+ 4. We check manually that the connection from `app` to `core` works.
+
+The whole project at this point is available from `https://github.com/xpmatteo/tdd4android/tree/starting-point`.  If you wish to quick-start a new project, you may just clone it from Github and import it in Android Studio.
+

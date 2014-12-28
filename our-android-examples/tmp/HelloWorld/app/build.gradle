@@ -17,6 +17,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+     lintOptions {
+         // set to true to turn off analysis progress reporting by lint
+         quiet true
+         // don't bother about this issue
+         disable 'IconMissingDensityFolder'
+         // if true, emit full/absolute paths to files with errors (true by default)
+         absolutePaths false
+         // if true, generate a text report of issues (false by default)
+         textReport true
+         // location to write the output; can be a file or 'stdout'
+         textOutput 'stdout'
+         // if true, generate an XML report for use by for example Jenkins
+         xmlReport false
+         // if true, generate an HTML report (with issue explanations, sourcecode, etc)
+         htmlReport false
+     }
 }
 
 dependencies {
@@ -26,3 +42,4 @@ dependencies {
     // We need classes from module "core"
     compile project(':core')
 }
+

@@ -8,6 +8,9 @@ dependencies {
 
     // Add dependency on JUnit
     testCompile 'junit:junit-dep:4.11'
+
+    // Add dependency on JMock
+    testCompile 'org.jmock:jmock-junit4:2.6.0'
 }
 
 // Improve test logging

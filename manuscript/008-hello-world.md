@@ -235,7 +235,7 @@ dependencies {
 We run the application again and it works!
 
 {width=50%}
-![Straight from the core](images/hello-world/210-app-screenshot.png)
+![Get the answer from the core module](images/hello-world/210-app-screenshot.png)
 
 
 ## What we've done

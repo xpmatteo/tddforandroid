@@ -1,11 +1,10 @@
-# A Form-Based Application: Unit Doctor
+# A form-based application: Unit Doctor
 
 ## Problem description
 
-We want to write an app that converts from various units to other units.  We imagine that it will support an extensive collection of conversions, from cm to yards, from Fahrenheit to Celsius, from HP to KW.
+We want to write an application to convert measures from various units to other units.  We imagine that it will support an extensive collection of conversions, e.g., from centimeters to yards, from Fahrenheit degrees to Celsius, from HP to KW.
 
-Yes, I know this feature is already implemented by Google on all phones. I use this example because it will allow me to illustrate some important techniques.  It's not too complicated and not too trivial.
-
+Outline of this chapter: we start by
 
 
 ## Examples {#unit-doctor-examples}

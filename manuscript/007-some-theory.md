@@ -82,13 +82,15 @@ An Acceptance Criterion can be a general statement of what the application shoul
 
 To make sure that we understand correctly what this means, we translate it to concrete Examples.  Usually we do this through a conversation with our customer.
 
-    Given Item "Buy milk" that was marked "done" on 1st March 2015 at 14:00:00
+> Given Item "Buy milk" that was marked "done" on 1st March 2015 at 14:00:00 \\
 
-    When the current date and time is 8th March 2015 at 13:59:59
-    Then the item is shown
+> **Example: item not yet hidden** \\
+>    When the current date and time is 8th March 2015 at 13:59:59 \\
+>    Then the item is shown \\
 
-    When the current date and time is 8th March 2015 at 14:00:00
-    Then the item is not shown
+> **Example: item hidden**
+>    When the current date and time is 8th March 2015 at 14:00:00
+>    Then the item is NOT shown
 
 As you can see, where the AC talks in general terms "An item marked as *done*", the examples are about concrete things: a specific item "Buy Milk" that was marked done in some specific instant in time.
 
@@ -99,7 +101,7 @@ Writing the examples is an useful thing, because
 
 Another name for Examples is Scenarios.
 
-The concept of Example/Scenario is crucial, because it drives development.  A scenario is the smallest unit of functionality that can be delivered.  The
+The concept of Example/Scenario is crucial, because it drives development.  A scenario is the smallest unit of functionality that can be delivered.
 
 
 
@@ -111,6 +113,8 @@ Spikes are important because we do often have to work with APIs that we don't kn
 
 Important point: don't try to write TDD with APIs that you don't know well.  There is the risk of wasting a lot of time writing ineffective tests.
 
+So, whenever we start working with a bit of Android APIs that we don't know well, it pays to start with a little experiment.
+
 The rules for spikes are:
 
   2. Goal: you have a learning goal for the spike
@@ -120,11 +124,113 @@ The rules for spikes are:
 
 
 
+## Test-Driven Development
 
 
-## How TDD works
+TDD is about writing code in *small increments*, driven by an *automated test*, keeping the code *as simple as possible* at all times.  This process has a dual nature: it is a way to *design* programs, and also is a way to build a good *suite of tests*.
 
-TBD
+The process was described first by Kent Beck in [Test-Driven Development: By Example](#tdd).  It's probably still the best book on the subject.  It's a subtle book: it seems like it's glossing over many things, but when you go back to it and read it again, you find it has new answers to your questions.
+
+
+### The micro-cycle
+
+The process is easy to describe.  Kent Beck in [Test-Driven Development: By Example](#tdd) writes the following sequence:
+
+  1. Quickly write a test
+  2. Run all the tests, see the new one fail
+  3. Make a small change
+  4. Run all the tests, see them all succeed
+  5. Refactor to remove duplication
+
+Note the emphasis on "small": the cycle is meant to be repeated every few minutes, not hours.  The point of TDD is to provide quick feedback on the quality of your code.
+
+If you've never seen an accomplished TDD practitioner at work, it's difficult to grasp how the TDD cycle should be done.  We suggest you to watch good TDD videos, like the [TDD Videos by Kent Beck](#beck-video)
+
+
+
+
+## Presenter First
+
+How do you TDD a GUI application?
+
+The Presenter First style of TDD is usually appropriate when we write GUI applications.  The idea is that you start by postulating that you will have at least two objects: a *Presenter* and a *View*.  The *Presenter* is an object that represents your whole application, or a significant subset of your application.  The *View* represent the GUI screen that your application will use.
+
+One key idea is that all application logic goes in the Presenter, while all technical details of how to show windows etc to the user go in the view.
+
+Another key idea is that you start TDD with the presenter.
+
+J.B. Rainsberger popularized the concept in his video [The World's Best Intro To TDD](#jbrains-tdd-video) and in his book [Responsible Design For Android](#jbrains-android)
+
+When we describe what a GUI application does, we usually reason in terms of "when the user does THIS, then the application shows THAT".  For instance, consider an application that shows a counter that can be incremented by the user by pressing a button.  Our Example will say:
+
+>    **Example: increment**
+>    Given that the current counter value is 0
+>    When the user presses the "INC" button
+>    Then the view will show 1
+
+
+### First version: not yet quite presenter-first
+
+A simple test for this example could be
+
+    CounterApp app = new CounterApp(0);
+    app.increment();
+    assertEquals(1, app.valueToDisplay());
+
+This test is adequate.  You can use it to develop your application.  It's easy to connect this `CounterApplication` logic to a GUI written in Android.  In the following code, we show how to use the `CounterApp` in an activity:
+
+{line-numbers=on}
+~~~~~
+public class CounterActivity
+    extends ActionBarActivity implements View.OnClickListener {
+
+  private CounterApp app = new CounterApp();
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_counter);
+
+    Button incrementButton = (Button) findViewById(R.id.increment);
+    incrementButton.setOnClickListener(this);
+  }
+
+  @Override
+  public void onClick(View v) {
+    app.increment();
+    TextView textView = (TextView) findViewById(R.id.counter);
+    textView.setText(String.valueOf(app.valueToDisplay()));
+  }
+}
+~~~~~
+
+In lines 11-12 we make sure that when the user clicks the "increment" button, Android will call back the activity method `onClick()`.
+
+In line 17 we increment the counter, and in lines 18-19 we update the text label.
+
+
+### Really presenter-first
+
+The previous example works and is adequate for most purposes; yet it's not completely satisfactory.  We need to write many lines of "glue" to make sure that we are really getting the right data from the CounterApp and using correctly in the activity.  We are calling the CounterApp twice, one for communicating the fact that the user has pressed the button, and another time for asking back the CounterApp for the value to display.
+
+This is adequate for such a small application, but becomes boring when the number of bits of user interface that *could* change increases.  If we had 100 text fields on the GUI, we wouldn't like to ask 100 questions to the app so that we can update them all.
+
+We would like to be able to avoid doing the second step, where we ask questions to the app.  We'd prefer that the CounterApp were able to change more directly the state of the GUI.
+
+If the CounterApp implemented ....
+
+
+
+<!-- To implement this sort of things in presenter-first style, we write a test like
+
+    context.checking(new Expectations() {{
+      oneOf(view).showThat();
+    }});
+    application.doThis();
+
+Here `application` is the Presenter.  The view is a mock of an interface.  The -->
+
+
 
 
 
@@ -253,10 +359,6 @@ The point of this test is that we can use it to define how the point should talk
 
 The syntax looks a bit esoteric at first, but it will all make sense.  The details on how JMock works are [in the appendix](#appendix-jmock).  More about mocks in [GOOS].
 
-
-## Presenter First
-
-Reference ?  Forse Fowler
 
 
 ## Skin & Wrap the API

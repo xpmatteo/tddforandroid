@@ -1,4 +1,4 @@
-package com.tdd4android.counter;
+package com.tdd4android.counter0;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

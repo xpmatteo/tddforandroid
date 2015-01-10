@@ -14,6 +14,7 @@ ls *-*.md > Book.txt
 
 git add -A .
 git commit -m "$commit_message"
+git pull
 git push
 sleep 3
 script/status

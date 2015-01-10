@@ -181,9 +181,7 @@ This test is adequate.  You can use it to develop your application.  It's easy t
 
 {line-numbers=on}
 ~~~~~
-public class CounterActivity
-    extends ActionBarActivity implements View.OnClickListener {
-
+public class CounterActivity extends Activity {
   private CounterApp app = new CounterApp();
 
   @Override
@@ -192,21 +190,19 @@ public class CounterActivity
     setContentView(R.layout.activity_counter);
 
     Button incrementButton = (Button) findViewById(R.id.increment);
-    incrementButton.setOnClickListener(this);
-  }
-
-  @Override
-  public void onClick(View v) {
-    app.increment();
-    TextView textView = (TextView) findViewById(R.id.counter);
-    textView.setText(String.valueOf(app.valueToDisplay()));
+    incrementButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        app.increment();
+        TextView textView = (TextView) findViewById(R.id.counter);
+        textView.setText(String.valueOf(app.valueToDisplay()));
+      }
+    });
   }
 }
 ~~~~~
 
-In lines 11-12 we make sure that when the user clicks the "increment" button, Android will call back the activity method `onClick()`.
-
-In line 17 we increment the counter, and in lines 18-19 we update the text label.
+In lines 9-10 we make sure that when the user clicks the "increment" button, Android will call us back.   In line 13 we increment the counter, and in lines 14-15 we update the text label.
 
 
 ### Really presenter-first
@@ -215,10 +211,155 @@ The previous example works and is adequate for most purposes; yet it's not compl
 
 This is adequate for such a small application, but becomes boring when the number of bits of user interface that *could* change increases.  If we had 100 text fields on the GUI, we wouldn't like to ask 100 questions to the app so that we can update them all.
 
-We would like to be able to avoid doing the second step, where we ask questions to the app.  We'd prefer that the CounterApp were able to change more directly the state of the GUI.
+    // Something we would definitely NOT want to do
+    public void onClick(View v) {
+      app.doSomething();
+      // ask the app the value of ALL fields in case one of them
+      // is changed...
+      findViewById(R.id.display0).setText(app.valueToDisplay0()));
+      findViewById(R.id.display1).setText(app.valueToDisplay1()));
+      findViewById(R.id.display2).setText(app.valueToDisplay2()));
+      findViewById(R.id.display3).setText(app.valueToDisplay3()));
+      findViewById(R.id.display4).setText(app.valueToDisplay4()));
+      findViewById(R.id.display5).setText(app.valueToDisplay5()));
+      // etc etc ...
+    }
 
-If the CounterApp implemented ....
+It would be much better if the app could update directly the fields it wishes to change.  What if it was simply like this:
 
+~~~~~
+public class CounterActivity extends Activity {
+  private CounterApp app = new CounterApp(this);
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_counter);
+
+    View incrementButton = findViewById(R.id.increment);
+    incrementButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        // Just notify the app, it will do the rest
+        app.increment();
+      }
+    });
+  }
+}
+~~~~~
+
+The activity is vastly simplified: all we have to do is call `app.increment()` whenever the user clicks the button.
+
+~~~~~
+public class CounterApp {
+  private int value;
+  private CounterActivity counterActivity;
+
+  public CounterApp(CounterActivity counterActivity) {
+    this.counterActivity = counterActivity;
+  }
+
+  // We're not quite there yet!
+  // We shouldn't mess with the internals of the activity!
+  public void increment() {
+    value++;
+    TextView view = (TextView) counterActivity.findViewById(R.id.counter);
+    view.setText(String.valueOf(value));
+  }
+}
+~~~~~
+
+The changing of the value displayed on the GUI has become a responsibility of the CounterApp.  We don't really like this; we'd like to be able to tell the activity "show this value!" and let the activity deal with the details of which element of the view to update.
+
+We have created a circular dependency between the activity and the app
+
+    +--------------+               +-------------------+
+    |  CounterApp  | <---------->  |  CounterActivity  |
+    +--------------+               +-------------------+
+
+And this is bad.  We would much prefer that the CounterApp be independent of the CounterActivity.  Luckily, there is a standard way to break circular dependencies: introduce an interface!
+
+    +--------------+               +----------<I>-+
+    |  CounterApp  | ----------->  |  CounterGui  |
+    +--------------+               +--------------+
+                                          ^
+                                          |
+                                 +-------------------+
+                                 |  CounterActivity  |
+                                 +-------------------+
+
+We introduce an interface we call `CounterGui` (We could have chosen the name `CounterView`, but that could create confusion with the way Android uses the word "view")
+
+So let's start again with the presenter.  We write a test of what the CounterApp should do when the increment method is called.  The test should do, in pseudo code:
+
+    Given the CounterApp holds a reference of the CounterGui as a collaborator
+    when we call increment on the CounterApp
+    then the CounterGui receives a call to display "1"
+
+We want to test CounterApp without ever referring to the CounterActivity, that in our intentions will be the one real implementation of CounterGui.  Therefore, we need a fake implementation of CounterGui.  Our fake implementation will be passed as a collaborator to the CounerApp, and it does not need to implement a real GUI; all we need is that we can check that the proper call(s) to it have been made.  This type of fake implementation of an interface is called a "Mock".
+
+D> Definition: a "mock" is a fake implementation of an interface that can be used to verify that certain calls have been made to it.
+
+There are more than one way to write this mock.  The simplest way needs no particular mocking frameworks.  Just let the test class implement the interface that we want to use.
+~~~~~
+// Our test class implements CounterGui
+public class CounterAppTest implements CounterGui {
+
+  @Test
+  public void increment() throws Exception {
+    // We create the app, passing the test class itself as a collaborator
+    final CounterApp app = new CounterApp(this);
+
+    // Whenever we call
+    app.increment();
+
+    // We expect display(1) to have been called
+    assertEquals(Integer.valueOf(1), displayedNumber);
+  }
+
+  // we use this variable to check that CounterGui#display(1) was called
+  Integer displayedNumber = null;
+
+  // and this is our fake implementation of CounterGui#display
+  @Override
+  public void display(int number) {
+    this.displayedNumber = number;
+  }
+}
+~~~~~
+Note that writing this test forces us to define the one method that the CounterGui needs to have, namely `display`.  We use a trick to verify that the display method has really been called.  If it is not called, the value of `displayedNumber` remains null.  If it is called, the value of `displayedNumber` is the value of the argument to the call.
+
+This is enough to allow us to see the test fail, and then build the right functionality within CounterApp to make it pass.
+
+Note, however, that if CounterApp made more than one call to CounterGui, we would not be able to detect this.  We only retain the argument of the last call.
+
+Using a mocking framework such as JMock or EasyMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to CounterGui#display with the argument 1".  The price we pay is that we need to use more sophisticated machinery.
+
+The following is the same test, implemented with JMock.
+~~~~~
+public class CounterAppTest {
+
+  // This is the JMock machinery that we need
+  @Rule public JUnitRuleMockery context = new JUnitRuleMockery();
+
+  public void testIncrement() throws Exception {
+    // We ask JMock to make a mock of the CounterGui interface
+    final CounterGui gui = context.mock(CounterGui.class);
+
+    // We create the app, passing the gui as a collaborator
+    final CounterApp app = new CounterApp(gui);
+
+    // We setup our expectations
+    context.checking(new Expectations() {{
+      // Exactly one time, gui will be called with display(1)
+      oneOf(gui).display(1);
+    }});
+
+    // Whenever we call
+    app.increment();
+  }
+}
+~~~~~
 
 
 <!-- To implement this sort of things in presenter-first style, we write a test like

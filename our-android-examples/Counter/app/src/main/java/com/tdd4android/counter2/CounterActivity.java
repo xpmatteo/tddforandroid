@@ -7,7 +7,7 @@ import android.view.View;
 import com.tdd4android.counter0.R;
 
 
-public class CounterActivity extends Activity {
+public class CounterActivity extends Activity implements CounterGui {
 
   private CounterApp app = new CounterApp(this);
 

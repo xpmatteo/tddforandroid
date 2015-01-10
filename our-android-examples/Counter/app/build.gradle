@@ -22,4 +22,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'junit:junit-dep:4.11'
+    compile 'org.jmock:jmock-junit4:2.6.0'
 }
+

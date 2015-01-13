@@ -1,16 +1,15 @@
 package com.tdd4android.counter2;
 
-import android.widget.TextView;
-
-import com.tdd4android.counter0.R;
-
 public class CounterApp {
   private int value;
+  private CounterGui gui;
 
   public CounterApp(CounterGui gui) {
+    this.gui = gui;
   }
 
   public void increment() {
     value++;
+    gui.display(value);
   }
 }

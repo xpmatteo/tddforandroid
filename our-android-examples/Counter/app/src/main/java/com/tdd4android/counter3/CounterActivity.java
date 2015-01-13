@@ -1,4 +1,4 @@
-package com.tdd4android.counter2;
+package com.tdd4android.counter3;
 
 import android.app.Activity;
 import android.os.Bundle;

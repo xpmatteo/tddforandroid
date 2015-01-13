@@ -155,6 +155,10 @@ How do you TDD a GUI application?
 
 The Presenter First style of TDD is usually appropriate when we write GUI applications.  The idea is that you start by postulating that you will have at least two objects: a *Presenter* and a *View*.  The *Presenter* is an object that represents your whole application, or a significant subset of your application.  The *View* represent the GUI screen that your application will use.
 
+I> **The "View" ambiguity**
+I>
+I> The word "view" in the Android world has a specific meaning.  When we talk of presenters and views, we mean something different.  A view in Android is a subclass of class `View`.  In the context of presenters, a "view" is a role that is played sometimes by Android activities, sometimes by actual Android views.  We trust that context will make it clear what we mean in each case.
+
 One key idea is that all application logic goes in the Presenter, while all technical details of how to show windows etc to the user go in the view.
 
 Another key idea is that you start TDD with the presenter.
@@ -167,6 +171,10 @@ When we describe what a GUI application does, we usually reason in terms of "whe
 >    Given that the current counter value is 0
 >    When the user presses the "INC" button
 >    Then the view will show 1
+
+{width=100%}
+![The GUI of the Counter application](images/presenter-first/counter-app-gui.png)
+
 
 
 ### First version: not yet quite presenter-first
@@ -329,11 +337,26 @@ public class CounterAppTest implements CounterGui {
 ~~~~~
 Note that writing this test forces us to define the one method that the CounterGui needs to have, namely `display`.  We use a trick to verify that the display method has really been called.  If it is not called, the value of `displayedNumber` remains null.  If it is called, the value of `displayedNumber` is the value of the argument to the call.
 
-This is enough to allow us to see the test fail, and then build the right functionality within CounterApp to make it pass.
+This is enough to allow us to see the test fail, and then build the right functionality within CounterApp to make it pass.  It's easily done:
+~~~~~
+public class CounterApp {
+  private int value;
+  private CounterGui gui;
+
+  public CounterApp(CounterGui gui) {
+    this.gui = gui;
+  }
+
+  public void increment() {
+    value++;
+    gui.display(value);
+  }
+}
+~~~~~
 
 Note, however, that if CounterApp made more than one call to CounterGui, we would not be able to detect this.  We only retain the argument of the last call.
 
-Using a mocking framework such as JMock or EasyMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to CounterGui#display with the argument 1".  The price we pay is that we need to use more sophisticated machinery.
+Using a mocking framework such as JMock or EasyMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to CounterGui#display with the argument 1".  The price we pay is that we need to use more sophisticated machinery (see chapter [How JMock Works](#appendix-jmock)).
 
 The following is the same test, implemented with JMock.
 ~~~~~
@@ -360,18 +383,94 @@ public class CounterAppTest {
   }
 }
 ~~~~~
+The amazing thing is that the presenter test, whether written with hand-made mocks or with a mocking framework, allows us to define the `CounterGui` interface, that is to find all the methods that we need from this interface, even before that an implementation exists!  Here is the interface that emerged:
+~~~~~
+public interface CounterGui {
+  void display(int number);
+}
+~~~~~
 
+Our next task is to define a real implementation of `CounterGui`.  The obvious choice here is to let `CounterActivity` implement it.  We do it here:
+~~~~~
+public class CounterActivity extends Activity implements CounterGui {
+  private CounterApp app = new CounterApp(this);
 
-<!-- To implement this sort of things in presenter-first style, we write a test like
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_counter);
 
-    context.checking(new Expectations() {{
-      oneOf(view).showThat();
-    }});
-    application.doThis();
+    View incrementButton = findViewById(R.id.increment);
+    incrementButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        app.increment();
+      }
+    });
+  }
 
-Here `application` is the Presenter.  The view is a mock of an interface.  The -->
+  @Override
+  public void display(int number) {
+    TextView textView = (TextView) findViewById(R.id.counter);
+    textView.setText(String.valueOf(number));
+  }
+}
+~~~~~
 
+Notice the nice separation of concerns: the presenter deals with the application logic; the view deals with presentation logic.
 
+### Model, View, Presenter
+
+A Presenter usually deals with a view, as we have seen, and a *model*.  What's a model?  A "model" in this context is a model of the problem domain.  In other words, it's a pure logic implementation of the application logic, independent of any infrastructural issues such as GUIs or persistence.
+
+Wait, didn't we say the same thing about the presenter, just a few pages ago?  Well, sort of.  You see, the Presenter that we have built so far really has two responsibilities:
+
+ 1. Implement application logic (in this case, it's the simple counter logic of incrementing the value)
+ 2. Connecting application logic with the view
+
+You see it in the implementation of method `CounterApp#increment`:
+
+    public void increment() {
+      value++;
+      gui.display(value);
+    }
+
+It is doing two things: incrementing the counter and updating the view.  In this particular case, the application logic is so simple that it might make sense to leave it like this.  In general, however, application logic is complex.  For this reason, it's usually a good idea to separate the model from the presenter.  If we wanted to do so, we would create a `Counter` object that does nothing but counting, and pass it to the presenter as a collaborator.
+
+The result would be a clearer separation of concerns:
+
+~~~~~
+public class CounterApp {
+  private Counter counter;
+  private CounterGui gui;
+
+  public CounterApp(Counter counter, CounterGui gui) {
+    this.counter = counter;
+    this.gui = gui;
+  }
+
+  public void increment() {
+    counter.increment();
+    gui.display(counter.value());
+  }
+}
+~~~~~
+
+The obvious implementation of `Counter` would be
+
+~~~~~
+public class Counter {
+  int value = 0;
+
+  public void increment() {
+    value++;
+  }
+
+  public int value() {
+    return value;
+  }
+}
+~~~~~
 
 
 

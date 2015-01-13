@@ -163,7 +163,7 @@ One key idea is that all application logic goes in the Presenter, while all tech
 
 Another key idea is that you start TDD with the presenter.
 
-J.B. Rainsberger popularized the concept in his video [The World's Best Intro To TDD](#jbrains-tdd-video) and in his book [Responsible Design For Android](#jbrains-android)
+J.B. Rainsberger popularized the concept in his video [The World's Best Intro To TDD](#jbrains-tdd-video) and in his book [Responsible Design For Android](#jbrains-book)
 
 When we describe what a GUI application does, we usually reason in terms of "when the user does THIS, then the application shows THAT".  For instance, consider an application that shows a counter that can be incremented by the user by pressing a button.  Our Example will say:
 
@@ -172,12 +172,12 @@ When we describe what a GUI application does, we usually reason in terms of "whe
 >    When the user presses the "INC" button
 >    Then the view will show 1
 
-{width=100%}
+{width=50%}
 ![The GUI of the Counter application](images/presenter-first/counter-app-gui.png)
 
 
 
-### First version: not yet quite presenter-first
+### First version: not yet quite a presenter
 
 A simple test for this example could be
 
@@ -213,7 +213,7 @@ public class CounterActivity extends Activity {
 In lines 9-10 we make sure that when the user clicks the "increment" button, Android will call us back.   In line 13 we increment the counter, and in lines 14-15 we update the text label.
 
 
-### Really presenter-first
+### A proper presenter
 
 The previous example works and is adequate for most purposes; yet it's not completely satisfactory.  We need to write many lines of "glue" to make sure that we are really getting the right data from the CounterApp and using correctly in the activity.  We are calling the CounterApp twice, one for communicating the fact that the user has pressed the button, and another time for asking back the CounterApp for the value to display.
 
@@ -309,6 +309,7 @@ We want to test CounterApp without ever referring to the CounterActivity, that i
 D> Definition: a "mock" is a fake implementation of an interface that can be used to verify that certain calls have been made to it.
 
 There are more than one way to write this mock.  The simplest way needs no particular mocking frameworks.  Just let the test class implement the interface that we want to use.
+
 ~~~~~
 // Our test class implements CounterGui
 public class CounterAppTest implements CounterGui {
@@ -335,9 +336,11 @@ public class CounterAppTest implements CounterGui {
   }
 }
 ~~~~~
+
 Note that writing this test forces us to define the one method that the CounterGui needs to have, namely `display`.  We use a trick to verify that the display method has really been called.  If it is not called, the value of `displayedNumber` remains null.  If it is called, the value of `displayedNumber` is the value of the argument to the call.
 
 This is enough to allow us to see the test fail, and then build the right functionality within CounterApp to make it pass.  It's easily done:
+
 ~~~~~
 public class CounterApp {
   private int value;
@@ -359,6 +362,7 @@ Note, however, that if CounterApp made more than one call to CounterGui, we woul
 Using a mocking framework such as JMock or EasyMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to CounterGui#display with the argument 1".  The price we pay is that we need to use more sophisticated machinery (see chapter [How JMock Works](#appendix-jmock)).
 
 The following is the same test, implemented with JMock.
+
 ~~~~~
 public class CounterAppTest {
 
@@ -383,7 +387,9 @@ public class CounterAppTest {
   }
 }
 ~~~~~
+
 The amazing thing is that the presenter test, whether written with hand-made mocks or with a mocking framework, allows us to define the `CounterGui` interface, that is to find all the methods that we need from this interface, even before that an implementation exists!  Here is the interface that emerged:
+
 ~~~~~
 public interface CounterGui {
   void display(int number);
@@ -391,6 +397,7 @@ public interface CounterGui {
 ~~~~~
 
 Our next task is to define a real implementation of `CounterGui`.  The obvious choice here is to let `CounterActivity` implement it.  We do it here:
+
 ~~~~~
 public class CounterActivity extends Activity implements CounterGui {
   private CounterApp app = new CounterApp(this);

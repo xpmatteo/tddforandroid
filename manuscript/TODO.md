@@ -1,5 +1,11 @@
 
-- 007-some-theory
+- Presenter-first:
+
+  - improve theorical explanation before: model-view-presenter
+
+  - add "what if"...
+
+
 
   - use anonymous implementation instead of letting the activity implement the view?
 
@@ -9,3 +15,4 @@
 
   - add Mockito examples
 
+  -

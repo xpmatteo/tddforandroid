@@ -316,7 +316,7 @@ public class CounterAppTest implements CounterGui {
   @Test
   public void increment() throws Exception {
     // We create the app, passing the test class itself as a collaborator
-    final CounterApp app = new CounterApp(this);
+    CounterApp app = new CounterApp(this);
 
     // Whenever we call
     app.increment();
@@ -370,7 +370,7 @@ public class CounterAppTest {
     final CounterGui gui = context.mock(CounterGui.class);
 
     // We create the app, passing the gui as a collaborator
-    final CounterApp app = new CounterApp(gui);
+    CounterApp app = new CounterApp(gui);
 
     // We setup our expectations
     context.checking(new Expectations() {{

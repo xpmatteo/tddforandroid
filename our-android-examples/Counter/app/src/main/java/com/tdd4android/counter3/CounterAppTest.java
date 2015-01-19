@@ -10,7 +10,8 @@ public class CounterAppTest implements CounterGui {
   @Test
   public void increment() throws Exception {
     // We create the app, passing the gui as a collaborator
-    final CounterApp app = new CounterApp(this);
+    final Counter counter = new Counter();
+    final CounterApp app = new CounterApp(counter, this);
 
     // Whenever we call
     app.increment();

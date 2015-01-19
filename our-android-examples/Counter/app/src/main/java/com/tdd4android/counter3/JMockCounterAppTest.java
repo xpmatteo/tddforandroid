@@ -20,7 +20,8 @@ public class JMockCounterAppTest {
     final CounterGui gui = context.mock(CounterGui.class);
 
     // We create the app, passing the gui as a collaborator
-    final CounterApp app = new CounterApp(gui);
+    Counter counter = new Counter();
+    CounterApp app = new CounterApp(counter, gui);
 
     // We setup our expectations
     context.checking(new Expectations() {{

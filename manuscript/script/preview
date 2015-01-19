@@ -12,7 +12,7 @@ commit_message="$1"
 
 ls *-*.md > Book.txt
 
-git add -A .
+git add -A :/
 git commit -m "$commit_message"
 git pull
 git push

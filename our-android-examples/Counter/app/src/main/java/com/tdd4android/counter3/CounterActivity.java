@@ -9,7 +9,8 @@ import com.tdd4android.counter0.R;
 
 
 public class CounterActivity extends Activity implements CounterGui {
-  private CounterApp app = new CounterApp(this);
+  private Counter counter = new Counter();
+  private CounterApp app = new CounterApp(counter, this);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

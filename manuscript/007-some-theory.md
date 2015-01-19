@@ -157,13 +157,16 @@ The Presenter First style of TDD is usually appropriate when we write GUI applic
 
 I> **The "View" ambiguity**
 I>
-I> The word "view" in the Android world has a specific meaning.  When we talk of presenters and views, we mean something different.  A view in Android is a subclass of class `View`.  In the context of presenters, a "view" is a role that is played sometimes by Android activities, sometimes by actual Android views.  We trust that context will make it clear what we mean in each case.
+I> The word "view" in the Android world has a specific meaning, but when we talk of presenters and views, we mean something different.  A view in Android is a subclass of class `View`.  In the context of presenters instead, a "view" is a role that is played sometimes by Android activities, sometimes by actual Android views.  We trust that context will make it clear what we mean in each case.
 
-One key idea is that all application logic goes in the Presenter, while all technical details of how to show windows etc to the user go in the view.
+One key idea is that all application logic goes in the Presenter, while all technical details of how to show windows etc to the user go in the view.  The presenter is notified by the view that something happened.  In response, the presenter calls methods on the view to change what the user sees.
+
 
 Another key idea is that you start TDD with the presenter.
 
 J.B. Rainsberger popularized the concept in his video [The World's Best Intro To TDD](#jbrains-tdd-video) and in his book [Responsible Design For Android](#jbrains-book)
+
+The presenter-first method works by defining (at least) two objects:
 
 When we describe what a GUI application does, we usually reason in terms of "when the user does THIS, then the application shows THAT".  For instance, consider an application that shows a counter that can be incremented by the user by pressing a button.  Our Example will say:
 

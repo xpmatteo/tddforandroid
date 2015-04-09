@@ -6,7 +6,7 @@ import android.view.View;
 import com.tdd4android.fairyfingers.core.FairyFingersCore;
 
 public class DecayTimer {
-  public static final long REFRESH_INTERVAL = 50;
+  public static final long REFRESH_INTERVAL = 100;
 
   private final FairyFingersView view;
   private Handler handler = new Handler();

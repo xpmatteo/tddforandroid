@@ -20,6 +20,8 @@ public class MyView extends View {
     super(context, attrs, defStyleAttr);
   }
 
+  List<Point> points = new ArrayList<Point>();
+
   @Override
   protected void onDraw(Canvas canvas) {
     Paint paint = new Paint();
@@ -44,6 +46,4 @@ public class MyView extends View {
     invalidate();
     return true;
   }
-
-  List<Point> points = new ArrayList<Point>();
 }

@@ -1,3 +1,7 @@
+2015-01-20
+
+La presentazione di Diego Torres Milano (dir /doc) contiene esempi del tipo di test che non servono a nulla... tipo testare l'allineamento degli elementi nella GUI.  La sua spiegazione del TDD evita di dire la cosa piu' importante, che e' una strategia per fare design emergente.  Non una strategia di testing.
+
 
 2014-10-17
 

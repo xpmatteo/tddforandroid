@@ -1,0 +1,3 @@
+[submodule "our-android-examples/UnitDoctor"]
+	path = our-android-examples/UnitDoctor
+	url = git@github.com:xpmatteo/unit-doctor.git

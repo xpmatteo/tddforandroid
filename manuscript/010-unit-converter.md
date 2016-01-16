@@ -45,10 +45,10 @@ The goal of our spike is to understand how to receive text from the Android API 
 {width=60%}
 ![How the unit conversion spike looks like](images/spike-units-screenshot.png)
 
-<<[The activity for the unit conversion spike](../our-android-examples/UnitConversionSpike/app/src/main/java/name/vaccari/matteo/unitconversionspike/MyActivity.java)
+<<[The activity for the unit conversion spike](code/UnitConversionSpike/app/src/main/java/name/vaccari/matteo/unitconversionspike/MyActivity.java)
 
 {lang="xml"}
-<<[The layout for the unit conversion spike](../our-android-examples/UnitConversionSpike/app/src/main/res/layout/activity_my.xml)
+<<[The layout for the unit conversion spike](code/UnitConversionSpike/app/src/main/res/layout/activity_my.xml)
 
 As expected, the spike exercise permit us to learn (among other things):
 
@@ -236,7 +236,7 @@ The responsibilities of the "view" object are to return what the user has entere
 This is the first test.  If you find the syntax weird, look for an explanation in [the JMock appendix](#appendix-jmock).
 
 {line-numbers=on, starting-line-number=10, crop-start-line=10, crop-end-line=27}
-<<(../our-android-examples/UnitDoctor/UnitDoctorCore/src/test/java/name/vaccari/matteo/unitdoctor/core/UnitDoctorTest.java)
+<<(code/UnitDoctor/UnitDoctorCore/src/test/java/name/vaccari/matteo/unitdoctor/core/UnitDoctorTest.java)
 
 Notes:
 
@@ -499,7 +499,7 @@ Our "main function" has the following responsibilities:
  * Instantiate the UnitDoctor and its view
  * Call the UnitDoctor whenever the user changes something
 
-<<(../our-android-examples/UnitDoctor/app/src/main/java/name/vaccari/matteo/unitdoctor/MainActivity.java)
+<<(code/UnitDoctor/app/src/main/java/name/vaccari/matteo/unitdoctor/MainActivity.java)
 
 We let `MainActivity` implement `TextWatcher` so that the `MainActivity` itself will listen for any change in the text fields.
 

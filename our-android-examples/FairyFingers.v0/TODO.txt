@@ -1,5 +1,0 @@
-
-Distruggere le linee ormai sbiadite
-Riposizionare la schedulazione del refresh nella activity
-
-Randomizzare i colori

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname "$0")"/..
+
+[ -z "$LEANPUB_API_KEY" ] && {
+  echo "Please setup your LEANPUB_API_KEY env var"
+  exit 1
+}
+
+which -s jq || {
+  echo "Please install jq (brew install jq)"
+  exit 1
+}
+
+slug="tddforandroid"
+
+pdf_preview_url=$(curl -s https://leanpub.com/$slug.json?api_key=$LEANPUB_API_KEY | jq -r .pdf_preview_url)
+echo $pdf_preview_url
+curl -L "$pdf_preview_url" > $slug.pdf
+open $slug.pdf

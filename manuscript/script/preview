@@ -8,6 +8,11 @@ cd "$(dirname "$0")"/..
   exit 1
 }
 
+[ -z "$LEANPUB_API_KEY" ] && {
+  echo "Please setup your LEANPUB_API_KEY env var"
+  exit 1
+}
+
 commit_message="$1"
 
 ls *-*.md > Book.txt
@@ -19,5 +24,7 @@ git add -A :/
 git commit -m "$commit_message"
 git pull -r
 git push
+curl -d "api_key=$LEANPUB_API_KEY" https://leanpub.com/tddforandroid/preview.json
 sleep 3
 script/status
+script/download-preview

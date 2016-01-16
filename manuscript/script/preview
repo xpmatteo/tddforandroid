@@ -24,6 +24,8 @@ git add -A :/
 git commit -m "$commit_message"
 git pull -r
 git push
+
+# generate preview
 curl -d "api_key=$LEANPUB_API_KEY" https://leanpub.com/tddforandroid/preview.json
 sleep 3
 script/status

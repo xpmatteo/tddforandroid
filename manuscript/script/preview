@@ -18,7 +18,7 @@ commit_message="$1"
 ls *-*.md > Book.txt
 
 for project in UnitDoctor FairyFingers; do
-  rsync -a ../our-android-examples/$project code
+  find ../our-android-examples/$project -name \*.java -exec cp {} code \;
 done
 git add -A :/
 git commit -m "$commit_message"

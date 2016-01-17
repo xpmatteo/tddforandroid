@@ -2,10 +2,7 @@
 
 ## Problem description
 
-We want to write an application to convert measures from various units to other units.  We imagine that it will support an extensive collection of conversions, e.g., from centimeters to yards, from Fahrenheit degrees to Celsius, from HP to KW.
-
-Outline of this chapter: we start by
-
+We want to write an application to convert measures from various units to other units.  We imagine that it will support an extensive collection of conversions, e.g., from centimeters to yards, from Fahrenheit degrees to Celsius, from HP to KW.  You may check out the source code for this example at [https://github.com/xpmatteo/unit-doctor](https://github.com/xpmatteo/unit-doctor).
 
 ## Examples {#unit-doctor-examples}
 
@@ -537,8 +534,6 @@ Q> *Shouldn't we also check for a non-numeric string?* \\
 Q> Not really.  Since we declared in the xml layout that the inputNumber field will only accept numeric input, this shouldn't happen.
 
 
-
-
 ## The compile-time project structure {#unitdoctor-compile-time-structure}
 
   * Project UnitDoctor
@@ -561,5 +556,5 @@ Q> Not really.  Since we declared in the xml layout that the inputNumber field w
 
 ## What now?
 
-We have started a project with tests.  Now our options are open: we can improve the UI or we can improve the core functions of the application.
+We have started a project with tests.  Now our options are open: we can improve the UI or we can improve the core functions of the application.  The clean separation that we enforced on view and domain model means that we can add more conversion logic, with full confidence that the new logic will be "picked up" by the user interface.
 

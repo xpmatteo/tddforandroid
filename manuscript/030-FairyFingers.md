@@ -248,19 +248,16 @@ The first implementation of `FairyFingersCore` makes these three tests pass, but
 package com.tdd4android.fairyfingers.core;
 
 public class FairyFingersCore {
-  private int trails;
+  private int trailsCount;
 
   public int trailsCount() {
-    return trails;
+    return trailsCount;
   }
 
-  public void onFingerDown(int x, int y) {
-    trails++;
+  public void onMotionEvent(int action, float x, float y) {
+    if (action == ACTION_DOWN)
+      trailsCount++;
   }
-
-  public void onFingerMove(int x, int y) {}
-
-  public void onFingerUp() {}
 }
 ~~~~~
 
@@ -309,12 +306,16 @@ public void unfinishedTrail() throws Exception {
 
 @Test
 public void aFinishedTrail() throws Exception {
-  core.onMotionEvent(ACTION_DOWN, 10, 20);
-  core.onMotionEvent(ACTION_MOVE, 30, 40);
-  core.onMotionEvent(ACTION_UP, 50, 60);
+  core.onMotionEvent(ACTION_DOWN, 1.1, 2.2);
+  core.onMotionEvent(ACTION_MOVE, 3.33, 4.44);
+  core.onMotionEvent(ACTION_UP, 5.555, 6.666);
 
   assertEquals(1, core.trailsCount());
-  assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
+  assertEquals("(1.1,2.2)->(3.33,4.44)->(5.555,6.666)", core.getTrail(0).toString());
 }
 ~~~~~~
 A> We moved the FairyFingersCore object in a field, in order to remove the duplication of creating it in every test.  We could use a `@Before` method to initialize it, but doing it this way is shorter.  We rely on the fact that JUnit creates a new `FairyFingersCoreTest` object for every test method it calls.  Therefore, every test has a fresh `FairyFingersCore` object.
+A>
+A> Also note that we always use different numbers in the tests.  If we wrote `core.onMotionEvent(ACTION_DOWN, 10, 10)` we would be open to the risk of swapping x and y in our production code.
+A>
+A> One last observation: Android uses the `float` data type for coordinates. Our code should do the same.

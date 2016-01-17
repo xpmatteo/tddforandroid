@@ -3,7 +3,6 @@
 007-the-android-development-process.md
 008-hello-world.md
 010-unit-converter.md
-020-more-conversion-logic.md
 030-FairyFingers.md
 040-more-android.md
 900-bibliography.md

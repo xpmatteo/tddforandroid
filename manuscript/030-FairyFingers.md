@@ -1,8 +1,8 @@
-# Exercise: Fairy Fingers
+# Drawing on the screen and sensing touch
 
 ## Digging deeper into Android
 
-We've seen how to TDD an application that has a GUI based on ordinary form widgets: text fields and buttons.  Now we'd like to go a bit deeper.  How do we TDD an application that reacts to the user's touch and draws directly on the screen?
+We've seen how to TDD an application based on ordinary form widgets: text fields and buttons.  Now we'd like to go a bit deeper.  How do we TDD an application that reacts to the user's touch and draws directly on the screen?
 
 The goal of this chapter is to further understand how to decouple the tests from the Android APIs, even when we *need* to use those APIs.
 
@@ -125,6 +125,14 @@ public boolean onTouchEvent(MotionEvent event) {
 
 So far, so good.  We could explore the `MotionEvent` further in order to understand multitouch, but we can leave that for later.  We learned enough already for writing a first version of Fairy Fingers that only supports single touch.
 
+What have we learned?  There are two points where we interact with the device.
+
+1. When the user touches the screen, we receive data through the `onTouchEvent(MotionEvent e)` call. We should accumulate these data in some kind of data structure.
+2. When the screen is being drawn, Android calls `onDraw(Canvas c)`.  We should use our previously created data structure to know what we should draw on the canvas.
+
+{width=100%}
+![How FairyFingers interacts with the device](images/spike-fairy-fingers-3.jpg)
+
 
 ## Acceptance tests
 
@@ -148,85 +156,9 @@ Note that we started using the word "trail" instead of "line".  We'd like to hav
 
 ## Setup the project
 
-We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view and then we stop to consider.  What next?
+We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view.  Then we add a new `Core` module that will contain the pure Java code, as usual.
 
-Before we can write any test, we need to update the project.  The pure Java tests will live in a separate, android-free module that we call `core`.
-
-1. We create a module of type "Java Library" with Android Studio.
-2. We name it `core`.
-3. We create the folder `core/src/test/java` in it.
-4. We add JUnit support to `core/build.gradle`
-
-The updated Gradle file looks like this:
-
-{line-numbers=on, lang="groovy"}
-~~~~~
-apply plugin: 'java'
-
-sourceCompatibility = 1.7
-
-dependencies {
-   compile fileTree(dir: 'libs', include: ['*.jar'])
-   testCompile 'junit:junit-dep:4.11'
-   testCompile 'org.jmock:jmock-junit4:2.6.0'
-}
-
-test {
-   testLogging {
-       events "passed", "skipped", "failed", "standardOut", "standardError"
-   }
-}
-~~~~~
-Line 3 sets the version of Java that we want to use in the core module.  Version 1.7 is the highest supported version at the time.  Lines 7-8 add support for JUnit and JMock.  Lines 11-15 improve the way Android Studio reports test results.
-
-We test that JUnit works by creating an simple test file and watching it fail.
-~~~~~
-package com.tdd4android.fairyfingers.core;
-
-import org.junit.*;
-import static org.junit.Assert.*;
-
-public class FairyFingersTest {
-    @Test
-    public void testName() throws Exception {
-        fail("foobar");
-    }
-}
-~~~~~
-
-We also test that the `app` module can use classes from the `core` module.  We create a dummy `MyClass` class in `core/src/main/java/com/tdd4android/fairyfingers/core` and create an instance in our main Activity:
-{line-numbers=on}
-~~~~~~
-package com.tdd4android.fairyfingers;
-//...
-public class FairyFingersActivity extends ActionBarActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fairy_fingers);
-        new MyClass();
-    }
-    // ...
-}
-~~~~~
-We instantiate a dummy core object in line 8, just to prove that we can.
-
-We must tell Gradle that module `app` depends on module `core`.  We do that by modifing app/build.gradle as follows:
-
-{lang=groovy, line-numbers=on}
-~~~~~
-apply plugin: 'com.android.application'
-
-android {
-  // ...
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':core')
-}
-~~~~~
-We added the dependency on line 9.
+Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.  We
 
 
 ## TDD
@@ -242,7 +174,20 @@ The first step for TDD is to write a test list.  We start by writing a todo list
 
 Where do we start?  We choose "create a two points trail" because we'd like to discover how we will solve this.
 
-Which object will accumulate points?  I imagine there will be an object that represents a set of trails.  It will receive messages from the `onTouchEvent` method of the view and it will react accordingly.
+Which object will accumulate points?  I imagine there will be an object that represents a set of trails.  It will receive messages from the `onTouchEvent` method of the view and it will react accordingly.  In the view, we'll have something like this:
+
+~~~~~~~~
+package com.tdd4android.fairyfingers;
+
+public class FairyFingersView extends View {
+  FairyFingersCore core = new FairyFingersCore();
+
+  @Override
+  public boolean onTouchEvent(final MotionEvent event) {
+    core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
+  }
+}
+~~~~~~~
 
 Now we can write the first test.
 
@@ -252,16 +197,21 @@ package com.tdd4android.fairyfingers.core;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TrailSetTest {
+public class FairyFingersCoreTest {
+  // Constants copied from android.view.MotionEvent
+  public static final int ACTION_DOWN             = 0;
+  public static final int ACTION_UP               = 1;
+  public static final int ACTION_MOVE             = 2;
+
   @Test
   public void twoPointsTrail() throws Exception {
-    TrailSet trailSet = new TrailSet();
+    FairyFingersCore core = new FairyFingersCore();
 
-    trailSet.onFingerDown(10, 20);
-    trailSet.onFingerMove(30, 40);
-    trailSet.onFingerUp();
+    core.onMotionEvent(ACTION_DOWN, 10, 20);
+    core.onMotionEvent(ACTION_MOVE, 30, 40);
+    core.onMotionEvent(ACTION_UP, 50, 60);
 
-    assertEquals(1, trailSet.size());
+    assertEquals(1, core.trailsCount());
   }
 }
 ~~~~~~
@@ -271,8 +221,8 @@ While we write this test, we think of a two simpler ones:
 ~~~~~
 @Test
 public void noTrails() throws Exception {
-  TrailSet trailSet = new TrailSet();
-  assertEquals(0, trailSet.size());
+  FairyFingersCore core = new FairyFingersCore();
+  assertEquals(0, core.trailsCount());
 }
 ~~~~~~
 
@@ -281,26 +231,26 @@ and
 ~~~~~
 @Test
 public void unfinishedTrail() throws Exception {
-  TrailSet trailSet = new TrailSet();
+  FairyFingersCore core = new FairyFingersCore();
 
-  trailSet.onFingerDown(10, 20);
-  trailSet.onFingerMove(30, 40);
+  core.onMotionEvent(ACTION_DOWN, 10, 20);
+  core.onMotionEvent(ACTION_MOVE, 30, 40);
 
-  assertEquals(1, trailSet.size());
+  assertEquals(1, core.trailsCount());
 }
 ~~~~~
 
 The last one is needed because we expect the trail to be visible even while it's not finished yet.
 
-The first implementation of `TrailSet` makes these three tests pass, but is not very useful yet.
+The first implementation of `FairyFingersCore` makes these three tests pass, but is not very useful yet.
 
 ~~~~~
 package com.tdd4android.fairyfingers.core;
 
-public class TrailSet {
+public class FairyFingersCore {
   private int trails;
 
-  public int size() {
+  public int trailsCount() {
     return trails;
   }
 
@@ -308,25 +258,23 @@ public class TrailSet {
     trails++;
   }
 
-  public void onFingerMove(int x, int y) {
-  }
+  public void onFingerMove(int x, int y) {}
 
-  public void onFingerUp() {
-  }
+  public void onFingerUp() {}
 }
 ~~~~~
 
-How can we improve the tests in a way that forces us to make `TrailSet` more useful?
+The problem is in the assertions.  The assertion on the `trailsCount()` by itself is not very useful.  It does not prove that the important data about the trail have been memorized. How can we improve the tests in a way that forces us to flesh out `FairyFingersCore` better?
 
 (Pause for a minute.  What would YOU do?)
 
-The TrailSet should build a Trail object, and we'd like this Trail to contain exactly the coordinates that were supplied by the tests.  One way to do this is with getters:
+The FairyFingersCore should build a Trail object, and we'd like this Trail to contain exactly the coordinates that were supplied by the tests.  One way to do this is with getters:
 
 ~~~~~
-assertEquals(10, trailSet.get(0).getPoints(0).getX());
-assertEquals(20, trailSet.get(0).getPoints(0).getY());
-assertEquals(30, trailSet.get(0).getPoints(1).getX());
-assertEquals(40, trailSet.get(0).getPoints(1).getY());
+assertEquals(10, core.getTrail(0).getPoints(0).getX());
+assertEquals(20, core.getTrail(0).getPoints(0).getY());
+assertEquals(30, core.getTrail(0).getPoints(1).getX());
+assertEquals(40, core.getTrail(0).getPoints(1).getY());
 ~~~~~
 
 But this test code is extremely boring to write!  Being bored is an important signal.  It's the test pushing back: it doesn't want to be written like this.  One concrete problem is that there are too many "dots" in the assertion.  We dig too much further into the objects.  One other problem is that we are assuming that we will need all those getters; it's not clear yet that these getters will be used in production code.
@@ -334,9 +282,39 @@ But this test code is extremely boring to write!  Being bored is an important si
 Trick: use "toString".  The `toString` of the `Trail` will certainly be needed for debugging and logging.  How about:
 
 ~~~~~
-assertEquals("(10,20)->(30,40)", trailSet.get(0).toString());
+assertEquals("(10,20)->(30,40)", core.getTrail(0).toString());
 ~~~~~
 
-In this test, are only assuming that the `TrailSet` will return an object that contains the expected points in a certain order.  It looks promising!
+In our test, we are only assuming that the `FairyFingersCore` will return an object that somehow contains the expected points in a certain order.  We don't even assert what kind of object it is.  It looks promising!  The tests are rewritten in the following style:
 
+~~~~~~
+private FairyFingersCore core = new FairyFingersCore();
 
+@Test
+public void justFingerDown() throws Exception {
+  core.onMotionEvent(ACTION_DOWN, 10, 20);
+
+  assertEquals(1, core.trailsCount());
+  assertEquals("(10.0,20.0)", core.getTrail(0).toString());
+}
+
+@Test
+public void unfinishedTrail() throws Exception {
+  core.onMotionEvent(ACTION_DOWN, 10, 20);
+  core.onMotionEvent(ACTION_MOVE, 30, 40);
+
+  assertEquals(1, core.trailsCount());
+  assertEquals("(10.0,20.0)->(30.0,40.0)", core.getTrail(0).toString());
+}
+
+@Test
+public void aFinishedTrail() throws Exception {
+  core.onMotionEvent(ACTION_DOWN, 10, 20);
+  core.onMotionEvent(ACTION_MOVE, 30, 40);
+  core.onMotionEvent(ACTION_UP, 50, 60);
+
+  assertEquals(1, core.trailsCount());
+  assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
+}
+~~~~~~
+A> We moved the FairyFingersCore object in a field, in order to remove the duplication of creating it in every test.  We could use a `@Before` method to initialize it, but doing it this way is shorter.  We rely on the fact that JUnit creates a new `FairyFingersCoreTest` object for every test method it calls.  Therefore, every test has a fresh `FairyFingersCore` object.

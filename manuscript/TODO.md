@@ -1,18 +1,17 @@
 
-- Presenter-first:
 
-  - improve theorical explanation before: model-view-presenter
+MUST
 
-  - add "what if"...
+* Section: some tests are useful, some are not
+* Section: presenter first with traffic lights
+* Section: FairyFingers: finish the description
 
+(somewhere: our standard project setup with a Java lib module)
 
+MAYBE
 
-  - use anonymous implementation instead of letting the activity implement the view?
+* Section: more android
+ - network
+ - storage
+ - ...
 
-  - in the hand-made mock test, use anonymous implementation instead of self shunt?
-
-  - Rename CounterApp to CounterCore
-
-  - add Mockito examples
-
-  -

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/mvaccari/work/android-book/our-android-examples/FairyFingers/AndroidFree/build/libs/AndroidFree.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="47f3776db184457a976a8c57b138284d2c306a87">
+        <dex dex="/Users/mvaccari/work/android-book/our-android-examples/FairyFingers/AndroidDependent/build/intermediates/pre-dexed/debug/AndroidFree-f6f1a4d8b02514dc81239eac64355dcb12e5315f.jar" />
+    </item>
+
+</items>

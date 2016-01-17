@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="AndroidFree.AndroidFree">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/AndroidFree/build/libs/AndroidFree.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -4,7 +4,7 @@
 
 We've seen how to TDD an application based on ordinary form widgets: text fields and buttons.  Now we'd like to go a bit deeper.  How do we TDD an application that reacts to the user's touch and draws directly on the screen?
 
-The goal of this chapter is to further understand how to decouple the tests from the Android APIs, even when we *need* to use those APIs.
+The goal of this chapter is to further understand how to decouple the tests from the Android APIs, even when we *need* to use those APIs.  You may find the source code for this chapter in [https://github.com/xpmatteo/fairy-fingers](https://github.com/xpmatteo/fairy-fingers).
 
 
 ## Problem Description
@@ -158,10 +158,28 @@ Note that we started using the word "trail" instead of "line".  We'd like to hav
 
 We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view.  Then we add a new `Core` module that will contain the pure Java code, as usual.
 
-Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.  We
+Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.   We imagine that we will have something like the following pseudo-code:
+
+~~~~~~~
+private FairyFingersCore core = new FairyFingersCore();
+
+@Override
+protected void onDraw(Canvas canvas) {
+  for every trail in core {
+    draw the trail on the canvas
+  }
+}
+
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+  core.onTouchEvent(event.getActionMasked(), getX(), getY());
+  invalidate();
+  return true;
+}
+~~~~~~~
 
 
-## TDD
+## Start the TDD
 
 The first step for TDD is to write a test list.  We start by writing a todo list from the acceptance tests list:
 
@@ -265,6 +283,8 @@ The problem is in the assertions.  The assertion on the `trailsCount()` by itsel
 
 (Pause for a minute.  What would YOU do?)
 
+* * *
+
 The FairyFingersCore should build a Trail object, and we'd like this Trail to contain exactly the coordinates that were supplied by the tests.  One way to do this is with getters:
 
 ~~~~~
@@ -297,11 +317,11 @@ public void justFingerDown() throws Exception {
 
 @Test
 public void unfinishedTrail() throws Exception {
-  core.onMotionEvent(ACTION_DOWN, 10, 20);
-  core.onMotionEvent(ACTION_MOVE, 30, 40);
+  core.onMotionEvent(ACTION_DOWN, 100, 200);
+  core.onMotionEvent(ACTION_MOVE, 300, 400);
 
   assertEquals(1, core.trailsCount());
-  assertEquals("(10.0,20.0)->(30.0,40.0)", core.getTrail(0).toString());
+  assertEquals("(100.0,200.0)->(300.0,400.0)", core.getTrail(0).toString());
 }
 
 @Test
@@ -317,5 +337,7 @@ public void aFinishedTrail() throws Exception {
 A> We moved the FairyFingersCore object in a field, in order to remove the duplication of creating it in every test.  We could use a `@Before` method to initialize it, but doing it this way is shorter.  We rely on the fact that JUnit creates a new `FairyFingersCoreTest` object for every test method it calls.  Therefore, every test has a fresh `FairyFingersCore` object.
 A>
 A> Also note that we always use different numbers in the tests.  If we wrote `core.onMotionEvent(ACTION_DOWN, 10, 10)` we would be open to the risk of swapping x and y in our production code.
+A>
+A> We avoid using the same test data in multiple tests.  Using always different data prevents us to leave hardcoded test data in production code!
 A>
 A> One last observation: Android uses the `float` data type for coordinates. Our code should do the same.

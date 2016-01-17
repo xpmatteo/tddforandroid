@@ -1,4 +1,4 @@
-# A form-based application: Unit Doctor
+# A simple form-based application: Unit Doctor
 
 ## Problem description
 

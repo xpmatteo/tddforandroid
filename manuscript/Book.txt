@@ -1,12 +1,9 @@
 000-introduction.md
 005-so-difficult.md
-007-some-theory.md
+007-the-android-development-process.md
 008-hello-world.md
 010-unit-converter.md
 020-more-conversion-logic.md
 030-FairyFingers.md
 040-more-android.md
 900-bibliography.md
-910-appendix-junit.md
-910-appendix-types-of-tests.md
-920-appendix-jmock.md

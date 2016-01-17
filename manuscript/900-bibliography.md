@@ -15,7 +15,8 @@ Kent Beck, *Test Driven Development with Kent Beck*,\\
 [https://pragprog.com/screencasts/v-kbtdd/test-driven-development](https://pragprog.com/screencasts/v-kbtdd/test-driven-development)
 
 {#jbrains-tdd-video}
-J.B. Rainsberger, *The World's Best Intro to TDD*,\\ [http://www.jbrains.ca/permalink/the-worlds-best-intro-to-tdd-demo-video](http://www.jbrains.ca/permalink/the-worlds-best-intro-to-tdd-demo-video)
+J.B. Rainsberger, *The World's Best Intro to TDD*,\\
+[http://www.jbrains.ca/permalink/the-worlds-best-intro-to-tdd-demo-video](http://www.jbrains.ca/permalink/the-worlds-best-intro-to-tdd-demo-video)
 
 {#jbrains-book}
 J.B. Rainsberger, *Responsible Design For Android*,\\

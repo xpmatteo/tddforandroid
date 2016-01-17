@@ -7,6 +7,10 @@ For reference, here are the complete listings of the final version of UnitDoctor
 
 This module contains the pure, Android-free logic of the application
 
+<<(code/UnitDoctor/UnitDoctorCore/src/test/java/name/vaccari/matteo/unitdoctor/core/UnitDoctorTest.java)
+
+<<(code/UnitDoctorTest.java)
+
 <<[The unit test for the UnitDoctor](code/UnitDoctor/UnitDoctorCore/src/test/java/name/vaccari/matteo/unitdoctor/core/UnitDoctorTest.java)
 
 <<[Our presenter class](code/UnitDoctor/UnitDoctorCore/src/main/java/name/vaccari/matteo/unitdoctor/core/UnitDoctor.java)

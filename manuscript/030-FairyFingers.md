@@ -205,7 +205,7 @@ public class FairyFingersView extends View {
     core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
   }
 }
-~~~~~~~
+~~~~~~~~
 
 Now we can write the first test.
 

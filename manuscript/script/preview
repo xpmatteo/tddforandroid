@@ -19,7 +19,7 @@ ls *-*.md > Book.txt
 
 for project in UnitDoctor UnitConversionSpike FairyFingers; do
   mkdir -p code/$project 2> /dev/null
-  find ../our-android-examples/$project -name \*.java -exec cp {} code/$project \;
+  find ../our-android-examples/$project -name \*.java -o -name \*.xml -exec cp {} code/$project \;
 done
 git add -A :/
 git commit -m "$commit_message"

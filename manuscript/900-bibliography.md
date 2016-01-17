@@ -5,7 +5,7 @@
 
 {#goos}
 Steve Freeman and Nat Pryce, *Growing Object Oriented Software, Guided By Tests*,\\
-[http://www.growing-object-oriented-software.com/]()
+[http://www.growing-object-oriented-software.com/](http://www.growing-object-oriented-software.com/)
 
 {#tdd}
 Kent Beck, *Test Driven Development: By Example*, Addison-Wesley, 2001

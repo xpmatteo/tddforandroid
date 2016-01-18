@@ -284,20 +284,36 @@ The changing of the value displayed on the GUI has become a responsibility of th
 
 We have created a circular dependency between the activity and the app
 
-    +--------------+               +-------------------+
-    |  CounterApp  | <---------->  |  CounterActivity  |
-    +--------------+               +-------------------+
+
+![Circular dependency between classes](images/withoutInterface.png)
+
+<!--
+http://yuml.me/diagram/scruffy/class/edit/[Counter]<->[CounterActivity]
+
+    +--------------+                +-------------------+
+    |  CounterApp  | <----------\>  |  CounterActivity  |
+    +--------------+                +-------------------+
+
+-->
 
 And this is bad.  We would much prefer that the CounterApp be independent of the CounterActivity.  Luckily, there is a standard way to break circular dependencies: introduce an interface!
 
-    +--------------+               +----------<I>-+
-    |  CounterApp  | ----------->  |  CounterGui  |
-    +--------------+               +--------------+
-                                          ^
-                                          |
-                                 +-------------------+
-                                 |  CounterActivity  |
-                                 +-------------------+
+
+![Break of circular dependency by means of a interface](images/withInterface.png)
+
+<!-- 
+http://yuml.me/diagram/scruffy/class/edit/[Counter]->[<<CounterGui>>], [<<CounterGui>>]^-.-[CounterActivity], [Counter]<-[CounterActivity]
+	
+    +--------------+                +----------<I>-+
+    |  CounterApp  | -----------\>  |  CounterGui  |
+    +--------------+                +--------------+
+           ^                               ^
+           |                               |
+           |                      +-------------------+
+           |______________________|  CounterActivity  |
+                                  +-------------------+
+
+-->
 
 We introduce an interface we call `CounterGui` (We could have chosen the name `CounterView`, but that could create confusion with the way Android uses the word "view")
 

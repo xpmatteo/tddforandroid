@@ -156,7 +156,7 @@ Note that we started using the word "trail" instead of "line".  We'd like to hav
 
 ## Setup the project
 
-We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view.  Then we add a new `Core` module that will contain the pure Java code, as usual.
+We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view.  Then we add a new `Core` module that will contain the pure Java code, as described in the [Hello, World](#hello-world) chapter.
 
 Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.  We will delegate most of the work to a `FairyFingersCore` object.  We imagine that we will have something like the following pseudo-code:
 

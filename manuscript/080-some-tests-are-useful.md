@@ -51,7 +51,7 @@ I call tests like this one "bureaucratic tests", because they look like I have t
 
 What kinds of tests are valuable, then?
 
-In TDD, like in XP, it all starts from what is valuable *for the customer* of the software.  So we start from the requirements, and work backwards to understand what we need to write.  A user story is made up of a number of *scenarios*, or *concrete examples*, of what the software should do.  So we write one test for each of these scenarios.  This is well explained in the many resources on BDD, ATDD and Cucumber; however, I don't recommend that you write your tests with Cucumber, necessarily.  You can write these test with JUnit just as well.
+In TDD, like in Extreme Programming, it all starts from what is valuable *for the customer* of the software.  So we start from the requirements, and work backwards to understand what we need to write.  A user story is made up of a number of *scenarios*, or *concrete examples*, of what the software should do.  So we write one test for each of these scenarios.  This is well explained in the many resources on BDD, ATDD and Cucumber; however, I don't recommend that you write your tests with Cucumber, necessarily.  You can write these test with JUnit just as well.
 
 When a scenario-level test is too big to pass quickly, then you may ignore it temporarily, and write smaller tests that take you one step closer to getting the original test to pass.  This is a pattern that Kent Beck calls "Child test" and is well explained in his [Test-Driven Development: By Example](#tdd) book.
 
@@ -62,6 +62,7 @@ This explanation leaves one question unanswered.  How do we test the GUI then?
 
 We apply one principle: **model-view separation**.
 
+{width=60%}
 ![Model-view separation](images/some-tests-are-useful/model-view-separation.png)
 
 The GUI does not contain any logic.  All the logic is extracted to plain-Java objects that can be developed and tested with no reference to the Android framework.  This principle is a cornerstone of Object-Oriented Design, and is well explained in Craig Larman's book [Applying UML and Patterns](http://www.craiglarman.com/wiki/index.php?title=Books_by_Craig_Larman#Applying_UML_and_Patterns).
@@ -72,6 +73,7 @@ When you are releasing the app and want to make sure that no screen of your appl
 
 When you are doing your everyday coding and refactoring, you certainly don't want to check manually that you haven't broken any view at every commit.  For this, you should have **one** end-to-end test for every screen, that tries to perform a basic test of the basic functionality offered by the screen.  These test do not guarantee that the screen looks right, but at least they guarantee that the basic functionality works.
 
+{width=60%}
 ![A few tests exercise the GUI, most of the tests don't](images/some-tests-are-useful/model-view-separation-2.png)
 
 

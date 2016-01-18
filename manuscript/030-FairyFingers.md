@@ -158,7 +158,7 @@ Note that we started using the word "trail" instead of "line".  We'd like to hav
 
 We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view.  Then we add a new `Core` module that will contain the pure Java code, as usual.
 
-Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.   We imagine that we will have something like the following pseudo-code:
+Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.  We will delegate most of the work to a `FairyFingersCore` object.  We imagine that we will have something like the following pseudo-code:
 
 ~~~~~~~
 private FairyFingersCore core = new FairyFingersCore();
@@ -172,7 +172,7 @@ protected void onDraw(Canvas canvas) {
 
 @Override
 public boolean onTouchEvent(MotionEvent event) {
-  core.onTouchEvent(event.getActionMasked(), getX(), getY());
+  core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
   invalidate();
   return true;
 }
@@ -190,24 +190,7 @@ The first step for TDD is to write a test list.  We start by writing a todo list
  - randomize colours
  - draw all the trails
 
-Where do we start?  We choose "create a two points trail" because we'd like to discover how we will solve this.
-
-Which object will accumulate points?  I imagine there will be an object that represents a set of trails.  It will receive messages from the `onTouchEvent` method of the view and it will react accordingly.  In the view, we'll have something like this:
-
-~~~~~~~~
-package com.tdd4android.fairyfingers;
-
-public class FairyFingersView extends View {
-  FairyFingersCore core = new FairyFingersCore();
-
-  @Override
-  public boolean onTouchEvent(final MotionEvent event) {
-    core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
-  }
-}
-~~~~~~~~
-
-Now we can write the first test.
+Where do we start?  We choose "create a two points trail" because we'd like to discover how we will solve this. Now we can write the first test.
 
 ~~~~~
 package com.tdd4android.fairyfingers.core;

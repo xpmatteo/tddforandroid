@@ -2,6 +2,7 @@
 005-so-difficult.md
 007-the-android-development-process.md
 008-hello-world.md
+009-some-tests-are-useful.md
 010-unit-converter.md
 030-FairyFingers.md
 040-more-android.md

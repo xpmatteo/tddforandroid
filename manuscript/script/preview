@@ -16,6 +16,7 @@ cd "$(dirname "$0")"/..
 commit_message="$1"
 
 ls *-*.md > Book.txt
+ls "200-unit-doctor.md" > Sample.txt
 
 for project in UnitDoctor UnitConversionSpike FairyFingers; do
   mkdir -p code/$project 2> /dev/null

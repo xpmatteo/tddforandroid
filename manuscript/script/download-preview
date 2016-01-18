@@ -18,4 +18,4 @@ slug="tddforandroid"
 pdf_preview_url=$(curl -s https://leanpub.com/$slug.json?api_key=$LEANPUB_API_KEY | jq -r .pdf_preview_url)
 echo $pdf_preview_url
 curl -L "$pdf_preview_url" > $slug.pdf
-open $slug.pdf
+open -n $slug.pdf

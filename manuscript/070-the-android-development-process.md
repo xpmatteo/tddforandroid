@@ -82,14 +82,14 @@ An Acceptance Criterion can be a general statement of what the application shoul
 
 To make sure that we understand correctly what this means, we translate it to concrete Examples.  Usually we do this through a conversation with our customer.
 
-> Given Item "Buy milk" that was marked "done" on 1st March 2015 at 14:00:00 \\
-
+> Given Item "Buy milk" that was marked "done" on 1st March 2015 at 14:00:00
+>
 > **Example: item not yet hidden** \\
 >    When the current date and time is 8th March 2015 at 13:59:59 \\
->    Then the item is shown \\
-
-> **Example: item hidden**
->    When the current date and time is 8th March 2015 at 14:00:00
+>    Then the item is shown
+>
+> **Example: item hidden** \\
+>    When the current date and time is 8th March 2015 at 14:00:00 \\
 >    Then the item is NOT shown
 
 As you can see, where the AC talks in general terms "An item marked as *done*", the examples are about concrete things: a specific item "Buy Milk" that was marked done in some specific instant in time.

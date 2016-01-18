@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="name.vaccari.matteo.unitdoctor.core.UnitDoctorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2016-01-18T14:02:02" hostname="eumvaccari.local" time="0.014">
+  <properties/>
+  <testcase name="convertFahrenheitToCelsius" classname="name.vaccari.matteo.unitdoctor.core.UnitDoctorTest" time="0.011"/>
+  <testcase name="showsConversionNotSupported" classname="name.vaccari.matteo.unitdoctor.core.UnitDoctorTest" time="0.001"/>
+  <testcase name="convertInchesToCm" classname="name.vaccari.matteo.unitdoctor.core.UnitDoctorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

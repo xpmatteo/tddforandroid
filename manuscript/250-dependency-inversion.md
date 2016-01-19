@@ -71,9 +71,10 @@ Android code ------------|> an interface  <-------- our logic
 
 The flow of control has not changed, but the direction of source code dependency has been inverted.  The interface is implemented in an Android class, such as an Activity or a View, but the interface itself is part of the Android-free world.  We will use this principle in the following chapters.
 
+## References
 
-For more information on Dependency Inversion, I recommend Robert Martin's video: [The Dependency Inversion Principle](https://cleancoders.com/episode/clean-code-episode-13/show).
+For more information on Dependency Inversion, I recommend Robert Martin's video: [The Dependency Inversion Principle](https://cleancoders.com/episode/clean-code-episode-13/show).  If you prefer to read, there's a chapter about DIP in Robert Martin's book [Agile Software Development, Principles, Patterns, and Practices](http://www.barnesandnoble.com/w/agile-software-development-principles-patterns-and-practices-1-e-robert-c-martin/1111570539?ean=9780135974445). Robert Martin published also [a free document about DIP](https://drive.google.com/file/d/0BwhCYaYDn8EgMjdlMWIzNGUtZTQ0NC00ZjQ5LTkwYzQtZjRhMDRlNTQ3ZGMz/view).
 
-An idea related to Dependency Inversion is the Ports and Adapters architecture, also known as Hexagonal architecture.  The Birthday Greetings Kata is an exercise meant to practice the Ports and Adapters architecture.
+An idea related to Dependency Inversion is the [Ports and Adapters architecture](http://alistair.cockburn.us/Hexagonal+architecture), published by Alistair Cockburn, also known as Hexagonal architecture.  The [Birthday Greetings Kata](http://matteo.vaccari.name/blog/archives/154) is an exercise meant to practice the Ports and Adapters architecture.
 
 

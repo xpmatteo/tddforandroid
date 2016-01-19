@@ -145,10 +145,9 @@ We start with the following acceptance tests:
  - Multi-touch.  Dragging two fingers should produce two trails.
  - Multi-touch dashes.  We draw a continuous trail with one finger, and a dashed trail with another finger at the same time.  We should see a pattern like
 
-~~~~~
---   --   --
-------------
-~~~~~
+        --   --   --
+        ------------
+
 
 These acceptance tests are meant to be executed manually.  Some can and will be automated.  The ones that deal with multi-touch cannot be automated with present-generation tools (Monkeyrunner).
 

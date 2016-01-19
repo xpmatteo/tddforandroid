@@ -4,6 +4,7 @@
 080-some-tests-are-useful.md
 100-hello-world.md
 200-unit-doctor.md
+250-dependency-inversion.md
 300-fairy-fingers.md
 400-more-android.md
 900-bibliography.md

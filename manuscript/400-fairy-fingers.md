@@ -287,33 +287,42 @@ assertEquals("(10,20)->(30,40)", core.getTrail(0).toString());
 In our test, we are only assuming that the `FairyFingersCore` will return an object that somehow contains the expected points in a certain order.  We don't even assert what kind of object it is.  It looks promising!  The tests are rewritten in the following style:
 
 ~~~~~~
-private FairyFingersCore core = new FairyFingersCore();
+package it.xpug.fairyfingers.core;
+// ...
+public class FairyFingersCoreTest {
+  private FairyFingersCore core = new FairyFingersCore();
 
-@Test
-public void justFingerDown() throws Exception {
-  core.onMotionEvent(ACTION_DOWN, 10, 20);
+  @Test
+  public void noTrails() throws Exception {
+    assertEquals(0, core.trailsCount());
+  }
 
-  assertEquals(1, core.trailsCount());
-  assertEquals("(10.0,20.0)", core.getTrail(0).toString());
-}
+  @Test
+  public void justFingerDown() throws Exception {
+    core.onMotionEvent(Actions.ACTION_DOWN, 10, 20);
 
-@Test
-public void unfinishedTrail() throws Exception {
-  core.onMotionEvent(ACTION_DOWN, 100, 200);
-  core.onMotionEvent(ACTION_MOVE, 300, 400);
+    assertEquals(1, core.trailsCount());
+    assertEquals("(10.0,20.0)", core.getTrail(0).toString());
+  }
 
-  assertEquals(1, core.trailsCount());
-  assertEquals("(100.0,200.0)->(300.0,400.0)", core.getTrail(0).toString());
-}
+  @Test
+  public void unfinishedTrail() throws Exception {
+    core.onMotionEvent(Actions.ACTION_DOWN, 100, 200);
+    core.onMotionEvent(Actions.ACTION_MOVE, 300, 400);
 
-@Test
-public void aFinishedTrail() throws Exception {
-  core.onMotionEvent(ACTION_DOWN, 1.1, 2.2);
-  core.onMotionEvent(ACTION_MOVE, 3.33, 4.44);
-  core.onMotionEvent(ACTION_UP, 5.555, 6.666);
+    assertEquals(1, core.trailsCount());
+    assertEquals("(100.0,200.0)->(300.0,400.0)", core.getTrail(0).toString());
+  }
 
-  assertEquals(1, core.trailsCount());
-  assertEquals("(1.1,2.2)->(3.33,4.44)->(5.555,6.666)", core.getTrail(0).toString());
+  @Test
+  public void oneFinishedTrail() throws Exception {
+    core.onMotionEvent(Actions.ACTION_DOWN,   1.1f,   2.2f);
+    core.onMotionEvent(Actions.ACTION_MOVE,  33.3f,  44.4f);
+    core.onMotionEvent(Actions.ACTION_UP,   555.5f, 666.6f);
+
+    assertEquals(1, core.trailsCount());
+    assertEquals("(1.1,2.2)->(33.3,44.4)->(555.5,666.6)", core.getTrail(0).toString());
+  }
 }
 ~~~~~~
 A> We moved the FairyFingersCore object in a field, in order to remove the duplication of creating it in every test.  We could use a `@Before` method to initialize it, but doing it this way is shorter.  We rely on the fact that JUnit creates a new `FairyFingersCoreTest` object for every test method it calls.  Therefore, every test has a fresh `FairyFingersCore` object.
@@ -323,3 +332,72 @@ A>
 A> We avoid using the same test data in multiple tests.  Using always different data prevents us to leave hardcoded test data in production code!
 A>
 A> One last observation: Android uses the `float` data type for coordinates. Our code should do the same.
+
+Eventually we get to write the first test that forces the core to contain more than one trail:
+
+    @Test
+    public void twoTrails() throws Exception {
+      core.onMotionEvent(ACTION_DOWN, 1.0f, 100.0f);
+      core.onMotionEvent(ACTION_MOVE, 2.0f, 200.0f);
+      core.onMotionEvent(ACTION_UP,   3.0f, 300.0f);
+
+      core.onMotionEvent(ACTION_DOWN, 4.0f, 400.0f);
+      core.onMotionEvent(ACTION_MOVE, 5.0f, 500.0f);
+      core.onMotionEvent(ACTION_UP,   6.0f, 600.0f);
+
+      assertEquals(2, core.trailsCount());
+      assertEquals("(1.0,100.0)->(2.0,200.0)->(3.0,300.0)", core.getTrail(0).toString());
+      assertEquals("(4.0,400.0)->(5.0,500.0)->(6.0,600.0)", core.getTrail(1).toString());
+    }
+
+A> To make the exposition shorter, we are showing you the end results of many TDD cycles.
+
+The implementation that we get after passing the last test is the following:
+
+    public class FairyFingersCore {
+      private List<Trail> trails = new ArrayList<>();
+
+      public void onMotionEvent(int action, float x, float y) {
+        if (Actions.ACTION_DOWN == action) {
+          trails.add(new Trail(x, y));
+        } else {
+          trails.get(trails.size() - 1).append(x, y);
+        }
+      }
+
+      public int trailsCount() {
+        return trails.size();
+      }
+
+      public Trail getTrail(int index) {
+        return trails.get(index);
+      }
+    }
+
+    public class Trail {
+      private StringBuilder description;
+
+      public Trail(float x, float y) {
+        description = new StringBuilder(formatPair(x, y));
+      }
+
+      public void append(float x, float y) {
+        description.append("->" + formatPair(x, y));
+      }
+
+      @Override
+      public String toString() {
+        return description.toString();
+      }
+
+      private String formatPair(float x, float y) {
+        return String.format("(%.1f,%.1f)", x, y);
+      }
+    }
+
+
+## Moving on to drawing
+
+In the last section we have completed (more or less) the data-gathering activity that we should do in response to motion events from Android.  What is missing?  Of course what is missing is drawing on the screen!  Our implementation of `Trail` does nothing.  We should find a way to let it interact with the Android `Canvas` object.  How do we do this?  Let's start with a test!
+
+

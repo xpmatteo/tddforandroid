@@ -6,6 +6,6 @@
 200-unit-doctor.md
 220-presenter-first.md
 250-dependency-inversion.md
-300-fairy-fingers.md
-400-more-android.md
+400-fairy-fingers.md
+500-more-android.md
 900-bibliography.md

@@ -15,7 +15,7 @@ public class FairyFingersCoreTest {
 
   @Test
   public void justFingerDown() throws Exception {
-    core.onMotionEvent(Actions.ACTION_DOWN, 10, 20);
+    core.onTouchEvent(Actions.ACTION_DOWN, 10, 20);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(10.0,20.0)", core.getTrail(0).toString());
@@ -23,8 +23,8 @@ public class FairyFingersCoreTest {
 
   @Test
   public void unfinishedTrail() throws Exception {
-    core.onMotionEvent(Actions.ACTION_DOWN, 100, 200);
-    core.onMotionEvent(Actions.ACTION_MOVE, 300, 400);
+    core.onTouchEvent(Actions.ACTION_DOWN, 100, 200);
+    core.onTouchEvent(Actions.ACTION_MOVE, 300, 400);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(100.0,200.0)->(300.0,400.0)", core.getTrail(0).toString());
@@ -32,9 +32,9 @@ public class FairyFingersCoreTest {
 
   @Test
   public void aFinishedTrail() throws Exception {
-    core.onMotionEvent(Actions.ACTION_DOWN,   1.1f,   2.2f);
-    core.onMotionEvent(Actions.ACTION_MOVE,  33.3f,  44.4f);
-    core.onMotionEvent(Actions.ACTION_UP,   555.5f, 666.6f);
+    core.onTouchEvent(Actions.ACTION_DOWN,   1.1f,   2.2f);
+    core.onTouchEvent(Actions.ACTION_MOVE,  33.3f,  44.4f);
+    core.onTouchEvent(Actions.ACTION_UP,   555.5f, 666.6f);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(1.1,2.2)->(33.3,44.4)->(555.5,666.6)", core.getTrail(0).toString());
@@ -42,13 +42,13 @@ public class FairyFingersCoreTest {
 
   @Test
   public void twoTrails() throws Exception {
-    core.onMotionEvent(ACTION_DOWN, 1.0f, 100.0f);
-    core.onMotionEvent(ACTION_MOVE, 2.0f, 200.0f);
-    core.onMotionEvent(ACTION_UP,   3.0f, 300.0f);
+    core.onTouchEvent(ACTION_DOWN, 1.0f, 100.0f);
+    core.onTouchEvent(ACTION_MOVE, 2.0f, 200.0f);
+    core.onTouchEvent(ACTION_UP,   3.0f, 300.0f);
 
-    core.onMotionEvent(ACTION_DOWN, 4.0f, 400.0f);
-    core.onMotionEvent(ACTION_MOVE, 5.0f, 500.0f);
-    core.onMotionEvent(ACTION_UP,   6.0f, 600.0f);
+    core.onTouchEvent(ACTION_DOWN, 4.0f, 400.0f);
+    core.onTouchEvent(ACTION_MOVE, 5.0f, 500.0f);
+    core.onTouchEvent(ACTION_UP,   6.0f, 600.0f);
 
     assertEquals(2, core.trailsCount());
     assertEquals("(1.0,100.0)->(2.0,200.0)->(3.0,300.0)", core.getTrail(0).toString());

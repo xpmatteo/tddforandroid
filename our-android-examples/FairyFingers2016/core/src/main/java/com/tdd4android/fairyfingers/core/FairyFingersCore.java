@@ -7,7 +7,7 @@ import static com.tdd4android.fairyfingers.core.Actions.ACTION_DOWN;
 public class FairyFingersCore {
   private List<Trail> trails = new ArrayList<>();
 
-  public void onMotionEvent(int action, float x, float y) {
+  public void onTouchEvent(int action, float x, float y) {
     if (ACTION_DOWN == action) {
       trails.add(new Trail(x, y));
     } else {

@@ -155,7 +155,7 @@ Note that we started using the word "trail" instead of "line".  We'd like to hav
 
 ## Setup the project
 
-We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view.  Then we add a new `Core` module that will contain the pure Java code, as described in the [Hello, World](#hello-world) chapter.
+We create a new project for Fairy Fingers.  We start much like we did in the spike; we create a custom view that we call `FairyFingersView`.  Then we add a new `core` module that will contain the pure Java code, as described in the [Hello, World](#hello-world) chapter.
 
 Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.  We will delegate most of the work to a `FairyFingersCore` object.  We imagine that we will have something like the following pseudo-code:
 
@@ -207,9 +207,9 @@ public class FairyFingersCoreTest {
   public void twoPointsTrail() throws Exception {
     FairyFingersCore core = new FairyFingersCore();
 
-    core.onMotionEvent(ACTION_DOWN, 10, 20);
-    core.onMotionEvent(ACTION_MOVE, 30, 40);
-    core.onMotionEvent(ACTION_UP, 50, 60);
+    core.onTouchEvent(ACTION_DOWN, 10, 20);
+    core.onTouchEvent(ACTION_MOVE, 30, 40);
+    core.onTouchEvent(ACTION_UP, 50, 60);
 
     assertEquals(1, core.trailsCount());
   }
@@ -233,8 +233,8 @@ and
 public void unfinishedTrail() throws Exception {
   FairyFingersCore core = new FairyFingersCore();
 
-  core.onMotionEvent(ACTION_DOWN, 10, 20);
-  core.onMotionEvent(ACTION_MOVE, 30, 40);
+  core.onTouchEvent(ACTION_DOWN, 10, 20);
+  core.onTouchEvent(ACTION_MOVE, 30, 40);
 
   assertEquals(1, core.trailsCount());
 }
@@ -254,7 +254,7 @@ public class FairyFingersCore {
     return trailsCount;
   }
 
-  public void onMotionEvent(int action, float x, float y) {
+  public void onTouchEvent(int action, float x, float y) {
     if (action == ACTION_DOWN)
       trailsCount++;
   }
@@ -299,7 +299,7 @@ public class FairyFingersCoreTest {
 
   @Test
   public void justFingerDown() throws Exception {
-    core.onMotionEvent(Actions.ACTION_DOWN, 10, 20);
+    core.onTouchEvent(Actions.ACTION_DOWN, 10, 20);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(10.0,20.0)", core.getTrail(0).toString());
@@ -307,8 +307,8 @@ public class FairyFingersCoreTest {
 
   @Test
   public void unfinishedTrail() throws Exception {
-    core.onMotionEvent(Actions.ACTION_DOWN, 100, 200);
-    core.onMotionEvent(Actions.ACTION_MOVE, 300, 400);
+    core.onTouchEvent(Actions.ACTION_DOWN, 100, 200);
+    core.onTouchEvent(Actions.ACTION_MOVE, 300, 400);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(100.0,200.0)->(300.0,400.0)", core.getTrail(0).toString());
@@ -316,9 +316,9 @@ public class FairyFingersCoreTest {
 
   @Test
   public void oneFinishedTrail() throws Exception {
-    core.onMotionEvent(Actions.ACTION_DOWN,   1.1f,   2.2f);
-    core.onMotionEvent(Actions.ACTION_MOVE,  33.3f,  44.4f);
-    core.onMotionEvent(Actions.ACTION_UP,   555.5f, 666.6f);
+    core.onTouchEvent(Actions.ACTION_DOWN,   1.1f,   2.2f);
+    core.onTouchEvent(Actions.ACTION_MOVE,  33.3f,  44.4f);
+    core.onTouchEvent(Actions.ACTION_UP,   555.5f, 666.6f);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(1.1,2.2)->(33.3,44.4)->(555.5,666.6)", core.getTrail(0).toString());
@@ -327,7 +327,7 @@ public class FairyFingersCoreTest {
 ~~~~~~
 A> We moved the FairyFingersCore object in a field, in order to remove the duplication of creating it in every test.  We could use a `@Before` method to initialize it, but doing it this way is shorter.  We rely on the fact that JUnit creates a new `FairyFingersCoreTest` object for every test method it calls.  Therefore, every test has a fresh `FairyFingersCore` object.
 A>
-A> Also note that we always use different numbers in the tests.  If we wrote `core.onMotionEvent(ACTION_DOWN, 10, 10)` we would be open to the risk of swapping x and y in our production code.
+A> Also note that we always use different numbers in the tests.  If we wrote `core.onTouchEvent(ACTION_DOWN, 10, 10)` we would be open to the risk of swapping x and y in our production code.
 A>
 A> We avoid using the same test data in multiple tests.  Using always different data prevents us to leave hardcoded test data in production code!
 A>
@@ -337,13 +337,13 @@ Eventually we get to write the first test that forces the core to contain more t
 
     @Test
     public void twoTrails() throws Exception {
-      core.onMotionEvent(ACTION_DOWN, 1.0f, 100.0f);
-      core.onMotionEvent(ACTION_MOVE, 2.0f, 200.0f);
-      core.onMotionEvent(ACTION_UP,   3.0f, 300.0f);
+      core.onTouchEvent(ACTION_DOWN, 1.0f, 100.0f);
+      core.onTouchEvent(ACTION_MOVE, 2.0f, 200.0f);
+      core.onTouchEvent(ACTION_UP,   3.0f, 300.0f);
 
-      core.onMotionEvent(ACTION_DOWN, 4.0f, 400.0f);
-      core.onMotionEvent(ACTION_MOVE, 5.0f, 500.0f);
-      core.onMotionEvent(ACTION_UP,   6.0f, 600.0f);
+      core.onTouchEvent(ACTION_DOWN, 4.0f, 400.0f);
+      core.onTouchEvent(ACTION_MOVE, 5.0f, 500.0f);
+      core.onTouchEvent(ACTION_UP,   6.0f, 600.0f);
 
       assertEquals(2, core.trailsCount());
       assertEquals("(1.0,100.0)->(2.0,200.0)->(3.0,300.0)", core.getTrail(0).toString());
@@ -357,7 +357,7 @@ The implementation that we get after passing the last test is the following:
     public class FairyFingersCore {
       private List<Trail> trails = new ArrayList<>();
 
-      public void onMotionEvent(int action, float x, float y) {
+      public void onTouchEvent(int action, float x, float y) {
         if (Actions.ACTION_DOWN == action) {
           trails.add(new Trail(x, y));
         } else {
@@ -524,8 +524,78 @@ The production code that makes the above tests pass is
       }
     }
 
-N> We know that the `points` field always contains at least one point, because it is added by the constructor.
+A> We know that the `points` field always contains at least one point, because it is added by the constructor.
 
 ## Trying it out!
 
-We are now ready to see if the work we've done so far works.
+We are now ready to see if the work we've done so far works.  We change the view to become:
+
+    public class FairyFingersView extends View {
+      leanpub-start-insert
+      FairyFingersCore core = new FairyFingersCore();
+      leanpub-end-insert
+
+      // constructors...
+
+      @Override
+      protected void onDraw(Canvas canvas) {
+        leanpub-start-insert
+        for (int i=0; i<core.trailsCount(); i++) {
+          core.getTrail(i).drawOn(new AndroidCoreCanvas(canvas));
+        }
+        leanpub-end-insert
+      }
+
+      @Override
+      public boolean onTouchEvent(MotionEvent event) {
+        leanpub-start-insert
+        core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
+        invalidate();
+        return true;
+        leanpub-end-insert
+      }
+    }
+
+The only bit that we haven't described is the Android implementation of `CoreCanvas`, which we called, predictably, `AndroidCoreCanvas`.  The implementation is very simple:
+
+    package com.tdd4android.fairyfingers;
+
+    import android.graphics.Canvas;
+    import android.graphics.Color;
+    import android.graphics.Paint;
+
+    import com.tdd4android.fairyfingers.core.CoreCanvas;
+
+    public class AndroidCoreCanvas implements CoreCanvas {
+      private Canvas canvas;
+      private Paint paint = new Paint();
+
+      public AndroidCoreCanvas(Canvas canvas) {
+        this.canvas = canvas;
+        paint.setColor(Color.BLUE);
+        paint.setStrokeWidth(3);
+      }
+
+      @Override
+      public void drawLine(float startX, float startY, float stopX, float stopY) {
+        canvas.drawLine(startX, startY, stopX, stopY, paint);
+      }
+    }
+
+We run the application, and it works!
+
+{width=50%,float=left}
+![The first demo of the app developed with TDD](images/fairy-fingers/first-demo-after-tdd.png)
+
+What have we accomplished?  We have rewritten the spike using TDD. It does not do much more than what the spike did, although, as it can be seen in the above screenshot, it keeps track of different, separate trails.
+
+What is missing?  Looking back at our list of ATs, we see that we are passing two of them:
+
+- (DONE) Single touch.  Dragging the finger should produce a colored trail
+- Fade.  The trails should fade to nothing.
+- (DONE) Many trails.  We draw a trail, then we draw another.
+- Many colours.  Every time we draw a trail, we should get a different colour
+- Multi-touch.  Dragging two fingers should produce two trails.
+- Multi-touch dashes.  We draw a continuous trail with one finger, and a dashed trail with another finger at the same time.
+
+In the following chapter, we'll focus on fading and multi-touch.

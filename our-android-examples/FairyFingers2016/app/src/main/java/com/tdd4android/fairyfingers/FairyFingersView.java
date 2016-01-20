@@ -5,9 +5,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
+import com.tdd4android.fairyfingers.core.CoreCanvas;
+import com.tdd4android.fairyfingers.core.FairyFingersCore;
+
 public class FairyFingersView extends View {
+  FairyFingersCore core = new FairyFingersCore();
+
   public FairyFingersView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
@@ -18,9 +24,15 @@ public class FairyFingersView extends View {
 
   @Override
   protected void onDraw(Canvas canvas) {
-    Paint paint = new Paint();
-    paint.setColor(Color.MAGENTA);
-    paint.setStrokeWidth(3);
-    canvas.drawLine(100, 100, 200, 200, paint);
+    for (int i=0; i<core.trailsCount(); i++) {
+      core.getTrail(i).drawOn(new AndroidCoreCanvas(canvas));
+    }
+  }
+
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+    core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
+    invalidate();
+    return true;
   }
 }

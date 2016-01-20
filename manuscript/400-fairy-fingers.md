@@ -587,7 +587,7 @@ We run the application, and it works!
 {id="first-demo-after-tdd",width=50%,float=left}
 ![The first demo of the app developed with TDD](images/fairy-fingers/first-demo-after-tdd.png)
 
-What have we accomplished?  We have rewritten the spike using TDD. It does not do much more than what the spike did, although, as it can be seen in the [screenshot](#first-demo-after-tdd), it keeps track of different, separate trails.
+What have we accomplished?  We have rewritten the spike using TDD. It does not do much more than what the spike did, although, as it can be seen in the [screenshot](#first-demo-after-tdd), it keeps track of different, separate trails.  Anyway, important thing is that this app was developed with TDD, it is simple and well-tested, and we are in a very good position to evolve it!
 
 What is missing?  Looking back at our list of ATs, we see that we are passing two of them:
 

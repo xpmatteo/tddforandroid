@@ -2,13 +2,15 @@
 
 MUST
 
-* Section: some tests are useful, some are not
-* Section: presenter first with traffic lights
-* Section: FairyFingers: finish the description
-
-(somewhere: our standard project setup with a Java lib module)
+* Section: FairyFingers:
+  - add automated ATs
+  - fading
+  - multitouch
+  - describe the trick of logging the touch events?
 
 MAYBE
+
+* Section: presenter first with traffic lights
 
 * Section: more android
  - network

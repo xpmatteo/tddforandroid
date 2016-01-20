@@ -375,25 +375,41 @@ The implementation that we get after passing the last test is the following:
     }
 
     public class Trail {
-      private StringBuilder description;
+      private List<Point> points = new ArrayList<>();
 
       public Trail(float x, float y) {
-        description = new StringBuilder(formatPair(x, y));
+        points.add(new Point(x, y));
       }
 
       public void append(float x, float y) {
-        description.append("->" + formatPair(x, y));
+        points.add(new Point(x, y));
       }
 
       @Override
       public String toString() {
-        return description.toString();
+        String description = "";
+        for (Point p : points) {
+          if (!description.isEmpty())
+            description += "->";
+          description += p.toString();
+        }
+        return description;
       }
 
-      private String formatPair(float x, float y) {
-        return String.format("(%.1f,%.1f)", x, y);
+      class Point {
+        float x, y;
+
+        public Point(float x, float y) {
+          this.x = x;
+          this.y = y;
+        }
+
+        @Override
+        public String toString() {
+          return String.format("(%.1f,%.1f)", x, y);
+        }
       }
-    }
+
 
 
 ## Moving on to drawing
@@ -441,4 +457,75 @@ This does not compile, because we don't have a `drawOn(CoreCanvas c)` method in 
 
 A> The `drawLine` method of the Android `Canvas` class has one more parameter: `drawLine(float startX, float startY, float stopX, float stopY, Paint paint)`.  It has a Paint parameter.  We still haven't reasoned about the color and texture of the lines we will draw on the screen, so we must assume that any implementation of `CoreCanvas` will use a default `Paint`.  This is good: our `CoreCanvas` is a gread deal simpler to use than the Android `Canvas`.  It only offers the features that we need.
 
+The simplest code that makes the above test pass is
 
+    public class Trail {
+      // ...
+      leanpub-start-insert
+      public void drawOn(CoreCanvas canvas) {
+        canvas.drawLine(points.get(0).x, points.get(0).y, points.get(1).x, points.get(1).y);
+      }
+      leanpub-end-insert
+    }
+
+After a few cycles of red-green-refactor we get to the following tests:
+
+    public class TrailTest {
+      CoreCanvas canvas = mock(CoreCanvas.class);
+
+      @Test
+      public void drawNothing() throws Exception {
+        Trail trail = new Trail(1f, 2f);
+
+        trail.drawOn(canvas);
+      }
+
+      @Test
+      public void drawOneSegment() throws Exception {
+        Trail trail = new Trail(10f, 20f);
+        trail.append(30f, 40f);
+        trail.drawOn(canvas);
+
+        verify(canvas).drawLine(10f, 20f, 30f, 40f);
+      }
+
+      @Test
+      public void drawTwoSegments() throws Exception {
+        Trail trail = new Trail(100f, 200f);
+        trail.append(300f, 400f);
+        trail.append(500f, 600f);
+        trail.drawOn(canvas);
+
+        verify(canvas).drawLine(100f, 200f, 300f, 400f);
+        verify(canvas).drawLine(300f, 400f, 500f, 600f);
+      }
+
+      @After
+      public void noMoreInteractions() {
+        verifyNoMoreInteractions(canvas);
+      }
+    }
+
+T> We added an `@After`-annotated method to check for every test that all interactions with the mock were expected in the test.  This compensates for the fact that Mockito does not offer "strict" mocks, that is, mocks that complain by default whenever they are asked to do something that was not expected.
+
+The production code that makes the above tests pass is
+
+    public class Trail {
+      // ...
+      public void drawOn(CoreCanvas canvas) {
+        leanpub-start-insert
+        Point start = points.get(0);
+        for (int i=1; i<points.size(); i++) {
+          Point stop = points.get(i);
+          canvas.drawLine(start.x, start.y, stop.x, stop.y);
+          start = stop;
+        }
+        leanpub-end-insert
+      }
+    }
+
+N> We know that the `points` field always contains at least one point, because it is added by the constructor.
+
+## Trying it out!
+
+We are now ready to see if the work we've done so far works.

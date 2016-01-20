@@ -74,7 +74,7 @@ We run the application again, and we see that the message has changed.
 
 ## Introduce a new module
 
-We now want to move the logic that produces the error message away from the `app` module, into a new module that will contain pure Java logic, free from any dependency on the Android APIs.  By convention, we always call this module `core`.
+We now want to move the logic that produces the error message away from the `app` module, into a new module that will contain pure Java logic, free from any dependency on the Android APIs.  By convention, we usually call this module `core`.
 
 Create a new module with Android Studio.  Remember to change the package name.  Android Studio requires us to name the first class in this module, so we call it `HelloWorld`.
 
@@ -139,22 +139,29 @@ We fix it by changing `core/build.gradle`
 ~~~~~
 apply plugin: 'java'
 
+leanpub-start-insert
 // Fix the version of Java; 1.7 is the highest version supported by Android
 sourceCompatibility = 1.7
+leanpub-end-insert
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Add dependency on JUnit
-    testCompile 'junit:junit-dep:4.11'
+    leanpub-start-insert
+    // Add dependency on test libraries
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    leanpub-end-insert
 }
 
+leanpub-start-insert
 // Improve test logging
 test {
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
     }
 }
+leanpub-end-insert
 ~~~~~
 
 We run the tests again, and look!  We now fail for the right reason!
@@ -205,30 +212,17 @@ We try to run the application, and it does not compile.
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
-
-    defaultConfig {
-        applicationId "com.tdd4android.helloworld"
-        minSdkVersion 16
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+  // ...
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
 
+    leanpub-start-insert
     // We need classes from module "core"
     compile project(':core')
+    leanpub-end-insert
 }
 ~~~~~
 

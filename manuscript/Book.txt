@@ -4,8 +4,8 @@
 080-some-tests-are-useful.md
 100-hello-world.md
 200-unit-doctor.md
-220-presenter-first.md
-250-dependency-inversion.md
+220-dependency-inversion.md
+250-presenter-first.md
 400-fairy-fingers.md
 500-more-android.md
 900-bibliography.md

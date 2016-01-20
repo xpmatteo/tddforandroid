@@ -400,4 +400,45 @@ The implementation that we get after passing the last test is the following:
 
 In the last section we have completed (more or less) the data-gathering activity that we should do in response to motion events from Android.  What is missing?  Of course what is missing is drawing on the screen!  Our implementation of `Trail` does nothing.  We should find a way to let it interact with the Android `Canvas` object.  How do we do this?  Let's start with a test!
 
+    import static org.mockito.Mockito.verify;
+
+    public class TrailTest {
+      @Test
+      public void drawOneSegment() throws Exception {
+       Trail trail = new Trail(10f, 20f);
+       trail.append(30f, 40f);
+       trail.drawOn(canvas);
+
+       // does not compile: canvas is not defined
+       verify(canvas).drawLine(10f, 20f, 30f, 40f);
+     }
+    }
+
+The above is the gist of what we'd like to test.  If I have a trail from point A to point B, it will be able to draw a line from A to B on a canvas.  Wait, but what kind of canvas is that?  It certainly can't be an `android.graphics.Canvas`, because that would introduce a dependency on the Android framework!  What would you do here?
+
+* * *
+
+What we should do is to apply Dependency Inversion: we define our own canvas interface.  We may call it `CoreCanvas`, to make it clear that it belongs in the core of the application.  The complete test then is:
+
+    import static org.mockito.Mockito.mock;
+    import static org.mockito.Mockito.verify;
+
+    public class TrailTest {
+      @Test
+      public void drawOneSegment() throws Exception {
+        CoreCanvas canvas = mock(CoreCanvas.class);
+
+        Trail trail = new Trail(10f, 20f);
+        trail.append(30f, 40f);
+        trail.drawOn(canvas);
+
+        verify(canvas).drawLine(10f, 20f, 30f, 40f);
+        verifyNoMoreInteractions(canvas);
+     }
+    }
+
+This does not compile, because we don't have a `drawOn(CoreCanvas c)` method in our `Trail` class, and moreover we don't have a `drawLine(...)` method in our `CoreCanvas` interface.  We fix both compilation errors, and we find we have *discovered* one method that our `CoreCanvas` must contain.
+
+A> The `drawLine` method of the Android `Canvas` class has one more parameter: `drawLine(float startX, float startY, float stopX, float stopY, Paint paint)`.  It has a Paint parameter.  We still haven't reasoned about the color and texture of the lines we will draw on the screen, so we must assume that any implementation of `CoreCanvas` will use a default `Paint`.  This is good: our `CoreCanvas` is a gread deal simpler to use than the Android `Canvas`.  It only offers the features that we need.
+
 

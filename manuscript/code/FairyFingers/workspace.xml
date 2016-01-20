@@ -4,7 +4,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8939387-e860-4feb-93ef-b469679169d9" name="Default" comment="" />
+    <list default="true" id="b8939387-e860-4feb-93ef-b469679169d9" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/TrailTest.java" afterPath="$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/TrailTest.java" />
+    </list>
     <ignored path="FairyFingers.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,7 +37,17 @@
         <entry file="file://$PROJECT_DIR$/AndroidDependent/src/main/java/com/tdd4android/fairyfingers/FairyFingersView.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
+              <caret line="36" column="19" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Canvas.java" pinned="false" current-in-tab="true">
+        <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/graphics/Canvas.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.36458334">
+              <caret line="1026" column="32" selection-start-line="1025" selection-start-column="25" selection-end-line="1026" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -51,11 +63,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FairyFingersCoreTest.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FairyFingersCoreTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/FairyFingersCoreTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.09375">
-              <caret line="20" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TrailTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/TrailTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CorePointTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/CorePointTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -1376,10 +1408,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/LineTest.java" />
-        <option value="$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/TrailTest.java" />
         <option value="$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/FairyFingersCoreTest.java" />
         <option value="$PROJECT_DIR$/AndroidFree/src/main/java/com/tdd4android/fairyfingers/core/FairyFingersCore.java" />
         <option value="$PROJECT_DIR$/AndroidDependent/src/main/java/com/tdd4android/fairyfingers/FairyFingersView.java" />
+        <option value="$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/TrailTest.java" />
       </list>
     </option>
   </component>
@@ -1464,6 +1496,34 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="AndroidFree" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.NonAndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FairyFingers" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidDependent" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FairyFingers" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidDependent" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fairyfingers" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -1848,21 +1908,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/TrailTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="42" column="16" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidDependent/src/main/java/com/tdd4android/fairyfingers/FairyFingersView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AndroidFree/src/main/java/com/tdd4android/fairyfingers/core/FairyFingersCore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1879,10 +1924,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/CorePointTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/FairyFingersCoreTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.09375">
-          <caret line="20" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidFree/src/test/java/com/tdd4android/fairyfingers/core/TrailTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidDependent/src/main/java/com/tdd4android/fairyfingers/FairyFingersView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="19" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/graphics/Canvas.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36458334">
+          <caret line="1026" column="32" selection-start-line="1025" selection-start-column="25" selection-end-line="1026" selection-end-column="32" />
           <folding />
         </state>
       </provider>

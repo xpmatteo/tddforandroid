@@ -1,7 +1,7 @@
 
-# More Android
+# More Android (TBD)
 
-## Persisting data
+## Persisting data (TBD)
 
 Saving application data.
 
@@ -14,7 +14,7 @@ Cloud!
 
 
 
-## App life-cycle
+## App life-cycle (TBD)
 
 How to suspend and resume the application safely
 

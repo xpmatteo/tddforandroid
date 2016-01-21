@@ -160,20 +160,24 @@ We create a new project for Fairy Fingers.  We start much like we did in the spi
 Our entry point will be in methods `onDraw()` and `onTouchEvent()` of the `FairyFingersView`.  We will delegate most of the work to a `FairyFingersCore` object.  We imagine that we will have something like the following pseudo-code:
 
 ~~~~~~~
-private FairyFingersCore core = new FairyFingersCore();
+class FairyFingersView extends View {
+  private FairyFingersCore core = new FairyFingersCore();
 
-@Override
-protected void onDraw(Canvas canvas) {
-  for every trail in core {
-    draw the trail on the canvas
+  // constructors ...
+
+  @Override
+  protected void onDraw(Canvas canvas) {
+    for every trail in core {
+      draw the trail on the canvas
+    }
   }
-}
 
-@Override
-public boolean onTouchEvent(MotionEvent event) {
-  core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
-  invalidate();
-  return true;
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+    core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
+    invalidate();
+    return true;
+  }
 }
 ~~~~~~~
 
@@ -358,7 +362,8 @@ The implementation that we get after passing the last test is the following:
       private List<Trail> trails = new ArrayList<>();
 
       public void onTouchEvent(int action, float x, float y) {
-        if (Actions.ACTION_DOWN == action) {
+        if (ACTION_DOWN == action) {
+          // create a new trail when the user puts a finger down
           trails.add(new Trail(x, y));
         } else {
           trails.get(trails.size() - 1).append(x, y);
@@ -395,20 +400,21 @@ The implementation that we get after passing the last test is the following:
         }
         return description;
       }
+    }
 
-      class Point {
-        float x, y;
+    class Point {
+      float x, y;
 
-        public Point(float x, float y) {
-          this.x = x;
-          this.y = y;
-        }
-
-        @Override
-        public String toString() {
-          return String.format("(%.1f,%.1f)", x, y);
-        }
+      public Point(float x, float y) {
+        this.x = x;
+        this.y = y;
       }
+
+      @Override
+      public String toString() {
+        return String.format("(%.1f,%.1f)", x, y);
+      }
+    }
 
 
 
@@ -453,7 +459,7 @@ What we should do is to apply Dependency Inversion: we define our own canvas int
      }
     }
 
-This does not compile, because we don't have a `drawOn(CoreCanvas c)` method in our `Trail` class, and moreover we don't have a `drawLine(...)` method in our `CoreCanvas` interface.  We fix both compilation errors, and we find we have *discovered* one method that our `CoreCanvas` must contain.
+This does not compile, because we don't have a `drawOn(CoreCanvas c)` method in our `Trail` class, and moreover we don't have a `drawLine(...)` method in our `CoreCanvas` interface.  We fix both compilation errors, and we find we have *discovered* one method that `CoreCanvas` must contain.
 
 A> The `drawLine` method of the Android `Canvas` class has one more parameter: `drawLine(float startX, float startY, float stopX, float stopY, Paint paint)`.  It has a Paint parameter.  We still haven't reasoned about the color and texture of the lines we will draw on the screen, so we must assume that any implementation of `CoreCanvas` will use a default `Paint`.  This is good: our `CoreCanvas` is a gread deal simpler to use than the Android `Canvas`.  It only offers the features that we need.
 

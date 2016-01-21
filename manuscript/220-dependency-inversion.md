@@ -1,4 +1,4 @@
-# Writing Android-free code: Dependency Inversion
+# Dependency Inversion and Android-free code
 
 We want to be able to keep our core logic independent of the Android libraries.  That is pretty easy when the Android framework is calling our logic.  We move from
 

@@ -11,14 +11,14 @@ Now, if you read some Android testing literature, you are being encouraged to wr
 
 ~~~~~~~~
 public class GuiTest extends ActivityInstrumentationTestCase2<MainActivity> {
-    public GuiTest() {
-        super(MainActivity.class);
-    }
+  public GuiTest() {
+    super(MainActivity.class);
+  }
 
-    public void testMessageGravity() throws Exception {
-        TextView myMessage = (TextView) getActivity().findViewById(R.id.myMessage);
-        assertEquals(Gravity.CENTER, myMessage.getGravity());
-    }
+  public void testMessageGravity() throws Exception {
+    TextView myMessage = (TextView) getActivity().findViewById(R.id.myMessage);
+    assertEquals(Gravity.CENTER, myMessage.getGravity());
+  }
 }
 ~~~~~~~~
 

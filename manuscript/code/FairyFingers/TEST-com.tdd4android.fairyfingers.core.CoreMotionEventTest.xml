@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.tdd4android.fairyfingers.core.CoreMotionEventTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2016-01-21T12:02:43" hostname="eumvaccari.local" time="0.021">
+  <properties/>
+  <testcase name="actionUp" classname="com.tdd4android.fairyfingers.core.CoreMotionEventTest" time="0.015"/>
+  <testcase name="convertActionDownToFingerDown" classname="com.tdd4android.fairyfingers.core.CoreMotionEventTest" time="0.0"/>
+  <testcase name="actionMoveTwoPointers" classname="com.tdd4android.fairyfingers.core.CoreMotionEventTest" time="0.001"/>
+  <testcase name="actionPointerUp" classname="com.tdd4android.fairyfingers.core.CoreMotionEventTest" time="0.001"/>
+  <testcase name="pointerDown" classname="com.tdd4android.fairyfingers.core.CoreMotionEventTest" time="0.001"/>
+  <testcase name="unrecognizedEvent" classname="com.tdd4android.fairyfingers.core.CoreMotionEventTest" time="0.001"/>
+  <testcase name="actionMove" classname="com.tdd4android.fairyfingers.core.CoreMotionEventTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

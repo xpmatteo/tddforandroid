@@ -7,5 +7,5 @@
 220-dependency-inversion.md
 250-presenter-first.md
 400-fairy-fingers.md
-500-more-android.md
+500-multi-touch.md
 900-bibliography.md

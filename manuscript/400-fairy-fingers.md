@@ -19,7 +19,7 @@ The goals of the spike are:
  * Understand how to draw on the screen
  * Understand how to track the user's finger
 
-We create an empty project and check that it shows a "hello world" on our device.   Then we modify the `res/layout/content_main.xml` file, removing the standard "hello world" view and replacing it with a custom view:
+We create an empty project and check that it shows a "hello world" on our device.   Then we modify the `app/res/layout/content_main.xml` file, removing the standard "hello world" view and replacing it with a custom view:
 
 {lang="xml"}
 ~~~~~
@@ -44,7 +44,7 @@ We create an empty project and check that it shows a "hello world" on our device
 </RelativeLayout>
 ~~~~~
 
-The IDE complains that the view does not exist, so we go ahead and create it.  We need to override the constructors.  I don't know which ones are really needed, so I override them all.  Then we need to override the `OnDraw` method.  We want to see if we can paint on the screen at all, so we draw a single line.
+The IDE complains that the `com.tdd4android.fairyfingers.spike.MyView` class does not exist, so we go ahead and create it.  We need to override the constructors.  I don't know which ones are really needed, so I override them all.  Then we need to override the `OnDraw` method.  We want to see if we can paint on the screen at all, so we draw a single line.
 
 ~~~~~
 package com.tdd4android.fairyfingers.spike;

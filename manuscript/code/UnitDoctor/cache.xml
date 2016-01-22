@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/mvaccari/work/android-book/our-android-examples/UnitDoctor/UnitDoctorCore/build/libs/UnitDoctorCore.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="ebb8b9dfcff936766f40f2dbcff8aeb8d61ca097">
+        <dex dex="/Users/mvaccari/work/android-book/our-android-examples/UnitDoctor/app/build/intermediates/pre-dexed/debug/UnitDoctorCore-5c6bc981501744226bc9138322fc7fbbb875a637.jar" />
+    </item>
+    <item
+        jar="/Users/mvaccari/work/android-book/our-android-examples/UnitDoctor/UnitDoctorCore/build/libs/UnitDoctorCore.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="c65805d1e067f63db7752f00289f2fbe51ed071f">
+        <dex dex="/Users/mvaccari/work/android-book/our-android-examples/UnitDoctor/app/build/intermediates/pre-dexed/debug/UnitDoctorCore-5c6bc981501744226bc9138322fc7fbbb875a637.jar" />
+    </item>
+
+</items>

@@ -19,19 +19,28 @@ The goals of the spike are:
  * Understand how to draw on the screen
  * Understand how to track the user's finger
 
-We create an empty project and check that it shows a "hello world" on our device.   Then we modify the `res/layout/activity_my.xml` file, removing the standard "hello world" view and replacing it with a custom view (see line 7 in next listing).
+We create an empty project and check that it shows a "hello world" on our device.   Then we modify the `res/layout/content_main.xml` file, removing the standard "hello world" view and replacing it with a custom view:
 
-{lang="xml", line-numbers=on}
+{lang="xml"}
 ~~~~~
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyActivity">
+    tools:context=".MainActivity">
 
+    leanpub-start-delete
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"/>
+    leanpub-start-delete
+
+    leanpub-start-insert
     <com.tdd4android.fairyfingers.spike.MyView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    leanpub-end-insert
 </RelativeLayout>
 ~~~~~
 
@@ -354,7 +363,7 @@ Eventually we get to write the first test that forces the core to contain more t
       assertEquals("(4.0,400.0)->(5.0,500.0)->(6.0,600.0)", core.getTrail(1).toString());
     }
 
-A> To make the exposition shorter, we are showing you the end results of many TDD cycles.
+A> To make the exposition shorter, we are showing you the end results of many TDD red-green-refactor cycles.
 
 The implementation that we get after passing the last test is the following:
 
@@ -490,6 +499,7 @@ After a few cycles of red-green-refactor we get to the following tests:
       public void drawOneSegment() throws Exception {
         Trail trail = new Trail(10f, 20f);
         trail.append(30f, 40f);
+
         trail.drawOn(canvas);
 
         verify(canvas).drawLine(10f, 20f, 30f, 40f);
@@ -500,6 +510,7 @@ After a few cycles of red-green-refactor we get to the following tests:
         Trail trail = new Trail(100f, 200f);
         trail.append(300f, 400f);
         trail.append(500f, 600f);
+
         trail.drawOn(canvas);
 
         verify(canvas).drawLine(100f, 200f, 300f, 400f);

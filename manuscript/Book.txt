@@ -8,4 +8,5 @@
 250-presenter-first.md
 400-fairy-fingers.md
 500-multi-touch.md
+600-more-android.md
 900-bibliography.md

@@ -152,15 +152,24 @@ We start with the following acceptance tests:
  - Many trails.  We draw a trail, then we draw another.
  - Many colours.  Every time we draw a trail, we should get a different colour
  - Multi-touch.  Dragging two fingers should produce two trails.
- - Multi-touch dashes.  We draw a continuous trail with one finger, and a dashed trail with another finger at the same time.  We should see a pattern like
+ - Multi-touch lifo.  We draw a continuous trail with one finger, and a dashed trail with another finger.  We should see a pattern like
 
         --   --   --
         ------------
 
+- Multi-touch fifo.  We draw with two fingers, as if they were the feet of a skater, lifting first one, then the other, always leaving one finger in contact with the screen.  We should see a pattern like
 
-These acceptance tests are meant to be executed manually.  Some can and will be automated.  The ones that deal with multi-touch cannot be automated with present-generation tools (Monkeyrunner).
+       -------   ---------    ---------
+          ---------    ---------
 
 Note that we started using the word "trail" instead of "line".  We'd like to have a special name for the "things" that we draw with in this app, and the word "line" is both too generic and too specific.  The Android `canvas` object has a `drawLine` method; we'd like to distinguish our own "lines" from what Android calls a "line".  Therefore we will call them "trails".
+
+Q> ## Shouldn't we automate acceptance tests?
+Q>
+Q> Yes, it would be very good to automate them.  However, it's very difficult to do that!  If you try to simulate the user dragging a finger on the screen with `TouchUtils`, then you will get a `SecurityException` notifying you that "Injecting to another application requires `INJECT_EVENTS` permission".  I don't know how to fix that.  An alternative is to use MonkeyRunner, which is a Python framework for testing Android devices.  Carlo wrote an acceptance test with MonkeyRunner: you will find it in file `AcceptanceTest1.py`.  However, it is not very reliable: it often gives a false positive (failing for no reason).  Furthermore, it does not work at all with an emulator (taking a screen snapshot from an emulator takes so long that any trail on the screen fade away.)  For this reason, it's very difficult to use in a continuous integration server.   In addition to all this, it's currently (January 2016) impossible to simulate multi-touch with MonkeyRunner.  For this application, we give up automating ATs and rely on manual testing before release.  It only takes 2 minutes to perform the list of AT by hand.  That is, by finger :-)
+
+
+
 
 ## Setup the project
 

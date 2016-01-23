@@ -1,11 +1,11 @@
 
-# Working with Multi-Touch
+# Working with Multi-Touch (CHAPTER IN PROGRESS)
 
 The way we dealt with motion events in the previous chapter was simple.  We essentially took only three pieces of information out of the event:
 
     core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
 
-This becomes quite a bit more complex when we start considering multi-touch.  The event will still be about a single pointer (that is, a finger).  But it's not trivial to understand which.  The details are in the Android documentation at [http://developer.android.com/reference/android/view/MotionEvent.html](http://developer.android.com/reference/android/view/MotionEvent.html).
+This becomes more complex when we consider multi-touch.  The event will still be about a single pointer (that is, a finger).  But it's not trivial to understand which.  The details are in the Android documentation at [http://developer.android.com/reference/android/view/MotionEvent.html](http://developer.android.com/reference/android/view/MotionEvent.html). Please read the introduction section of the `MotionEvent` class.
 
 The important things to note are:
 
@@ -89,6 +89,11 @@ First, let's make a list of the test that we think we need:
  * `action=ACTION_POINTER_DOWN(1), ...`
  * `action=ACTION_POINTER_UP(1), ...`
 
+We should also be prepared to (quoting from the `MotionEvent` javadoc):
+
+  * handle {@link #ACTION_CANCEL}
+  * and tolerate anomalous situations such as receiving a new {@link #ACTION_DOWN} without first having received an {@link #ACTION_UP} for the prior gesture.
+
 Let's start with `ACTION_DOWN`.  How do we write a test?  When in doubt, *start with the assertion*.  So, when we receive an event like `action=ACTION_DOWN, id[0]=0, x[0]=351.2183, y[0]=121.680405`, we'd like to assert that:
 
  * the action is ACTION_DOWN
@@ -119,4 +124,4 @@ Since it depends on MotionEvent, this test should live in the Android-dependent 
 just to see if we can make this test fail.  In order to run it in Android Studio, we must change the "build variant": go to Build -> Select Build Variant.  This will open a small panel that contains a "Test Artifact" menu.  Choose "Unit Tests" in the Test Artifact menu.
 
 {width=50%}
-![Choose "Unit Tests" in the Build Variant panel to run tests in `src/test/java`](images/multi-touch/build-variants.png)
+![Choose "Unit Tests" in the Build Variant panel to run unit tests in `app/src/test/java`](images/multi-touch/build-variants.png)

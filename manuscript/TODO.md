@@ -1,12 +1,13 @@
 
-
 MUST
 
-* Section: FairyFingers:
-  - add automated ATs
-  - fading
+* Section: FairyFingers 2:
   - multitouch
-  - describe the trick of logging the touch events?
+  - fading
+
+* General
+  - rewrite using Mockito everywhere
+  - perhaps: rewrite avoiding the `core` module altogether?  Perhaps not: it teaches you about managing dependency directions
 
 MAYBE
 
@@ -17,3 +18,5 @@ MAYBE
  - storage
  - ...
 
+* Section: FairyFingers:
+ - try again automated ATs ???

@@ -1,5 +1,5 @@
 
-# Working with Multi-Touch (CHAPTER IN PROGRESS)
+# Working with Multi-Touch (IN PROGRESS)
 
 The way we dealt with motion events in the previous chapter was simple.  We essentially took only three pieces of information out of the event:
 
@@ -75,6 +75,81 @@ Note that:
   * The `ACTION_UP` event contains the same coordinates as the last `ACTION_MOVE` event.
   * The `id[0]=0` means that the identifier of the pointer at index 0 is 0, and `id[1]=1` similarly means that the index 1 of the record contains data about the pointer of index 1.  I made several tests, and I notice that it *does* happen to see them swapped: `id[0]=1` would mean that the pointer of identifier 1 is at index 0 in the array.
 
+## How the core should change
+
+So far, the `FairyFingersCore` has a single "current" trail.  We now keep track of more than one open trails.  The best way to understand how it should change is by writing a test.  The simplest multi-touch scenario I can imagine is
+
+{linenos=on}
+    @Test
+    public void oneMorePointerDown() throws Exception {
+      core.onDown(10, 20);            // down first finger
+      core.onMove(30, 40);            // drag it
+      core.onPointerDown(100, 200);   // down second finger
+      core.onMove(50, 60, 110, 210);  // drag both
+
+      assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
+      assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
+    }
+
+This is the sort of level of detail I would like to have in my test.  Trying to make it pass, I realise that step at line 6 forces me to have a notion of "open trails", which I currently don't have.  In fact, this existing test
+
+    @Test
+    public void twoTrails() throws Exception {
+      core.onTouchEvent(ACTION_DOWN, 1.0f, 100.0f);
+      core.onTouchEvent(ACTION_MOVE, 2.0f, 200.0f);
+      core.onTouchEvent(ACTION_UP,   3.0f, 300.0f);
+
+      core.onTouchEvent(ACTION_DOWN, 4.0f, 400.0f);
+      core.onTouchEvent(ACTION_MOVE, 5.0f, 500.0f);
+      core.onTouchEvent(ACTION_UP,   6.0f, 600.0f);
+
+      assertEquals(2, core.trailsCount());
+      assertEquals("(1.0,100.0)->(2.0,200.0)->(3.0,300.0)", core.getTrail(0).toString());
+      assertEquals("(4.0,400.0)->(5.0,500.0)->(6.0,600.0)", core.getTrail(1).toString());
+    }
+
+would break if I tried to apply the coordinates in `core.onMove(50, 60, 110, 210)` to all existing trails.
+
+It would be too big a step to add the concept of "open trails" and make the test pass at the same time, so I `@Ignore` the test and refactor `FairyFingersCore`.
+
+    public class FairyFingersCore {
+      private List<Trail> trails = new ArrayList<>();
+      // leanpub-start-insert
+      private Trail openTrail;
+      // leanpub-end-insert
+
+      public void onTouchEvent(int action, float x, float y) {
+        if (ACTION_DOWN == action) {
+          // leanpub-start-insert
+          openTrail = new Trail(x, y);
+          trails.add(openTrail);
+          // leanpub-end-insert
+          // leanpub-start-delete
+          trails.add(new Trail(x, y));
+          // leanpub-end-delete
+        } else {
+          // leanpub-start-insert
+          openTrail.append(x, y);
+          // leanpub-end-insert
+          // leanpub-start-delete
+          trails.get(trails.size() - 1).append(x, y);
+          // leanpub-end-delete
+        }
+      }
+    }
+
+T> One variation of red-green-refactor happens when making the current test pass is too difficult.  It may be that the current code is not ready to accept the new feature.  In this case, we `@Ignore` the test and keep refactoring until making the test pass becomes easy.  Remember: we should try to stay in the "green" most of the time.  Spending too much time in the red is a smell.
+
+T> Note that we avoided assertions such as `assertEquals(1, core.openTrailsCount())`.  It is tempting to use this sort of assertions as a stepping stone to build the concept we think we need; however, it is better to avoid adding methods that are only needed for asserting on them in tests.  As it happens, we can test the open trails concept perfectly well by using the same methods that are needed by the production code.
+
+
+
+Q> ## Why only one pair of coordinates in `onPointerDown()`?
+Q>
+Q> Because one method call should do one thing; adding an additional finger is similar to adding one finger.  It should just tell me that there is a new finger at the given coordinates.  The `onMove()` should be the method that gives me new coordinates for existing pointers.  At least, this is how I feel the API of `FairyFingersCore` should be.  It seems like the Android engineers think likewise, as I observed in my event logging experiments that in a `ACTION_POINTER_DOWN` event, all the pointer positions of existing pointers are unchanged from the previous `ACTION_MOVE` event.  Similarly, `ACTION_POINTER_UP` and `ACTION_UP` can be observed to never report new coordinates.
+
+
+
 ## Creating an adapter
 
 The Android MotionEvent is way too complicated for my tastes.  I would rather work with an event that presents its information in the way that my core logic wants it.  In particular, we want to be able to get the coordinates of pointers by identifier, and not by index.  So we want to find a way to transform the Android `MotionEvent` into a `CoreMotionEvent`: a class that does not exist yet.  How do we do it?  Starting with a test, of course.
@@ -89,10 +164,10 @@ First, let's make a list of the test that we think we need:
  * `action=ACTION_POINTER_DOWN(1), ...`
  * `action=ACTION_POINTER_UP(1), ...`
 
-We should also be prepared to (quoting from the `MotionEvent` javadoc):
+We should also be prepared to (according to the `MotionEvent` javadoc):
 
-  * handle {@link #ACTION_CANCEL}
-  * and tolerate anomalous situations such as receiving a new {@link #ACTION_DOWN} without first having received an {@link #ACTION_UP} for the prior gesture.
+  * handle `ACTION_CANCEL`
+  * handle `ACTION_DOWN` without first having received an `ACTION_UP` for the prior gesture.
 
 Let's start with `ACTION_DOWN`.  How do we write a test?  When in doubt, *start with the assertion*.  So, when we receive an event like `action=ACTION_DOWN, id[0]=0, x[0]=351.2183, y[0]=121.680405`, we'd like to assert that:
 

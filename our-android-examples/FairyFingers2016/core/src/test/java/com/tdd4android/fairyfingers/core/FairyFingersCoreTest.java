@@ -15,7 +15,7 @@ public class FairyFingersCoreTest {
 
   @Test
   public void justFingerDown() throws Exception {
-    core.onTouchEvent(ACTION_DOWN, 10, 20);
+    core.onDown(10, 20);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(10.0,20.0)", core.getTrail(0).toString());
@@ -23,8 +23,8 @@ public class FairyFingersCoreTest {
 
   @Test
   public void unfinishedTrail() throws Exception {
-    core.onTouchEvent(ACTION_DOWN, 100, 200);
-    core.onTouchEvent(ACTION_MOVE, 300, 400);
+    core.onDown(100, 200);
+    core.onMove(300, 400);
 
     assertEquals(1, core.trailsCount());
     assertEquals("(100.0,200.0)->(300.0,400.0)", core.getTrail(0).toString());

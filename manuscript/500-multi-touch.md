@@ -79,7 +79,6 @@ Note that:
 
 So far, the `FairyFingersCore` has a single "current" trail.  We now keep track of more than one open trails.  The best way to understand how it should change is by writing a test.  The simplest multi-touch scenario I can imagine is
 
-{linenos=on}
     @Test
     public void oneMorePointerDown() throws Exception {
       core.onDown(10, 20);            // down first finger
@@ -91,27 +90,15 @@ So far, the `FairyFingersCore` has a single "current" trail.  We now keep track 
       assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
     }
 
-This is the sort of level of detail I would like to have in my test.  Trying to make it pass, I realise that step at line 6 forces me to have a notion of "open trails", which I currently don't have.  In fact, this existing test
+This is the sort of level of detail I would like to have in my test.
 
-    @Test
-    public void twoTrails() throws Exception {
-      core.onTouchEvent(ACTION_DOWN, 1.0f, 100.0f);
-      core.onTouchEvent(ACTION_MOVE, 2.0f, 200.0f);
-      core.onTouchEvent(ACTION_UP,   3.0f, 300.0f);
+Q> ## Why only one pair of coordinates in `onPointerDown()`?
+Q>
+Q> Because one method call should do one thing; adding an additional finger is similar to adding one finger.  It should just tell me that there is a new finger at the given coordinates.  The `onMove()` should be the method that gives me new coordinates for existing pointers.  At least, this is how I feel the API of `FairyFingersCore` should be.  It seems like the Android engineers think likewise, as I observed in my event logging experiments that in a `ACTION_POINTER_DOWN` event, all the pointer positions of existing pointers are unchanged from the previous `ACTION_MOVE` event.  Similarly, `ACTION_POINTER_UP` and `ACTION_UP` can be observed to never report new coordinates.
 
-      core.onTouchEvent(ACTION_DOWN, 4.0f, 400.0f);
-      core.onTouchEvent(ACTION_MOVE, 5.0f, 500.0f);
-      core.onTouchEvent(ACTION_UP,   6.0f, 600.0f);
+Trying to make it pass, I realise that step `core.onMove(50, 60, 110, 210)` forces me to have a notion of "open trails", which I currently don't have. It would be too big a step to add the concept of "open trails" and make the test pass at the same time, so I `@Ignore` the test and refactor `FairyFingersCore`.
 
-      assertEquals(2, core.trailsCount());
-      assertEquals("(1.0,100.0)->(2.0,200.0)->(3.0,300.0)", core.getTrail(0).toString());
-      assertEquals("(4.0,400.0)->(5.0,500.0)->(6.0,600.0)", core.getTrail(1).toString());
-    }
-
-would break if I tried to apply the coordinates in `core.onMove(50, 60, 110, 210)` to all existing trails.
-
-It would be too big a step to add the concept of "open trails" and make the test pass at the same time, so I `@Ignore` the test and refactor `FairyFingersCore`.
-
+{lang=java}
     public class FairyFingersCore {
       private List<Trail> trails = new ArrayList<>();
       // leanpub-start-insert
@@ -140,13 +127,9 @@ It would be too big a step to add the concept of "open trails" and make the test
 
 T> One variation of red-green-refactor happens when making the current test pass is too difficult.  It may be that the current code is not ready to accept the new feature.  In this case, we `@Ignore` the test and keep refactoring until making the test pass becomes easy.  Remember: we should try to stay in the "green" most of the time.  Spending too much time in the red is a smell.
 
-T> Note that we avoided assertions such as `assertEquals(1, core.openTrailsCount())`.  It is tempting to use this sort of assertions as a stepping stone to build the concept we think we need; however, it is better to avoid adding methods that are only needed for asserting on them in tests.  As it happens, we can test the open trails concept perfectly well by using the same methods that are needed by the production code.
+T> Note that in the previous test we avoided assertions such as `assertEquals(1, core.openTrailsCount())`.  It is tempting to use this sort of assertions as a stepping stone to build the concept we think we need; however, it is better to avoid adding methods that are only needed for asserting on them in tests.  As it happens, we can test the open trails concept perfectly well by using the same methods that are needed by the production code.
 
 
-
-Q> ## Why only one pair of coordinates in `onPointerDown()`?
-Q>
-Q> Because one method call should do one thing; adding an additional finger is similar to adding one finger.  It should just tell me that there is a new finger at the given coordinates.  The `onMove()` should be the method that gives me new coordinates for existing pointers.  At least, this is how I feel the API of `FairyFingersCore` should be.  It seems like the Android engineers think likewise, as I observed in my event logging experiments that in a `ACTION_POINTER_DOWN` event, all the pointer positions of existing pointers are unchanged from the previous `ACTION_MOVE` event.  Similarly, `ACTION_POINTER_UP` and `ACTION_UP` can be observed to never report new coordinates.
 
 
 

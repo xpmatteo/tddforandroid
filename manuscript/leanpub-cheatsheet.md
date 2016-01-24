@@ -30,3 +30,16 @@ Q>
 Q>        verify(view).showNumber(42);
 Q>
 Q> With JMock it would be
+
+
+In addition to
+asides A>,
+warnings (W>),
+tips (T>),
+errors (E>),
+information (I>),
+questions (Q>),
+discussions (D>) and
+exercises (X>).
+generic text blocks (G>) where you can pick an icon from a large selection.
+

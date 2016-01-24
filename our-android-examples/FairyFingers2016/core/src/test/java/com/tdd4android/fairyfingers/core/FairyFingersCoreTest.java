@@ -42,17 +42,17 @@ public class FairyFingersCoreTest {
 
   @Test
   public void twoTrails() throws Exception {
-    core.onTouchEvent(ACTION_DOWN, 1.0f, 100.0f);
-    core.onTouchEvent(ACTION_MOVE, 2.0f, 200.0f);
-    core.onTouchEvent(ACTION_UP,   3.0f, 300.0f);
+    core.onDown(1.0f, 100.0f);
+    core.onMove(2.0f, 200.0f);
+    core.onUp();
 
-    core.onTouchEvent(ACTION_DOWN, 4.0f, 400.0f);
-    core.onTouchEvent(ACTION_MOVE, 5.0f, 500.0f);
-    core.onTouchEvent(ACTION_UP,   6.0f, 600.0f);
+    core.onDown(4.0f, 400.0f);
+    core.onMove(5.0f, 500.0f);
+    core.onUp();
 
     assertEquals(2, core.trailsCount());
-    assertEquals("(1.0,100.0)->(2.0,200.0)->(3.0,300.0)", core.getTrail(0).toString());
-    assertEquals("(4.0,400.0)->(5.0,500.0)->(6.0,600.0)", core.getTrail(1).toString());
+    assertEquals("(1.0,100.0)->(2.0,200.0)", core.getTrail(0).toString());
+    assertEquals("(4.0,400.0)->(5.0,500.0)", core.getTrail(1).toString());
   }
 
   @Test@Ignore

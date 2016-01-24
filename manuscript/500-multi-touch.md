@@ -130,9 +130,99 @@ T> Note that in the previous test we avoided assertions such as `assertEquals(1,
 
 A further refactoring that seems necessary (because I try to pass the test and find it still too difficult) to rewrite the old test not to use the generic `onTouchEvent()` method and replace it with the more accurate, expressive calls we're using in the new test.
 
+    public class FairyFingersCoreTest {
+      private FairyFingersCore core = new FairyFingersCore();
+
+      @Test
+      public void noTrails() throws Exception {
+        assertEquals(0, core.trailsCount());
+      }
+
+      @Test
+      public void justFingerDown() throws Exception {
+        core.onDown(10, 20);
+
+        assertEquals(1, core.trailsCount());
+        assertEquals("(10.0,20.0)", core.getTrail(0).toString());
+      }
+
+      @Test
+      public void unfinishedTrail() throws Exception {
+        core.onDown(100, 200);
+        core.onMove(300, 400);
+
+        assertEquals(1, core.trailsCount());
+        assertEquals("(100.0,200.0)->(300.0,400.0)", core.getTrail(0).toString());
+      }
+
+      @Test
+      public void aFinishedTrail() throws Exception {
+        core.onDown(1.1f,   2.2f);
+        core.onMove(33.3f,  44.4f);
+        core.onUp();
+
+        assertEquals(1, core.trailsCount());
+        assertEquals("(1.1,2.2)->(33.3,44.4)", core.getTrail(0).toString());
+      }
+
+      @Test
+      public void twoTrails() throws Exception {
+        core.onDown(1.0f, 100.0f);
+        core.onMove(2.0f, 200.0f);
+        core.onUp();
+
+        core.onDown(4.0f, 400.0f);
+        core.onMove(5.0f, 500.0f);
+        core.onUp();
+
+        assertEquals(2, core.trailsCount());
+        assertEquals("(1.0,100.0)->(2.0,200.0)", core.getTrail(0).toString());
+        assertEquals("(4.0,400.0)->(5.0,500.0)", core.getTrail(1).toString());
+      }
+
+      @Test@Ignore
+      public void oneMorePointerDown() throws Exception {
+        core.onDown(10, 20);            // down first finger
+        core.onMove(30, 40);            // drag it
+        core.onPointerDown(100, 200);   // down second finger
+        core.onMove(50, 60, 110, 210);  // drag both
+
+        assertEquals("(10.0,20.0)->(30.0,40.0)", core.getTrail(0).toString());
+        assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
+      }
+    }
+
 T> "Refactor mercilessly" was a mantra of early Extreme Programmers.  Don't stop refactoring until the code is really clean.
 
+The tests are still green (except the ignored one), but if we remove `FairyFingersCore::onTouchEvent`, the production code breaks:
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+      core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
+      invalidate();
+      return true;
+    }
+
+We refactor as follows, with a bit of fear as we know that this code is not covered by any automated test:
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+      // leanpub-start-insert
+      switch (event.getActionMasked()) {
+        case MotionEvent.ACTION_DOWN:
+          core.onDown(event.getX(), event.getY());
+          break;
+        case MotionEvent.ACTION_MOVE:
+          core.onMove(event.getX(), event.getY());
+        case MotionEvent.ACTION_UP:
+          core.onUp();
+      }
+      // leanpub-end-insert
+      invalidate();
+      return true;
+    }
+
+We run the app and check that it still works.  It's OK: good! We commit the code and continue.
 
 ## Creating an adapter
 

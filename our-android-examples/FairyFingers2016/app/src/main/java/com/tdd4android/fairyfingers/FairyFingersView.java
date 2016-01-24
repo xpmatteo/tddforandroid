@@ -31,7 +31,15 @@ public class FairyFingersView extends View {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
-    core.onTouchEvent(event.getActionMasked(), event.getX(), event.getY());
+    switch (event.getActionMasked()) {
+      case MotionEvent.ACTION_DOWN:
+        core.onDown(event.getX(), event.getY());
+        break;
+      case MotionEvent.ACTION_MOVE:
+        core.onMove(event.getX(), event.getY());
+      case MotionEvent.ACTION_UP:
+        core.onUp();
+    }
     invalidate();
     return true;
   }

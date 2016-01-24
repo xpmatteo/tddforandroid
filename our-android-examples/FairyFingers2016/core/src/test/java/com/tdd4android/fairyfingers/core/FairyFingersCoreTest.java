@@ -55,14 +55,14 @@ public class FairyFingersCoreTest {
     assertEquals("(4.0,400.0)->(5.0,500.0)", core.getTrail(1).toString());
   }
 
-  @Test@Ignore
+  @Test
   public void oneMorePointerDown() throws Exception {
     core.onDown(10, 20);            // down first finger
     core.onMove(30, 40);            // drag it
     core.onPointerDown(100, 200);   // down second finger
     core.onMove(50, 60, 110, 210);  // drag both
 
-    assertEquals("(10.0,20.0)->(30.0,40.0)", core.getTrail(0).toString());
+    assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
     assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
   }
 }

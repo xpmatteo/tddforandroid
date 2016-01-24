@@ -187,7 +187,7 @@ A further refactoring that seems necessary (because I try to pass the test and f
         core.onPointerDown(100, 200);   // down second finger
         core.onMove(50, 60, 110, 210);  // drag both
 
-        assertEquals("(10.0,20.0)->(30.0,40.0)", core.getTrail(0).toString());
+        assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
         assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
       }
     }
@@ -253,6 +253,39 @@ We run the app and check that it still works.  It's OK: good! We commit the code
       public void onPointerDown(float x, float y) {
       }
     }
+
+We finally are able to un-`@Ignore` the last test and make it pass!
+
+    public class FairyFingersCore {
+      // ...
+      public void onMove(float ... coords) {
+        // leanpub-start-insert
+        for (int i=0; i<openTrails.size(); i++) {
+          float x = coords[i*2];
+          float y = coords[i*2+1];
+          Trail trail = openTrails.get(i);
+          trail.append(x, y);
+        }
+        // leanpub-end-insert
+        // leanpub-start-delete
+        openTrails.get(0).append(coords[0], coords[1]);
+        // leanpub-end-delete
+      }
+
+      public void onPointerDown(float x, float y) {
+        // leanpub-start-insert
+        onDown(x, y);
+        // leanpub-end-insert
+      }
+    }
+
+I'm not happy with the index math in `onMove()` but I don't know yet how this code will want to be refactored.
+
+
+
+
+
+
 
 
 

@@ -23,7 +23,12 @@ public class FairyFingersCore {
   }
 
   public void onMove(float ... coords) {
-    openTrails.get(0).append(coords[0], coords[1]);
+    for (int i=0; i<openTrails.size(); i++) {
+      float x = coords[i*2];
+      float y = coords[i*2+1];
+      Trail trail = openTrails.get(i);
+      trail.append(x, y);
+    }
   }
 
   public void onUp() {
@@ -31,5 +36,6 @@ public class FairyFingersCore {
   }
 
   public void onPointerDown(float x, float y) {
+    onDown(x, y);
   }
 }

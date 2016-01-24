@@ -222,7 +222,39 @@ We refactor as follows, with a bit of fear as we know that this code is not cove
       return true;
     }
 
-We run the app and check that it still works.  It's OK: good! We commit the code and continue.
+We run the app and check that it still works.  It's OK: good! We commit the code and continue.  This untested switch is a smell that we'll have to deal with later.  We still need one more refactoring to make it so that it will be easy to implement our ignored test: the single `openTrail` should become a list of `openTrails`.
+
+    public class FairyFingersCore {
+      private List<Trail> trails = new ArrayList<>();
+      private List<Trail> openTrails = new ArrayList<>();
+
+      public int trailsCount() {
+        return trails.size();
+      }
+
+      public Trail getTrail(int index) {
+        return trails.get(index);
+      }
+
+      public void onDown(float x, float y) {
+        Trail newTrail = new Trail(x, y);
+        openTrails.add(newTrail);
+        trails.add(newTrail);
+      }
+
+      public void onMove(float ... coords) {
+        openTrails.get(0).append(coords[0], coords[1]);
+      }
+
+      public void onUp() {
+        openTrails.remove(0);
+      }
+
+      public void onPointerDown(float x, float y) {
+      }
+    }
+
+
 
 ## Creating an adapter
 

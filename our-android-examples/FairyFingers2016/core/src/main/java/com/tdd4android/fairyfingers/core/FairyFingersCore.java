@@ -38,4 +38,8 @@ public class FairyFingersCore {
   public void onPointerDown(float x, float y) {
     onDown(x, y);
   }
+
+  public void onPointerUp(int pointerId) {
+    openTrails.remove(1);
+  }
 }

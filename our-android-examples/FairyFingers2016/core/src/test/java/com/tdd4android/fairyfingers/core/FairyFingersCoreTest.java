@@ -33,7 +33,7 @@ public class FairyFingersCoreTest {
   @Test
   public void aFinishedTrail() throws Exception {
     core.onDown(1.1f,   2.2f);
-    core.onMove(33.3f,  44.4f);
+    core.onMove(33.3f, 44.4f);
     core.onUp();
 
     assertEquals(1, core.trailsCount());
@@ -65,4 +65,34 @@ public class FairyFingersCoreTest {
     assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
     assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
   }
+
+  @Test
+  public void oneMorePointerDownThenUp_LIFO() throws Exception {
+    core.onDown(10, 20);            // down first finger
+    core.onMove(30, 40);            // drag it
+    core.onPointerDown(100, 200);   // down second finger
+    core.onMove(50, 60, 110, 210);  // drag both
+    core.onPointerUp(1);            // down second finger
+    core.onMove(70, 80);            // drag first finger
+    core.onUp();
+
+    assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)->(70.0,80.0)", core.getTrail(0).toString());
+    assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
+  }
+
+
+  @Test
+  public void oneMorePointerDownThenUp_FIFO() throws Exception {
+    core.onDown(10, 20);            // down first finger
+    core.onMove(30, 40);            // drag it
+    core.onPointerDown(100, 200);   // down second finger
+    core.onMove(50, 60, 110, 210);  // drag both
+    core.onPointerUp(0);            // down second finger
+    core.onMove(120, 220);            // drag first finger
+    core.onUp();
+
+    assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
+    assertEquals("(100.0,200.0)->(110.0,210.0)->(120.0,220.0)", core.getTrail(1).toString());
+  }
+
 }

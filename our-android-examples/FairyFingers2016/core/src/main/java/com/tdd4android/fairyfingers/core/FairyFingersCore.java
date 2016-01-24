@@ -12,10 +12,8 @@ public class FairyFingersCore {
     if (ACTION_DOWN == action) {
       openTrail = new Trail(x, y);
       trails.add(openTrail);
-      //trails.add(new Trail(x, y));
     } else {
       openTrail.append(x, y);
-//      trails.get(trails.size() - 1).append(x, y);
     }
   }
 
@@ -35,6 +33,7 @@ public class FairyFingersCore {
   }
 
   public void onPointerDown(float x, float y) {
-    trails.add(new Trail(x, y));
+    openTrail = new Trail(x, y);
+    trails.add(openTrail);
   }
 }

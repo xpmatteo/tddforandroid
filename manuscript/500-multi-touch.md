@@ -98,39 +98,39 @@ Q> Because one method call should do one thing; adding an additional finger is s
 
 Trying to make it pass, I realise that step `core.onMove(50, 60, 110, 210)` forces me to have a notion of "open trails", which I currently don't have. It would be too big a step to add the concept of "open trails" and make the test pass at the same time, so I `@Ignore` the test and refactor `FairyFingersCore`.
 
-~~~~~~~~
-public class FairyFingersCore {
-  private List<Trail> trails = new ArrayList<>();
-  // leanpub-start-insert
-  private Trail openTrail;
-  // leanpub-end-insert
+    public class FairyFingersCore {
+      private List<Trail> trails = new ArrayList<>();
+      // leanpub-start-insert
+      private Trail openTrail;
+      // leanpub-end-insert
 
-  public void onTouchEvent(int action, float x, float y) {
-    if (ACTION_DOWN == action) {
-      // leanpub-start-insert
-      openTrail = new Trail(x, y);
-      trails.add(openTrail);
-      // leanpub-end-insert
-      // leanpub-start-delete
-      trails.add(new Trail(x, y));
-      // leanpub-end-delete
-    } else {
-      // leanpub-start-insert
-      openTrail.append(x, y);
-      // leanpub-end-insert
-      // leanpub-start-delete
-      trails.get(trails.size() - 1).append(x, y);
-      // leanpub-end-delete
+      public void onTouchEvent(int action, float x, float y) {
+        if (ACTION_DOWN == action) {
+          // leanpub-start-insert
+          openTrail = new Trail(x, y);
+          trails.add(openTrail);
+          // leanpub-end-insert
+          // leanpub-start-delete
+          trails.add(new Trail(x, y));
+          // leanpub-end-delete
+        } else {
+          // leanpub-start-insert
+          openTrail.append(x, y);
+          // leanpub-end-insert
+          // leanpub-start-delete
+          trails.get(trails.size() - 1).append(x, y);
+          // leanpub-end-delete
+        }
+      }
     }
-  }
-}
-~~~~~~~~
 
 T> One variation of red-green-refactor happens when making the current test pass is too difficult.  It may be that the current code is not ready to accept the new feature.  In this case, we `@Ignore` the test and keep refactoring until making the test pass becomes easy.  Remember: we should try to stay in the "green" most of the time.  Spending too much time in the red is a smell.
 
 T> Note that in the previous test we avoided assertions such as `assertEquals(1, core.openTrailsCount())`.  It is tempting to use this sort of assertions as a stepping stone to build the concept we think we need; however, it is better to avoid adding methods that are only needed for asserting on them in tests.  As it happens, we can test the open trails concept perfectly well by using the same methods that are needed by the production code.
 
+A further refactoring that seems necessary (because I try to pass the test and find it still too difficult) to rewrite the old test not to use the generic `onTouchEvent()` method and replace it with the more accurate, expressive calls we're using in the new test.
 
+T> "Refactor mercilessly" was a mantra of early Extreme Programmers.  Don't stop refactoring until the code is really clean.
 
 
 

@@ -107,14 +107,10 @@ Trying to make it pass, I realise that step `core.onMove(50, 60, 110, 210)` forc
         if (ACTION_DOWN == action) {
           openTrail = new Trail(x, y);
           trails.add(openTrail);
-          // leanpub-start-delete
           trails.add(new Trail(x, y));
-          // leanpub-end-delete
         } else {
           openTrail.append(x, y);
-          // leanpub-start-delete
           trails.get(trails.size() - 1).append(x, y);
-          // leanpub-end-delete
         }
       }
     }

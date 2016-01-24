@@ -32,12 +32,12 @@ public class FairyFingersCoreTest {
 
   @Test
   public void aFinishedTrail() throws Exception {
-    core.onTouchEvent(ACTION_DOWN,   1.1f,   2.2f);
-    core.onTouchEvent(ACTION_MOVE,  33.3f,  44.4f);
-    core.onTouchEvent(ACTION_UP,   555.5f, 666.6f);
+    core.onDown(1.1f,   2.2f);
+    core.onMove(33.3f,  44.4f);
+    core.onUp();
 
     assertEquals(1, core.trailsCount());
-    assertEquals("(1.1,2.2)->(33.3,44.4)->(555.5,666.6)", core.getTrail(0).toString());
+    assertEquals("(1.1,2.2)->(33.3,44.4)", core.getTrail(0).toString());
   }
 
   @Test

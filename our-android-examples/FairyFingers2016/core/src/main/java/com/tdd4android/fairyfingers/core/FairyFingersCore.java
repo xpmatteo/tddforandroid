@@ -38,4 +38,7 @@ public class FairyFingersCore {
     openTrail = new Trail(x, y);
     trails.add(openTrail);
   }
+
+  public void onUp() {
+  }
 }

@@ -40,6 +40,6 @@ public class FairyFingersCore {
   }
 
   public void onPointerUp(int pointerId) {
-    openTrails.remove(1);
+    openTrails.remove(pointerId);
   }
 }

@@ -32,7 +32,7 @@ public class FairyFingersCoreTest {
 
   @Test
   public void aFinishedTrail() throws Exception {
-    core.onDown(1.1f,   2.2f);
+    core.onDown(1.1f, 2.2f);
     core.onMove(33.3f, 44.4f);
     core.onUp();
 
@@ -56,18 +56,7 @@ public class FairyFingersCoreTest {
   }
 
   @Test
-  public void oneMorePointerDown() throws Exception {
-    core.onDown(10, 20);            // down first finger
-    core.onMove(30, 40);            // drag it
-    core.onPointerDown(100, 200);   // down second finger
-    core.onMove(50, 60, 110, 210);  // drag both
-
-    assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
-    assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
-  }
-
-  @Test
-  public void oneMorePointerDownThenUp_LIFO() throws Exception {
+  public void twoFingers_LIFO() throws Exception {
     core.onDown(10, 20);            // down first finger
     core.onMove(30, 40);            // drag it
     core.onPointerDown(100, 200);   // down second finger
@@ -82,7 +71,7 @@ public class FairyFingersCoreTest {
 
 
   @Test
-  public void oneMorePointerDownThenUp_FIFO() throws Exception {
+  public void twoFingers_FIFO() throws Exception {
     core.onDown(10, 20);            // down first finger
     core.onMove(30, 40);            // drag it
     core.onPointerDown(100, 200);   // down second finger
@@ -94,5 +83,20 @@ public class FairyFingersCoreTest {
     assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
     assertEquals("(100.0,200.0)->(110.0,210.0)->(120.0,220.0)", core.getTrail(1).toString());
   }
+
+  @Test
+  public void twoFingers_alternating() throws Exception {
+    core.onDown(100, 101);            // down first finger
+    core.onPointerDown(200, 201);     // down second finger
+    core.onMove(102, 103, 202, 203);  // drag both
+    core.onPointerUp(0);              // up first finger
+    core.onMove(204, 205);            // move second
+    core.onPointerDown(300, 301);     // down again first finger
+    core.onMove(202, 203, 300);
+
+    assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
+    assertEquals("(100.0,200.0)->(110.0,210.0)->(120.0,220.0)", core.getTrail(1).toString());
+  }
+
 
 }

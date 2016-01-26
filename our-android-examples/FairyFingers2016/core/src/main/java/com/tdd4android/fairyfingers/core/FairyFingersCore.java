@@ -42,4 +42,9 @@ public class FairyFingersCore {
   public void onPointerUp(int pointerId) {
     openTrails.remove(pointerId);
   }
+
+  @Override
+  public String toString() {
+    return openTrails.toString();
+  }
 }

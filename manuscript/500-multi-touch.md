@@ -181,7 +181,7 @@ A further refactoring that seems necessary (because I try to pass the test and f
       }
 
       @Test@Ignore
-      public void oneMorePointerDown() throws Exception {
+      public void twoFingersTogether() throws Exception {
         core.onDown(10, 20);            // down first finger
         core.onMove(30, 40);            // drag it
         core.onPointerDown(100, 200);   // down second finger
@@ -254,7 +254,7 @@ We run the app and check that it still works.  It's OK: good! We commit the code
       }
     }
 
-We finally are able to un-`@Ignore` the last test and make it pass!
+We finally are able to un-`@Ignore` the `twoFingersTogether` test and make it pass!
 
     public class FairyFingersCore {
       // ...
@@ -281,9 +281,44 @@ We finally are able to un-`@Ignore` the last test and make it pass!
 
 I'm not happy with the index math in `onMove()` but I don't know yet how this code will want to be refactored.
 
+What next?  We could extend our test with the `ACTION_POINTER_UP` event.
 
+    @Test
+    public void twoFingersTogether() throws Exception {
+      core.onDown(10, 20);            // down first finger
+      core.onMove(30, 40);            // drag it
+      core.onPointerDown(100, 200);   // down second finger
+      core.onMove(50, 60, 110, 210);  // drag both
+      // leanpub-start-insert
+      core.onPointerUp(1);            // down second finger
+      core.onMove(70, 80);            // drag first finger
+      core.onUp();
+      // leanpub-end-insert
 
+      assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)->(70.0,80.0)", core.getTrail(0).toString());
+      assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
+    }
 
+This leads to the question: what is the meaning of the "1" being passed to `onPointerUp`?  It really is a pointer identifier coming from the Android `MotionEvent`.  In this particular scenario, the number "1" also happens to be the correct index into the `openTrails` list.  But clearly this is just a coincidence.  We can make the above pass with
+
+    package com.tdd4android.fairyfingers.core;
+
+    import java.util.*;
+
+    import static com.tdd4android.fairyfingers.core.Actions.ACTION_DOWN;
+
+    public class FairyFingersCore {
+      //...
+      // leanpub-start-insert
+      public void onPointerUp(int pointerId) {
+        openTrails.remove(pointerId);
+      }
+      // leanpub-end-insert
+    }
+
+This is still not satisfactory; we are not using the pointer ids from the `MotionEvent`.
+
+TBD refactor to use the pointer ids
 
 
 

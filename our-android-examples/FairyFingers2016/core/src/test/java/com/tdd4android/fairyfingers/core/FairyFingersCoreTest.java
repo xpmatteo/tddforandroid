@@ -69,7 +69,6 @@ public class FairyFingersCoreTest {
     assertEquals("(100.0,200.0)->(110.0,210.0)", core.getTrail(1).toString());
   }
 
-
   @Test
   public void twoFingers_FIFO() throws Exception {
     core.onDown(10, 20);            // down first finger
@@ -79,20 +78,6 @@ public class FairyFingersCoreTest {
     core.onPointerUp(0);            // down second finger
     core.onMove(120, 220);            // drag first finger
     core.onUp();
-
-    assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
-    assertEquals("(100.0,200.0)->(110.0,210.0)->(120.0,220.0)", core.getTrail(1).toString());
-  }
-
-  @Test
-  public void twoFingers_alternating() throws Exception {
-    core.onDown(100, 101);            // down first finger
-    core.onPointerDown(200, 201);     // down second finger
-    core.onMove(102, 103, 202, 203);  // drag both
-    core.onPointerUp(0);              // up first finger
-    core.onMove(204, 205);            // move second
-    core.onPointerDown(300, 301);     // down again first finger
-    core.onMove(202, 203, 300);
 
     assertEquals("(10.0,20.0)->(30.0,40.0)->(50.0,60.0)", core.getTrail(0).toString());
     assertEquals("(100.0,200.0)->(110.0,210.0)->(120.0,220.0)", core.getTrail(1).toString());

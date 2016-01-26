@@ -11,4 +11,3 @@
 500-multi-touch.md
 600-more-android.md
 900-bibliography.md
-leanpub-cheatsheet.md

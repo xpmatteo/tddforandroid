@@ -155,13 +155,13 @@ The changing of the value displayed on the GUI has become a responsibility of th
 Unfortunately, we created a circular dependency between the activity and the app:
 
     +--------------+                +-------------------+
-    |  CounterApp  | <----------\>  |  CounterActivity  |
+    |  CounterApp  | <----------->  |  CounterActivity  |
     +--------------+                +-------------------+
 
 And this is bad.  We would much prefer that the CounterApp be independent of the CounterActivity.  Luckily, there is a standard way to break circular dependencies: introduce an interface!
 
     +--------------+                +----------<I>-+
-    |  CounterApp  | -----------\>  |  CounterGui  |
+    |  CounterApp  | ------------>  |  CounterGui  |
     +--------------+                +--------------+
            ^                               ^
            |                               |

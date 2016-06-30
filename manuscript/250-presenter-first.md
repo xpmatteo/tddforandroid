@@ -154,24 +154,11 @@ The changing of the value displayed on the GUI has become a responsibility of th
 
 Unfortunately, we created a circular dependency between the activity and the app:
 
-![Circular dependency between classes](images/withoutInterface.png)
-
-<!--
-http://yuml.me/diagram/scruffy/class/edit/[Counter]<->[CounterActivity]
-
     +--------------+                +-------------------+
     |  CounterApp  | <----------\>  |  CounterActivity  |
     +--------------+                +-------------------+
 
--->
-
 And this is bad.  We would much prefer that the CounterApp be independent of the CounterActivity.  Luckily, there is a standard way to break circular dependencies: introduce an interface!
-
-
-![Break of circular dependency by means of a interface](images/withInterface.png)
-
-<!--
-http://yuml.me/diagram/scruffy/class/edit/[Counter]->[<<CounterGui>>], [<<CounterGui>>]^-.-[CounterActivity], [Counter]<-[CounterActivity]
 
     +--------------+                +----------<I>-+
     |  CounterApp  | -----------\>  |  CounterGui  |
@@ -181,8 +168,6 @@ http://yuml.me/diagram/scruffy/class/edit/[Counter]->[<<CounterGui>>], [<<Counte
            |                      +-------------------+
            |______________________|  CounterActivity  |
                                   +-------------------+
-
--->
 
 We introduce an interface we call `CounterGui` (We could have chosen the name `CounterView`, but that could create confusion with the way Android uses the word "view")
 
@@ -201,10 +186,10 @@ There are more than one way to write this mock.  The simplest way needs no parti
 ~~~~~
 // Our test class implements CounterGui
 public class CounterAppTest implements CounterGui {
-
   @Test
   public void increment() throws Exception {
-    // We create the app, passing the test class itself as a collaborator
+    // We create the app, passing the test class itself as a collaborator.
+    // This pattern is called "self shunt"!
     CounterApp app = new CounterApp(this);
 
     // Whenever we call
@@ -253,7 +238,6 @@ The following is the same test, implemented with JMock.
 
 ~~~~~
 public class CounterAppTest {
-
   // This is the JMock machinery that we need
   @Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 
@@ -371,9 +355,9 @@ public class Counter {
 
 ## Mock objects
 
-Quick, what are mock objects good for?  If you answered "for isolating dependencies" then Bzzzzzzt! You got it wrong!
+Quick, what are mock objects good for?  If you answered "for isolating dependencies" then Bzzzzzzt! You got it wrong!  Or at least, it's not all there is to it.
 
-The real reason why mocks are useful is that they help us developing *protocols*, that is a set of messages that an object must understand in order to fulfill a *role* in an object-oriented system.
+The real reason why mocks are useful is that they help us *discover interfaces*, that is, a set of messages that an object must understand in order to fulfill a *role* in an object-oriented system.
 
 
 <!-- Some objects have responsibilities for *knowing* things.  For instance, a Point object might be responsible for knowing its cartesian coordinates, and it might be a reasonable implementation to give this object "getter" methods so that we can know where in the plane is this Point.
@@ -383,6 +367,7 @@ Other objects have responsibilities for *doing* things.  For instance, a Point o
 It's easy (if maybe boring) to use TDD to develop the first kind of Point.  But how would you use TDD to define the behaviour of the second kind of test? -->
 
 ### Tell, don't ask
+{#tell-dont-ask}
 
 An object works by sending and receiving *messages*.  When an object receives a message, it can react by sending messages to other objects.  How do we test an object then?  The simple way is to send a message to an object and then use *getters* to access the object internal state.  One problem with this is that the getters will force us to expose at least part of the object's internal representation.  This will make it harder to change the object.
 

@@ -1,5 +1,5 @@
 
-# Presenter First (TO BE REVIEWED)
+# Presenter First
 
 How do you TDD a GUI application?
 

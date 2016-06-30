@@ -3,26 +3,25 @@
 
 How do you TDD a GUI application?
 
-The Presenter First style of TDD is usually appropriate when we write GUI applications.  The idea is that you start by postulating that you will have at least two objects: a *Presenter* and a *View*.  The *Presenter* is an object that represents your whole application, or a significant subset of your application.  The *View* represent the GUI screen that your application will use.
+The Presenter First style of TDD is often useful when we write GUI applications.  The idea is that you start by postulating that you will have at least two objects: a *Presenter* and a *View*.  The *Presenter* is an object that represents your whole application, from the point of view of the user.  The *View* represent the GUI screen that your application will use.
 
 I> **The "View" ambiguity**
 I>
-I> The word "view" in the Android world has a specific meaning, but when we talk of presenters and views, we mean something different.  A view in Android is a subclass of class `View`.  In the context of presenters instead, a "view" is a role that is played sometimes by Android activities, sometimes by actual Android views.  We trust that context will make it clear what we mean in each case.
+I> The word "view" in the Android world has a specific meaning, but when we talk of presenters and views, we mean something different.  A view in Android is a subclass of class `View`.  In the context of presenters instead, a "view" is a role that is played sometimes by Android activities, sometimes by actual Android views.  We hope that context will make it clear what we mean in each case.
 
-One key idea is that all application logic goes in the Presenter, while all technical details of how to show windows etc to the user go in the view.  The presenter is notified by the view that something happened.  In response, the presenter calls methods on the view to change what the user sees.
+The "Presenter" idea is that all application logic is hidden behind the Presenter, while all technical details of how to show windows etc to the user go in the view.  The presenter is notified by the view that something happened.  In response, the presenter calls methods on the view to change what the user sees.
 
-
-Another key idea is that you start TDD with the presenter.
+When you do Presenter First, you start TDD with the presenter.
 
 J.B. Rainsberger popularized the concept in his video [The World's Best Intro To TDD](#jbrains-tdd-video) and in his book [Responsible Design For Android](#jbrains-book)
 
-The presenter-first method works by defining (at least) two objects:
+## The Counter example
 
 When we describe what a GUI application does, we usually reason in terms of "when the user does THIS, then the application shows THAT".  For instance, consider an application that shows a counter that can be incremented by the user by pressing a button.  Our Example will say:
 
->    **Example: increment**
->    Given that the current counter value is 0
->    When the user presses the "INC" button
+>    **Example: increment** \\
+>    Given that the current counter value is 0 \\
+>    When the user presses the "INC" button \\
 >    Then the view will show 1
 
 {width=50%}
@@ -30,7 +29,7 @@ When we describe what a GUI application does, we usually reason in terms of "whe
 
 
 
-### First version: not yet quite a presenter
+### First version: not a presenter (yet)
 
 A simple test for this example could be
 
@@ -38,7 +37,7 @@ A simple test for this example could be
     app.increment();
     assertEquals(1, app.valueToDisplay());
 
-This test is adequate.  You can use it to develop your application.  It's easy to connect this `CounterApplication` logic to a GUI written in Android.  In the following code, we show how to use the `CounterApp` in an activity:
+This test seems good enough.  We can use it to develop our application.  It's easy to connect this `CounterApp` logic to a GUI written in Android.  In the following code, we see how to use the `CounterApp` in an activity:
 
 {line-numbers=on}
 ~~~~~
@@ -66,30 +65,57 @@ public class CounterActivity extends Activity {
 In lines 9-10 we make sure that when the user clicks the "increment" button, Android will call us back.   In line 13 we increment the counter, and in lines 14-15 we update the text label.
 
 
-### A proper presenter
+## When is a presenter useful
 
-The previous example works and is adequate for most purposes; yet it's not completely satisfactory.  We need to write many lines of "glue" to make sure that we are really getting the right data from the CounterApp and using correctly in the activity.  We are calling the CounterApp twice, one for communicating the fact that the user has pressed the button, and another time for asking back the CounterApp for the value to display.
+The previous example works and it's simple.  What's wrong with it?
 
-This is adequate for such a small application, but becomes boring when the number of bits of user interface that *could* change increases.  If we had 100 text fields on the GUI, we wouldn't like to ask 100 questions to the app so that we can update them all.
+Actually, it's perfectly OK to use the above style, when the interaction of app logic and view is *uniform*.  By "uniform", we mean that the sequence of action is always the same: click button, update text field.  No variations. But, suppose that your app, in response to a user action, could choose to do *different things*.  For instance, some times it could update a field, some other times it could change the color of another, some other times it would make appear or disappear things.  You could still manage this situation by asking the app everything, every time.
 
-    // Something we would definitely NOT want to do
+    // This is not good code
     public void onClick(View v) {
       app.doSomething();
-      // ask the app the value of ALL fields in case one of them
-      // is changed...
-      findViewById(R.id.display0).setText(app.valueToDisplay0()));
-      findViewById(R.id.display1).setText(app.valueToDisplay1()));
-      findViewById(R.id.display2).setText(app.valueToDisplay2()));
-      findViewById(R.id.display3).setText(app.valueToDisplay3()));
-      findViewById(R.id.display4).setText(app.valueToDisplay4()));
-      findViewById(R.id.display5).setText(app.valueToDisplay5()));
+
+      // Now ask the app *everything* that could be changed
+
+      // Should we show or hide field "foo"?
+      if (app.wantsToShowFoo())
+        findViewById(R.id.foo).setVisibility(View.GONE);
+      else
+        findViewById(R.id.foo).setVisibility(View.VISIBLE);
+
+      // What color should this button be?
+      findViewById(R.id.bar).setBackgroundColor(app.colorForBar());
+
+      // What is the text content of this?
+      findViewById(R.id.baz).setText(app.valueToDisplayInBaz()));
+
       // etc etc ...
     }
 
-It would be much better if the app could update directly the fields it wishes to change.  What if it was simply like this:
+Now the above code is bad for a number of reasons:
 
+ 1. The code is too long
+ 2. It updates everything that could have changed, even if value is not changed; so it's inefficient
+ 3. This method will probably change very often
+ 4. The app knows too much: when we ask which color the "bar" field should be, it returns an integer representing an Android color.  This is (arguably) an implementation detail.  In this case, if the intention is to make a button more or less evident by changing the color, it would be better for the app to just express that intention, and let the view choose the most appropriate way to achieve that effect.
+
+In the above, we have the view *ask* a lot of things to the app and then changing itself accordingly.  What if, instead, we had the app *tell* the view what the app wants to show?
+
+I> Tell, don't ask
+>
+> TBD
+
+## A presenter
+
+In the next example, we see three changes:
+
+  * At lines 12--14, we see that the `onClick` handler is much simpler (and it's not likely to change much anymore).
+  * At line 2, we see that the `CounterApp` now receives a reference to the activity in the constructor.  Does this mean that the `CounterApp` now depends on Android code?
+  * Luckily no, because all the `CounterApp` sees is a `CounterGui`, which is an Android-free interface.  At line 1 we see that the `CounterActivity` implements it.
+
+{line-numbers=on}
 ~~~~~
-public class CounterActivity extends Activity {
+public class CounterActivity extends Activity implements CounterGui {
   private CounterApp app = new CounterApp(this);
 
   @Override
@@ -101,7 +127,7 @@ public class CounterActivity extends Activity {
     incrementButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // Just notify the app, it will do the rest
+        // Just notify the app and let it update the view
         app.increment();
       }
     });
@@ -109,30 +135,52 @@ public class CounterActivity extends Activity {
 }
 ~~~~~
 
-The activity is vastly simplified: all we have to do is call `app.increment()` whenever the user clicks the button.
+Now the `CounterApp` has the responsibility of calling methods on the `CounterGui` in response to a call to `increment`.
 
 ~~~~~
 public class CounterApp {
   private int value;
-  private CounterActivity counterActivity;
+  private CounterGui counterView;
 
-  public CounterApp(CounterActivity counterActivity) {
-    this.counterActivity = counterActivity;
+  public CounterApp(CounterGui counterView) {
+    this.counterView = counterView;
   }
 
-  // We're not quite there yet!
-  // We shouldn't mess with the internals of the activity!
   public void increment() {
     value++;
-    TextView view = (TextView) counterActivity.findViewById(R.id.counter);
-    view.setText(String.valueOf(value));
+    counterView.showCounterValue(value);
   }
 }
 ~~~~~
 
-The changing of the value displayed on the GUI has become a responsibility of the CounterApp.  We don't really like this; we'd like to be able to tell the activity "show this value!" and let the activity deal with the details of which element of the view to update.
+The above code forces us to define method `showCounterValue` in the interface `CounterGui`
 
-We have created a circular dependency between the activity and the app
+~~~~~
+public interface CounterGui {
+  void showCounterValue(int value);
+}
+~~~~~
+
+Which, in turn, forces us to implement the `showCounterValue` method in the `CounterActivity`:
+
+~~~~~
+public class CounterActivity extends Activity implements CounterGui {
+  // ...
+  @Override
+  void showCounterValue(int value) {
+    TextView textView = (TextView) findViewById(R.id.counter);
+    textView.setText(String.valueOf(value));
+  }
+}
+~~~~~
+
+This (in our humble opinion) is cool! The app tells its view to show an updated value.  The app does not know or care how the view does it: it could be a text field, a gauge, even a sliding graph.  The activity implements the view and does what is appropriate in response to an updated counter value.
+
+In this example it was OK to let the activity implement the view interface.  In other cases, an Android View could be the best place to do that.  It depends.
+
+## Dependency inversion
+
+It's interesting to note how we avoided creating a circular dependency between the activity and the app.
 
 
 ![Circular dependency between classes](images/withoutInterface.png)

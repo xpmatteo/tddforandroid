@@ -1,9 +1,11 @@
 
 MUST
 
+* Clean up the presenter-first section
+
 * Section: FairyFingers 2:
   - multitouch
-  - fading
+  - fading (?) exe to the reader
 
 * General
   - rewrite using Mockito everywhere

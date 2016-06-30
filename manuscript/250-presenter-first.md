@@ -232,30 +232,32 @@ public class CounterApp {
 
 Note, however, that if CounterApp made more than one call to CounterGui, we would not be able to detect this.  We only retain the argument of the last call.
 
-Using a mocking framework such as JMock or EasyMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to CounterGui#display with the argument 1".  The price we pay is that we need to use more sophisticated machinery (see chapter [How JMock Works](#appendix-jmock)).
+Using a mocking framework such as Mockito or JMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to CounterGui#display with the argument 1".  The price we pay is that we need to use more sophisticated machinery.
 
-The following is the same test, implemented with JMock.
+The following is the same test, implemented with Mockito.
 
 ~~~~~
+// These static imports make the code read much better
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 public class CounterAppTest {
-  // This is the JMock machinery that we need
-  @Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-
   public void testIncrement() throws Exception {
-    // We ask JMock to make a mock of the CounterGui interface
-    final CounterGui gui = context.mock(CounterGui.class);
+    // We ask Mockito to make a mock of the CounterGui interface
+    CounterGui gui = mock(CounterGui.class);
 
-    // We create the app, passing the gui as a collaborator
+    // We create the app, passing the mock gui as a collaborator
     CounterApp app = new CounterApp(gui);
 
-    // We setup our expectations
-    context.checking(new Expectations() {{
-      // Exactly one time, gui will be called with display(1)
-      oneOf(gui).display(1);
-    }});
-
-    // Whenever we call
+    // We call the method we're interested in
     app.increment();
+
+    // We check that the expected call to the gui was made
+    verify(gui).display(1);
+
+    // And nothing else
+    verifyNoMoreInteractions(gui);
   }
 }
 ~~~~~
@@ -268,8 +270,13 @@ public interface CounterGui {
 }
 ~~~~~
 
-Our next task is to define a real implementation of `CounterGui`.  The obvious choice here is to let `CounterActivity` implement it.  We do it here:
+Our next task is to define a real implementation of `CounterGui`.  The obvious choice here is to let `CounterActivity` implement it.  This is the final version of the `CounterActivity`.  Note that:
 
+  * At lines 12--14, we see that the `onClick` handler is much simpler (and it's not likely to change much anymore).
+  * At line 2, we see that the `CounterApp` now receives a reference to the activity in the constructor.  Does this mean that the `CounterApp` now depends on Android code?
+  * Luckily no, because all the `CounterApp` sees is a `CounterGui`, which is an Android-free interface.  At line 1 we see that the `CounterActivity` implements it.
+
+{line-numbers=on}
 ~~~~~
 public class CounterActivity extends Activity implements CounterGui {
   private CounterApp app = new CounterApp(this);
@@ -371,7 +378,7 @@ It's easy (if maybe boring) to use TDD to develop the first kind of Point.  But 
 
 An object works by sending and receiving *messages*.  When an object receives a message, it can react by sending messages to other objects.  How do we test an object then?  The simple way is to send a message to an object and then use *getters* to access the object internal state.  One problem with this is that the getters will force us to expose at least part of the object's internal representation.  This will make it harder to change the object.
 
-Not only that.  Using getters will push us to separate data and behaviour.  Consider
+Not only that.  Using getters will push us to separate data and behaviour, which is not effective object design.  Consider
 
     if (point.isPolar()) {
       x = point.getRadius() * Math.cos(point.getAngle());
@@ -416,7 +423,7 @@ We can increase this isolation by making the name of the message simpler:
 
 Here we don't want to know *any* detail: nothing about color, shape, visibility, or anything else.  This isolation makes code **much easier to change**, because changes in the protocol between point and canvas will not impact the callers of either.
 
-This preference for telling objects to do things rather than asking objects to return values was called "Tell, don't ask!" in a famous paper by Andy Hunt and Dave Thomas (TBD - reference).
+The preference for telling objects to do things rather than asking objects to return values was called "Tell, don't ask!" in a famous paper by [Andy Hunt and Dave Thomas](https://pragprog.com/articles/tell-dont-ask).
 
 
 ## Mocks
@@ -438,24 +445,24 @@ The only way to do test such an object is to *observe its behaviour*.  That is, 
 I'd rather express my test (in pseudocode) this way:
 
 {lang=plain}
-    I expect that
-      canvas will receive drawPoint(x, y)
     whenever I do
       point.drawYourselfOn(canvas)
+    I expect that
+      canvas will receive drawPoint(x, y)
 
 So instead of an *assertion* we have an **expectation**.  We expect that the canvas will be called in a certain way, *and nothing else*.  The nice thing in this test is that *we don't care what's the behaviour of the canvas*.  For all we care, we can just assume that `canvas` is just an interface.  This means that we can develop an object with TDD before its collaborators even exist!
 
-The above test, expressed in JMock, would look like the following:
+The above test, expressed in Mockito, would look like the following:
 
     Point point = new Point(10, 20);
-    Canvas canvas = context.mock(Canvas.class);
-    context.checking(new Expectations() {{
-      oneOf(canvas).drawPoint(10, 20);
-    }});
+    Canvas canvas = mock(Canvas.class);
+
     point.drawYourselfOn(canvas);
 
-The point of this test is that we can use it to define how the point should talk to its collaborator.
+    verify(canvas).drawPoint(10, 20);
+    verifyNoMoreInteractions(canvas);
 
-The syntax looks a bit esoteric at first, but it will all make sense.  The details on how JMock works are [in the appendix](#appendix-jmock).  More about mocks in [GOOS].
+The point of this test is that we can use it to define how the `Point` should talk to its collaborator.
+
 
 

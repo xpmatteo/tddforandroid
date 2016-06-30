@@ -148,17 +148,17 @@ public class CounterApp {
 }
 ~~~~~
 
-The changing of the value displayed on the GUI has become a responsibility of the CounterApp.  We don't really like this; we'd like to be able to tell the activity "show this value!" and let the activity deal with the details of which element of the view to update.
+The changing of the value displayed on the GUI has become a responsibility of the `CounterApp`.  We don't really like this; we'd like to be able to tell the activity "show this value!" and let the activity deal with the details of which element of the view to update.
 
 ## Dependency inversion
 
-Unfortunately, we created a circular dependency between the activity and the app:
+In the above discussion, we created a circular dependency between the activity and the app:
 
     +--------------+                +-------------------+
     |  CounterApp  | <----------->  |  CounterActivity  |
     +--------------+                +-------------------+
 
-And this is bad.  We would much prefer that the CounterApp be independent of the CounterActivity.  Luckily, there is a standard way to break circular dependencies: introduce an interface!
+And this is bad.  We would much prefer that the `CounterApp` be independent of the `CounterActivity`.  Luckily, there is a standard way to break circular dependencies: introduce an interface!
 
     +--------------+                +----------<I>-+
     |  CounterApp  | ------------>  |  CounterGui  |
@@ -171,13 +171,13 @@ And this is bad.  We would much prefer that the CounterApp be independent of the
 
 We introduce an interface we call `CounterGui` (We could have chosen the name `CounterView`, but that could create confusion with the way Android uses the word "view")
 
-So let's start again with the presenter.  We write a test of what the CounterApp should do when the increment method is called.  The test should do, in pseudo code:
+So let's start again with the presenter.  We write a test of what the `CounterApp` should do when the increment method is called.  The test should do, in pseudo code:
 
     Given the CounterApp holds a reference of the CounterGui as a collaborator
     when we call increment on the CounterApp
     then the CounterGui receives a call to display "1"
 
-We want to test CounterApp without ever referring to the CounterActivity, that in our intentions will be the one real implementation of CounterGui.  Therefore, we need a fake implementation of CounterGui.  Our fake implementation will be passed as a collaborator to the CounerApp, and it does not need to implement a real GUI; all we need is that we can check that the proper call(s) to it have been made.  This type of fake implementation of an interface is called a "Mock".
+We want to test `CounterApp` without ever referring to the `CounterActivity`, that in our intentions will be the one real implementation of `CounterGui`.  Therefore, we need a fake implementation of `CounterGui`.  Our fake implementation will be passed as a collaborator to the CounerApp, and it does not need to implement a real GUI; all we need is that we can check that the proper call(s) to it have been made.  This type of fake implementation of an interface is called a "Mock".
 
 D> Definition: a "mock" is a fake implementation of an interface that can be used to verify that certain calls have been made to it.
 
@@ -210,9 +210,9 @@ public class CounterAppTest implements CounterGui {
 }
 ~~~~~
 
-Note that writing this test forces us to define the one method that the CounterGui needs to have, namely `display`.  We use a trick to verify that the display method has really been called.  If it is not called, the value of `displayedNumber` remains null.  If it is called, the value of `displayedNumber` is the value of the argument to the call.
+Note that writing this test forces us to define the one method that the `CounterGui` needs to have, namely `display`.  We use a trick to verify that the display method has really been called.  If it is not called, the value of `displayedNumber` remains null.  If it is called, the value of `displayedNumber` is the value of the argument to the call.
 
-This is enough to allow us to see the test fail, and then build the right functionality within CounterApp to make it pass.  It's easily done:
+This is enough to allow us to see the test fail, and then build the right functionality within `CounterApp` to make it pass.  It's easily done:
 
 ~~~~~
 public class CounterApp {
@@ -230,9 +230,9 @@ public class CounterApp {
 }
 ~~~~~
 
-Note, however, that if CounterApp made more than one call to CounterGui, we would not be able to detect this.  We only retain the argument of the last call.
+Note, however, that if `CounterApp` does more than one call to `CounterGui`, we will not be able to detect this.  We only retain the argument of the last call.
 
-Using a mocking framework such as Mockito or JMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to CounterGui#display with the argument 1".  The price we pay is that we need to use more sophisticated machinery.
+Using a mocking framework such as Mockito or JMock solves this problem.  It also makes it easier to specify precisely what we expect: "just ONE call to `CounterGui#display` with the argument 1".  The price we pay is that we need to use more sophisticated machinery.
 
 The following is the same test, implemented with Mockito.
 

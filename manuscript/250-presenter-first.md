@@ -99,23 +99,15 @@ Now the above code is bad for a number of reasons:
  3. This method will probably change very often
  4. The app knows too much: when we ask which color the "bar" field should be, it returns an integer representing an Android color.  This is (arguably) an implementation detail.  In this case, if the intention is to make a button more or less evident by changing the color, it would be better for the app to just express that intention, and let the view choose the most appropriate way to achieve that effect.
 
-In the above, we have the view *ask* a lot of things to the app and then changing itself accordingly.  What if, instead, we had the app *tell* the view what the app wants to show?
+In the above, we have the view *ask* a lot of things to the app and then changing itself accordingly.  What if, instead, we had the app *tell* the view what the app wants to show?  (See [Tell, don't ask](#tell-dont-ask) below.)
 
-I> Tell, don't ask
->
-> TBD
 
-## A presenter
+## The road to the Presenter
 
-In the next example, we see three changes:
+It would be much better if the app could update directly the fields it wishes to change.  What if it was simply like this:
 
-  * At lines 12--14, we see that the `onClick` handler is much simpler (and it's not likely to change much anymore).
-  * At line 2, we see that the `CounterApp` now receives a reference to the activity in the constructor.  Does this mean that the `CounterApp` now depends on Android code?
-  * Luckily no, because all the `CounterApp` sees is a `CounterGui`, which is an Android-free interface.  At line 1 we see that the `CounterActivity` implements it.
-
-{line-numbers=on}
 ~~~~~
-public class CounterActivity extends Activity implements CounterGui {
+public class CounterActivity extends Activity {
   private CounterApp app = new CounterApp(this);
 
   @Override
@@ -127,7 +119,7 @@ public class CounterActivity extends Activity implements CounterGui {
     incrementButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // Just notify the app and let it update the view
+        // Just notify the app, it will do the rest
         app.increment();
       }
     });
@@ -135,53 +127,32 @@ public class CounterActivity extends Activity implements CounterGui {
 }
 ~~~~~
 
-Now the `CounterApp` has the responsibility of calling methods on the `CounterGui` in response to a call to `increment`.
+The activity is vastly simplified: all we have to do is call `app.increment()` whenever the user clicks the button.
 
 ~~~~~
 public class CounterApp {
   private int value;
-  private CounterGui counterView;
+  private CounterActivity counterActivity;
 
-  public CounterApp(CounterGui counterView) {
-    this.counterView = counterView;
+  public CounterApp(CounterActivity counterActivity) {
+    this.counterActivity = counterActivity;
   }
 
+  // We're not quite there yet!
+  // We shouldn't mess with the internals of the activity!
   public void increment() {
     value++;
-    counterView.showCounterValue(value);
+    TextView view = (TextView) counterActivity.findViewById(R.id.counter);
+    view.setText(String.valueOf(value));
   }
 }
 ~~~~~
 
-The above code forces us to define method `showCounterValue` in the interface `CounterGui`
-
-~~~~~
-public interface CounterGui {
-  void showCounterValue(int value);
-}
-~~~~~
-
-Which, in turn, forces us to implement the `showCounterValue` method in the `CounterActivity`:
-
-~~~~~
-public class CounterActivity extends Activity implements CounterGui {
-  // ...
-  @Override
-  void showCounterValue(int value) {
-    TextView textView = (TextView) findViewById(R.id.counter);
-    textView.setText(String.valueOf(value));
-  }
-}
-~~~~~
-
-This (in our humble opinion) is cool! The app tells its view to show an updated value.  The app does not know or care how the view does it: it could be a text field, a gauge, even a sliding graph.  The activity implements the view and does what is appropriate in response to an updated counter value.
-
-In this example it was OK to let the activity implement the view interface.  In other cases, an Android View could be the best place to do that.  It depends.
+The changing of the value displayed on the GUI has become a responsibility of the CounterApp.  We don't really like this; we'd like to be able to tell the activity "show this value!" and let the activity deal with the details of which element of the view to update.
 
 ## Dependency inversion
 
-It's interesting to note how we avoided creating a circular dependency between the activity and the app.
-
+Unfortunately, we created a circular dependency between the activity and the app:
 
 ![Circular dependency between classes](images/withoutInterface.png)
 
